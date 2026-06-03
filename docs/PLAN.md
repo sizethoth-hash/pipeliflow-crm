@@ -1,0 +1,380 @@
+# PLAN — PipeFlow CRM
+> Plano de execução completo. Interface primeiro, backend depois.
+> PRD: [PRD.md](PRD.md) | Briefing: [../CLAUDE.md](../CLAUDE.md)
+
+---
+
+## Visão Geral
+
+```
+FASE 1 — INTERFACE (M0 → M7)   UI com dados mock, sem Supabase
+FASE 2 — BACKEND   (M8 → M11)  Integração Supabase + RLS
+FASE 3 — PRODUTO   (M12 → M14) Stripe, Resend, Deploy
+```
+
+---
+
+## FASE 1 — Interface
+
+### M0 · Setup do Projeto
+**Branch:** `main`
+**Objetivo:** Repositório configurado, stack instalada, CI passando, estrutura de pastas criada.
+
+#### Entregas
+- [ ] Inicializar repositório Git + `.gitignore`
+- [ ] Criar projeto Next.js 14 com App Router + TypeScript strict
+- [ ] Instalar e configurar Tailwind CSS v4
+- [ ] Instalar e configurar shadcn/ui (tema indigo, radius md)
+- [ ] Instalar Biome v2 + script `pnpm lint`
+- [ ] Configurar `tsconfig.json` com path aliases (`@/`)
+- [ ] Criar estrutura de pastas: `app/`, `components/`, `features/`, `hooks/`, `store/`, `services/`, `types/`, `utils/`, `lib/`
+- [ ] Configurar Vitest + Testing Library
+- [ ] Configurar Playwright para e2e
+- [ ] Arquivo `.env.example` com todas as variáveis necessárias
+- [ ] `pnpm typecheck` e `pnpm lint` sem erros
+
+**Commit final:** `chore: project setup — Next.js 14, Tailwind v4, shadcn/ui, Biome, Vitest, Playwright`
+
+---
+
+### M1 · Design System & Layout Shell
+**Branch:** `feat/design-system`
+**Objetivo:** Sistema de design base e shell do app autenticado com navegação funcional (dados mock).
+
+#### Entregas
+- [ ] Tokens de design: cores (indigo-500, slate-900, verde, vermelho), fonte Inter
+- [ ] Componentes base: `Button`, `Input`, `Badge`, `Card`, `Avatar`, `Spinner`
+- [ ] Componentes de feedback: `Toast`, `Dialog`, `Tooltip`, `DropdownMenu`
+- [ ] Layout autenticado: `AppLayout` com sidebar fixa + área de conteúdo
+- [ ] `Sidebar` com: logo, nav links (Dashboard, Leads, Pipeline, Settings), workspace switcher dropdown, avatar do usuário
+- [ ] `TopBar` com título da página e slot de ações
+- [ ] Rotas de placeholder: `/dashboard`, `/leads`, `/pipeline`, `/settings`
+- [ ] Responsividade: sidebar colapsável em mobile
+- [ ] Storybook ou página `/dev/components` com catálogo visual (opcional)
+- [ ] Testes unitários dos componentes base (≥ 85% coverage)
+
+**Commit final:** `feat: design system and authenticated app shell`
+
+---
+
+### M2 · Landing Page
+**Branch:** `feat/landing-page`
+**Objetivo:** Página pública de apresentação do PipeFlow CRM, publicável de forma independente.
+
+#### Entregas
+- [ ] Layout de marketing: `(marketing)/layout.tsx` sem sidebar
+- [ ] Seção **Hero**: headline, subheadline, CTA "Começar grátis", mockup/screenshot
+- [ ] Seção **Funcionalidades**: 6 cards com ícone, título e descrição
+- [ ] Seção **Pipeline Preview**: imagem/ilustração do Kanban
+- [ ] Seção **Planos e Preços**: tabela Free vs Pro com features e CTAs
+- [ ] Seção **CTA final**: chamada para cadastro
+- [ ] `Navbar` pública: logo + links de âncora + botões Login/Cadastro
+- [ ] `Footer`: links institucionais
+- [ ] Totalmente responsiva (mobile-first)
+- [ ] Acessibilidade: todos os links e botões com `aria-label`
+
+**Commit final:** `feat: marketing landing page — hero, features, pricing, CTA`
+
+---
+
+### M3 · Autenticação & Onboarding (UI)
+**Branch:** `feat/auth-ui`
+**Objetivo:** Fluxo completo de login, cadastro e onboarding com estado local mock (sem Supabase).
+
+#### Entregas
+- [ ] Página `/login`: form com e-mail + senha, link para cadastro, OAuth placeholder
+- [ ] Página `/signup`: form com nome, e-mail, senha, confirmação de senha
+- [ ] Validação com React Hook Form + Zod em ambos os forms
+- [ ] Página `/onboarding`: wizard de 2 passos — (1) nome do workspace, (2) convite de colaboradores (opcional)
+- [ ] `AuthLayout`: layout centralizado para páginas de auth
+- [ ] Zustand store `useAuthStore`: `user`, `workspace`, `isLoading`, `login()`, `logout()`
+- [ ] Mock de autenticação: simula login bem-sucedido e redireciona para `/dashboard`
+- [ ] Rota protegida: middleware mock que redireciona `/dashboard` → `/login` se não autenticado
+- [ ] Página `/forgot-password`: form de recuperação (UI apenas)
+- [ ] Testes unitários dos forms e store
+
+**Commit final:** `feat: auth and onboarding UI with mock state`
+
+---
+
+### M4 · Gestão de Leads & Contatos (UI)
+**Branch:** `feat/leads-ui`
+**Objetivo:** CRUD completo de leads com listagem, busca, filtros e página de detalhe — dados mock via fixtures.
+
+#### Entregas
+- [ ] Tipos TypeScript: `Lead`, `LeadStatus`, `Contact`
+- [ ] Fixtures mock: `src/mocks/leads.ts` com 20+ leads de exemplo
+- [ ] Zustand store `useLeadsStore`: `leads[]`, `filters`, CRUD actions
+- [ ] Página `/leads`: tabela com colunas (nome, empresa, status, responsável, criado em)
+- [ ] Barra de busca com debounce + filtros por status e responsável
+- [ ] Paginação da tabela (client-side no mock)
+- [ ] Botão "Novo Lead" → `LeadFormModal`: form completo com React Hook Form + Zod
+  - Campos: nome, e-mail, telefone, empresa, cargo, status, responsável
+- [ ] Ação de editar lead via modal reutilizando `LeadFormModal`
+- [ ] Ação de excluir lead com `ConfirmDialog`
+- [ ] Página `/leads/[id]`: perfil completo do lead
+  - Header com nome, empresa, cargo, status badge
+  - Campos de contato (e-mail, telefone)
+  - Seção de negócios vinculados (placeholder)
+  - Seção de timeline de atividades (placeholder)
+- [ ] Testes unitários do store e componentes principais
+
+**Commit final:** `feat: leads management UI — list, filters, CRUD, detail page`
+
+---
+
+### M5 · Pipeline Kanban (UI)
+**Branch:** `feat/pipeline-ui`
+**Objetivo:** Board Kanban visual com drag-and-drop entre colunas — dados mock persistidos no Zustand.
+
+#### Entregas
+- [ ] Tipos TypeScript: `Deal`, `DealStage`, `PipelineColumn`
+- [ ] Fixtures mock: `src/mocks/deals.ts` com negócios distribuídos nas 6 etapas
+- [ ] Zustand store `useDealsStore`: `columns`, `deals[]`, `moveDeal()`, CRUD actions
+- [ ] Página `/pipeline`: board com 6 colunas fixas
+  - `Novo Lead` | `Contato Realizado` | `Proposta Enviada` | `Negociação` | `Fechado Ganho` | `Fechado Perdido`
+- [ ] Cada coluna exibe: nome da etapa, contador de cards, total em R$
+- [ ] `DealCard`: título, valor (R$), avatar do responsável, prazo, lead vinculado
+- [ ] Drag-and-drop via `@dnd-kit` entre colunas com animação suave
+- [ ] Estado de drag atualiza coluna no Zustand (sem persistência nessa etapa)
+- [ ] Botão "Novo Negócio" em cada coluna → `DealFormModal`
+  - Campos: título, valor, lead vinculado, responsável, prazo, etapa
+- [ ] Ação de editar negócio via drawer lateral (`DealDetailDrawer`)
+- [ ] Ação de excluir negócio com `ConfirmDialog`
+- [ ] Testes unitários do store e da lógica de movimentação
+
+**Commit final:** `feat: pipeline kanban UI with dnd-kit drag-and-drop`
+
+---
+
+### M6 · Detalhe do Lead & Registro de Atividades (UI)
+**Branch:** `feat/activities-ui`
+**Objetivo:** Página de detalhe do lead completa com timeline de atividades e formulário de novo registro.
+
+#### Entregas
+- [ ] Tipos TypeScript: `Activity`, `ActivityType`
+- [ ] Fixtures mock: atividades vinculadas aos leads do mock
+- [ ] Zustand store `useActivitiesStore`: `activities[]`, `addActivity()`, `deleteActivity()`
+- [ ] Completar página `/leads/[id]` com timeline real
+- [ ] `ActivityTimeline`: lista cronológica reversa de atividades
+  - Ícone por tipo (Ligação ☎ | E-mail ✉ | Reunião 📅 | Nota 📝)
+  - Autor, descrição, data formatada
+- [ ] `AddActivityForm`: form inline na página de detalhe
+  - Campos: tipo, descrição, data (default: hoje)
+  - Validação Zod, submit adiciona ao store
+- [ ] Ação de excluir atividade
+- [ ] Negócios vinculados ao lead: cards resumidos com link para `/pipeline`
+- [ ] Breadcrumb de navegação: Dashboard > Leads > [Nome do Lead]
+- [ ] Testes unitários do store e dos componentes de timeline
+
+**Commit final:** `feat: lead detail page with activity timeline`
+
+---
+
+### M7 · Dashboard de Métricas (UI)
+**Branch:** `feat/dashboard-ui`
+**Objetivo:** Dashboard completo com KPI cards, gráfico de funil e lista de negócios com prazo próximo — dados derivados dos mocks.
+
+#### Entregas
+- [ ] Tipos TypeScript: `DashboardMetrics`, `FunnelData`
+- [ ] Hook `useDashboardMetrics()`: agrega dados dos stores de leads e deals
+  - Total de leads
+  - Negócios abertos (excluindo Fechado Ganho/Perdido)
+  - Valor total do pipeline (soma dos negócios abertos)
+  - Taxa de conversão (Fechado Ganho / total de negócios)
+- [ ] Página `/dashboard`: grid responsivo de 4 `MetricCard`
+- [ ] `MetricCard`: ícone, label, valor principal, variação percentual (mock)
+- [ ] `SalesFunnelChart`: gráfico de barras horizontais com Recharts mostrando contagem por etapa
+- [ ] `UpcomingDeals`: lista dos 5 negócios com prazo mais próximo
+  - Nome do negócio, valor, responsável, dias restantes (badge colorido)
+- [ ] `RecentLeads`: lista dos 5 leads mais recentes com link para detalhe
+- [ ] Saudação personalizada com nome do usuário mockado
+- [ ] Testes unitários do hook de métricas
+
+**Commit final:** `feat: dashboard with KPI cards, funnel chart, and upcoming deals`
+
+---
+
+## FASE 2 — Backend
+
+### M8 · Supabase: Schema, Auth & RLS
+**Branch:** `feat/supabase-auth`
+**Objetivo:** Banco de dados configurado, autenticação real funcionando, RLS ativo em todas as tabelas.
+
+#### Entregas
+- [ ] Criar projeto no Supabase
+- [ ] Migrations SQL:
+  - `workspaces` (id, name, plan, owner_id, created_at)
+  - `workspace_members` (workspace_id, user_id, role)
+  - `leads` (id, workspace_id, name, email, phone, company, job_title, status, owner_id, created_at)
+  - `deals` (id, workspace_id, lead_id, title, value, stage, owner_id, due_date, created_at)
+  - `activities` (id, workspace_id, lead_id, type, description, author_id, created_at)
+- [ ] RLS policies para cada tabela: leitura/escrita apenas para membros do workspace
+- [ ] Substituir mock auth por Supabase Auth (email+password)
+- [ ] `lib/supabase.ts`: client singleton (browser + server)
+- [ ] Atualizar `useAuthStore` para usar sessão real do Supabase
+- [ ] Middleware Next.js real: proteger rotas `(app)/` com `@supabase/ssr`
+- [ ] Fluxo de onboarding gravando workspace no banco
+- [ ] Variáveis de ambiente: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+- [ ] Testes de integração: login, logout, criação de workspace
+
+**Commit final:** `feat: supabase schema, RLS policies, and real authentication`
+
+---
+
+### M9 · Leads & Pipeline: Integração Backend
+**Branch:** `feat/leads-backend`
+**Objetivo:** Substituir todos os dados mock de leads e negócios por chamadas reais ao Supabase.
+
+#### Entregas
+- [ ] `services/leads.ts`: `getLeads()`, `getLead()`, `createLead()`, `updateLead()`, `deleteLead()`
+- [ ] `services/deals.ts`: `getDeals()`, `getDeal()`, `createDeal()`, `updateDeal()`, `deleteDeal()`, `moveDeal()`
+- [ ] Substituir Zustand stores por TanStack Query (queries + mutations)
+  - `useLeads()`, `useLead()`, `useCreateLead()`, `useUpdateLead()`, `useDeleteLead()`
+  - `useDeals()`, `useCreateDeal()`, `useUpdateDeal()`, `useDeleteDeal()`, `useMoveDeal()`
+- [ ] Drag-and-drop no Kanban persiste `stage` no banco via `useMoveDeal()`
+- [ ] Otimistic updates em todas as mutations
+- [ ] Estados de loading e erro nos formulários e listas
+- [ ] Filtros de busca executados no servidor (Supabase `.ilike()`, `.eq()`)
+- [ ] Paginação server-side com cursor ou offset
+- [ ] Testes de integração: CRUD leads e deals
+
+**Commit final:** `feat: leads and pipeline connected to Supabase`
+
+---
+
+### M10 · Atividades & Dashboard: Integração Backend
+**Branch:** `feat/activities-backend`
+**Objetivo:** Timeline de atividades e métricas do dashboard vindas do banco de dados real.
+
+#### Entregas
+- [ ] `services/activities.ts`: `getActivities()`, `createActivity()`, `deleteActivity()`
+- [ ] TanStack Query hooks: `useActivities()`, `useCreateActivity()`, `useDeleteActivity()`
+- [ ] Invalidação automática da query de atividades após mutação
+- [ ] `services/metrics.ts`: queries agregadas para métricas do dashboard
+  - Usar `count`, `sum` e filtros do Supabase para eficiência
+- [ ] Hook `useDashboardMetrics()` substituído por TanStack Query com dados reais
+- [ ] `SalesFunnelChart` com dados reais por etapa
+- [ ] `UpcomingDeals` com deals reais filtrados por `due_date`
+- [ ] Testes de integração: criação de atividade e métricas
+
+**Commit final:** `feat: activities and dashboard metrics connected to Supabase`
+
+---
+
+### M11 · Multi-workspace & Colaboração
+**Branch:** `feat/workspaces`
+**Objetivo:** Usuário pode criar múltiplos workspaces, convidar membros por e-mail e alternar entre eles.
+
+#### Entregas
+- [ ] `services/workspaces.ts`: `getWorkspaces()`, `createWorkspace()`, `inviteMember()`, `removeMember()`, `updateRole()`
+- [ ] Workspace switcher na sidebar: lista workspaces do usuário, troca contexto global
+- [ ] Store/context de workspace ativo: todos os serviços filtram por `workspace_id` ativo
+- [ ] Página `/settings/workspace`: nome do workspace, plano atual, danger zone (excluir)
+- [ ] Página `/settings/members`: lista de membros com papel, botão convidar, botão remover
+- [ ] `InviteMemberModal`: form com e-mail + papel (Admin/Membro)
+- [ ] Integração Resend: envio de e-mail de convite com link de aceitação
+- [ ] Rota `/invite/[token]`: aceitar convite → login/cadastro → entrar no workspace
+- [ ] Guards de autorização: apenas Admin pode convidar/remover membros
+- [ ] Limite do plano Free: bloquear convite ao atingir 2 membros (mostrar upsell)
+- [ ] Variáveis de ambiente: `RESEND_API_KEY`, `NEXT_PUBLIC_APP_URL`
+- [ ] Testes: convite, aceitação, troca de workspace
+
+**Commit final:** `feat: multi-workspace with member invites via Resend`
+
+---
+
+## FASE 3 — Produto
+
+### M12 · Monetização com Stripe
+**Branch:** `feat/stripe`
+**Objetivo:** Planos Free e Pro funcionando com checkout, webhook e portal do cliente.
+
+#### Entregas
+- [ ] `lib/stripe.ts`: instância singleton do Stripe SDK
+- [ ] Tabela `subscriptions` no Supabase (workspace_id, stripe_customer_id, stripe_subscription_id, plan, status)
+- [ ] Página `/settings/billing`: plano atual, botão upgrade/gerenciar assinatura
+- [ ] API Route `POST /api/stripe/checkout`: cria Checkout Session para o plano Pro
+- [ ] API Route `POST /api/stripe/portal`: cria Customer Portal Session
+- [ ] API Route `POST /api/stripe/webhook`:
+  - `checkout.session.completed` → ativa plano Pro no workspace
+  - `customer.subscription.deleted` → reverte para Free
+  - `customer.subscription.updated` → atualiza status
+- [ ] Guards de limite do plano Free:
+  - Bloquear criação de lead ao atingir 50 → modal de upsell
+  - Bloquear convite ao atingir 2 membros → modal de upsell
+- [ ] Variáveis de ambiente: `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `STRIPE_PRICE_ID_PRO`
+- [ ] Testes com Stripe CLI (`stripe listen --forward-to`)
+- [ ] Testes unitários das guards de limite
+
+**Commit final:** `feat: Stripe billing — checkout, webhook, plan limits`
+
+---
+
+### M13 · Qualidade, Testes & Acessibilidade
+**Branch:** `feat/quality`
+**Objetivo:** Coverage targets atingidas, WCAG 2.2 AA verificado, sem erros de lint ou typecheck.
+
+#### Entregas
+- [ ] Coverage ≥ 85% em `components/` e `hooks/`
+- [ ] Coverage ≥ 70% em `utils/` e `services/`
+- [ ] Testes e2e Playwright: fluxos críticos
+  - [ ] Cadastro + onboarding
+  - [ ] Criar lead → mover no pipeline
+  - [ ] Adicionar atividade
+  - [ ] Convidar membro
+  - [ ] Upgrade para Pro
+- [ ] Auditoria de acessibilidade: `axe-core` em todos os formulários e modais
+- [ ] `pnpm lint` sem warnings
+- [ ] `pnpm typecheck` sem erros
+- [ ] Performance: Lighthouse score ≥ 90 em `/dashboard`
+- [ ] Revisar todos os `aria-label`, `role` e navegação por teclado
+- [ ] Corrigir erros encontrados
+
+**Commit final:** `test: full coverage, e2e flows, and WCAG 2.2 AA audit`
+
+---
+
+### M14 · Deploy & Produção
+**Branch:** `feat/deploy`
+**Objetivo:** Aplicação em produção com CI/CD, variáveis configuradas e domínio ativo.
+
+#### Entregas
+- [ ] Criar projeto no Vercel conectado ao repositório GitHub
+- [ ] Configurar todas as variáveis de ambiente no Vercel:
+  - `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+  - `SUPABASE_SERVICE_ROLE_KEY`
+  - `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `STRIPE_PRICE_ID_PRO`
+  - `RESEND_API_KEY`, `NEXT_PUBLIC_APP_URL`
+- [ ] Supabase: habilitar Auth email confirmations em produção
+- [ ] Stripe: criar webhook endpoint apontando para URL da Vercel
+- [ ] Rodar migrations em produção via Supabase CLI
+- [ ] `pnpm build` sem erros no CI
+- [ ] Preview deployments automáticos para PRs
+- [ ] Configurar domínio customizado (opcional)
+- [ ] Smoke test pós-deploy: cadastro → onboarding → lead → pipeline → billing
+- [ ] Atualizar `README.md` com instruções de setup local
+
+**Commit final:** `chore: production deploy — Vercel, Supabase, Stripe configured`
+
+---
+
+## Resumo dos Milestones
+
+| # | Milestone | Branch | Fase |
+|---|-----------|--------|------|
+| M0 | Setup do Projeto | `main` | Interface |
+| M1 | Design System & Layout Shell | `feat/design-system` | Interface |
+| M2 | Landing Page | `feat/landing-page` | Interface |
+| M3 | Autenticação & Onboarding (UI) | `feat/auth-ui` | Interface |
+| M4 | Gestão de Leads & Contatos (UI) | `feat/leads-ui` | Interface |
+| M5 | Pipeline Kanban (UI) | `feat/pipeline-ui` | Interface |
+| M6 | Detalhe do Lead & Atividades (UI) | `feat/activities-ui` | Interface |
+| M7 | Dashboard de Métricas (UI) | `feat/dashboard-ui` | Interface |
+| M8 | Supabase: Schema, Auth & RLS | `feat/supabase-auth` | Backend |
+| M9 | Leads & Pipeline: Backend | `feat/leads-backend` | Backend |
+| M10 | Atividades & Dashboard: Backend | `feat/activities-backend` | Backend |
+| M11 | Multi-workspace & Colaboração | `feat/workspaces` | Backend |
+| M12 | Monetização com Stripe | `feat/stripe` | Produto |
+| M13 | Qualidade, Testes & Acessibilidade | `feat/quality` | Produto |
+| M14 | Deploy & Produção | `feat/deploy` | Produto |

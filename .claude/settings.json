@@ -1,0 +1,47 @@
+{
+  "projectName": "pipeliflow-crm",
+  "language": "JavaScript/TypeScript",
+  "framework": "React",
+  "version": "1.0.0",
+  "description": "Frontend CRM application built with React and TypeScript",
+  "env": {
+    "NODE_ENV": "development"
+  },
+  "agents": {
+    "frontend-developer": {
+      "enabled": true,
+      "frameworks": ["React", "Vue", "Angular"],
+      "defaultFramework": "React"
+    },
+    "code-reviewer": {
+      "enabled": true,
+      "autoReviewOnLargeGenerations": true,
+      "linesThreshold": 200
+    }
+  },
+  "codeStyle": {
+    "typescript": {
+      "strict": true,
+      "noImplicitAny": true
+    },
+    "formatting": {
+      "tool": "biome",
+      "indentSize": 2,
+      "singleQuote": true,
+      "trailingComma": "es5"
+    },
+    "css": "tailwind"
+  },
+  "testing": {
+    "runner": "vitest",
+    "e2e": "playwright",
+    "coverageTarget": {
+      "components": 85,
+      "utilities": 70
+    }
+  },
+  "build": {
+    "bundler": "vite",
+    "packageManager": "pnpm"
+  }
+}
