@@ -21,17 +21,17 @@ FASE 3 — PRODUTO   (M12 → M14) Stripe, Resend, Deploy
 **Objetivo:** Repositório configurado, stack instalada, CI passando, estrutura de pastas criada.
 
 #### Entregas
-- [ ] Inicializar repositório Git + `.gitignore`
-- [ ] Criar projeto Next.js 14 com App Router + TypeScript strict
-- [ ] Instalar e configurar Tailwind CSS v4
-- [ ] Instalar e configurar shadcn/ui (tema indigo, radius md)
-- [ ] Instalar Biome v2 + script `pnpm lint`
-- [ ] Configurar `tsconfig.json` com path aliases (`@/`)
-- [ ] Criar estrutura de pastas: `app/`, `components/`, `features/`, `hooks/`, `store/`, `services/`, `types/`, `utils/`, `lib/`
-- [ ] Configurar Vitest + Testing Library
-- [ ] Configurar Playwright para e2e
-- [ ] Arquivo `.env.example` com todas as variáveis necessárias
-- [ ] `pnpm typecheck` e `pnpm lint` sem erros
+- [x] Inicializar repositório Git + `.gitignore`
+- [x] Criar projeto Next.js 14 com App Router + TypeScript strict
+- [x] Instalar e configurar Tailwind CSS v4
+- [x] Instalar e configurar shadcn/ui (tema indigo, radius md)
+- [x] Instalar Biome v2 + script `pnpm lint`
+- [x] Configurar `tsconfig.json` com path aliases (`@/`)
+- [x] Criar estrutura de pastas: `app/`, `components/`, `features/`, `hooks/`, `store/`, `services/`, `types/`, `utils/`, `lib/`
+- [x] Configurar Vitest + Testing Library
+- [x] Configurar Playwright para e2e
+- [x] Arquivo `.env.example` com todas as variáveis necessárias
+- [x] `pnpm typecheck` e `pnpm lint` sem erros
 
 **Commit final:** `chore: project setup — Next.js 14, Tailwind v4, shadcn/ui, Biome, Vitest, Playwright`
 
