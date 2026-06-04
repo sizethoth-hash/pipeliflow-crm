@@ -38,6 +38,7 @@ const leadSchema = z.object({
   company: z.string().optional(),
   jobTitle: z.string().optional(),
   potentialValue: z.number().min(0, 'Valor deve ser positivo').optional(),
+  notes: z.string().optional(),
   status: z.enum(['new', 'contacted', 'proposal', 'negotiation', 'won', 'lost']),
   ownerId: z.string().min(1, 'Selecione um responsável'),
 })
@@ -79,6 +80,7 @@ export function LeadFormModal({ open, onClose, lead }: LeadFormModalProps) {
           company: lead.company ?? '',
           jobTitle: lead.jobTitle ?? '',
           potentialValue: lead.potentialValue,
+          notes: lead.notes ?? '',
           status: lead.status,
           ownerId: lead.ownerId,
         })
@@ -166,6 +168,18 @@ export function LeadFormModal({ open, onClose, lead }: LeadFormModalProps) {
                 <p className="text-xs text-red-400">{errors.potentialValue.message}</p>
               )}
             </div>
+          </div>
+
+          {/* Anotações */}
+          <div className="space-y-1.5">
+            <Label htmlFor="notes" className="text-slate-300">Anotações</Label>
+            <textarea
+              id="notes"
+              rows={3}
+              placeholder="Observações internas sobre este lead…"
+              className={`flex w-full resize-none rounded-md border px-3 py-2 text-sm leading-relaxed ${inputCls} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-offset-slate-800`}
+              {...register('notes')}
+            />
           </div>
 
           {/* Status + Responsável (2 colunas) */}
