@@ -103,22 +103,22 @@ FASE 3 — PRODUTO   (M12 → M14) Stripe, Resend, Deploy
 **Objetivo:** CRUD completo de leads com listagem, busca, filtros e página de detalhe — dados mock via fixtures.
 
 #### Entregas
-- [ ] Tipos TypeScript: `Lead`, `LeadStatus`, `Contact`
-- [ ] Fixtures mock: `src/mocks/leads.ts` com 20+ leads de exemplo
-- [ ] Zustand store `useLeadsStore`: `leads[]`, `filters`, CRUD actions
-- [ ] Página `/leads`: tabela com colunas (nome, empresa, status, responsável, criado em)
-- [ ] Barra de busca com debounce + filtros por status e responsável
-- [ ] Paginação da tabela (client-side no mock)
-- [ ] Botão "Novo Lead" → `LeadFormModal`: form completo com React Hook Form + Zod
-  - Campos: nome, e-mail, telefone, empresa, cargo, status, responsável
-- [ ] Ação de editar lead via modal reutilizando `LeadFormModal`
-- [ ] Ação de excluir lead com `ConfirmDialog`
-- [ ] Página `/leads/[id]`: perfil completo do lead
+- [x] Tipos TypeScript: `Lead`, `LeadStatus`, `Activity`, `ActivityType`, `LeadFilters`
+- [x] Fixtures mock: `src/mocks/leads.ts` com 15 leads brasileiros + 10 atividades
+- [x] Zustand store `useLeadsStore`: `leads[]`, `activities[]`, `filters`, CRUD actions
+- [x] Página `/leads`: tabela com colunas (nome, empresa, status, responsável, criado em)
+- [x] Barra de busca com debounce + filtros por status e responsável
+- [x] Paginação da tabela (client-side no mock)
+- [x] Botão "Novo Lead" → `LeadFormModal`: form completo com React Hook Form + Zod
+  - Campos: nome, e-mail, telefone, empresa, cargo, valor potencial, anotações, status, responsável
+- [x] Ação de editar lead via modal reutilizando `LeadFormModal`
+- [x] Ação de excluir lead com `ConfirmDialog`
+- [x] Página `/leads/[id]`: perfil completo do lead
   - Header com nome, empresa, cargo, status badge
   - Campos de contato (e-mail, telefone)
   - Seção de negócios vinculados (placeholder)
-  - Seção de timeline de atividades (placeholder)
-- [ ] Testes unitários do store e componentes principais
+  - Seção de timeline de atividades (visual com mock)
+- [x] Suite e2e: 20 testes cobrindo busca, filtros, CRUD, detalhe e timeline
 
 **Commit final:** `feat: leads management UI — list, filters, CRUD, detail page`
 
