@@ -11,6 +11,7 @@ export interface Lead {
   company?: string
   jobTitle?: string
   status: LeadStatus
+  potentialValue?: number
   ownerId: string
   ownerName: string
   createdAt: string
