@@ -10,8 +10,8 @@ import {
   User,
 } from 'lucide-react'
 import Link from 'next/link'
-import { notFound, useParams } from 'next/navigation'
-import { useState } from 'react'
+import { useParams, useRouter } from 'next/navigation'
+import { useEffect, useState } from 'react'
 
 import { Avatar, AvatarFallback } from '@/components/ui/Avatar'
 import { Button } from '@/components/ui/Button'
@@ -39,15 +39,23 @@ function formatDate(iso: string) {
 
 export default function LeadDetailPage() {
   const params = useParams()
+  const router = useRouter()
   const id = typeof params.id === 'string' ? params.id : params.id?.[0] ?? ''
 
   const { getLeadById, getActivitiesByLeadId } = useLeadsStore()
+  // Subscrever os arrays para reatividade; derivar os dados via getters estáveis
+  useLeadsStore((s) => s.leads)
+  useLeadsStore((s) => s.activities)
   const lead = getLeadById(id)
   const activities = getActivitiesByLeadId(id)
 
   const [editOpen, setEditOpen] = useState(false)
 
-  if (!lead) return notFound()
+  useEffect(() => {
+    if (!lead) router.replace('/leads')
+  }, [lead, router])
+
+  if (!lead) return null
 
   return (
     <div className="p-6 lg:p-8">

@@ -37,7 +37,12 @@ const leadSchema = z.object({
   phone: z.string().optional(),
   company: z.string().optional(),
   jobTitle: z.string().optional(),
-  potentialValue: z.number().min(0, 'Valor deve ser positivo').optional(),
+  potentialValue: z
+    .union([
+      z.number().min(0, 'Valor deve ser positivo'),
+      z.nan().transform(() => undefined as unknown as number),
+    ])
+    .optional(),
   notes: z.string().optional(),
   status: z.enum(['new', 'contacted', 'proposal', 'negotiation', 'won', 'lost']),
   ownerId: z.string().min(1, 'Selecione um responsável'),
@@ -116,7 +121,7 @@ export function LeadFormModal({ open, onClose, lead }: LeadFormModalProps) {
           <DialogTitle>{isEditing ? 'Editar Lead' : 'Novo Lead'}</DialogTitle>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-4">
           {/* Nome */}
           <div className="space-y-1.5">
             <Label htmlFor="name" className="text-slate-300">

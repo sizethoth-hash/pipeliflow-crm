@@ -11,7 +11,7 @@ import {
   User,
 } from 'lucide-react'
 import Link from 'next/link'
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
 import { Avatar, AvatarFallback } from '@/components/ui/Avatar'
 import { Button } from '@/components/ui/Button'
@@ -32,7 +32,7 @@ import type { Lead } from '@/types/lead'
 
 function useDebounce<T>(value: T, delay = 300): T {
   const [debounced, setDebounced] = useState(value)
-  useMemo(() => {
+  useEffect(() => {
     const timer = setTimeout(() => setDebounced(value), delay)
     return () => clearTimeout(timer)
   }, [value, delay])
@@ -55,7 +55,7 @@ function getInitials(name: string) {
 }
 
 export default function LeadsPage() {
-  const { filters, setFilters, resetFilters, deleteLead, currentPage, pageSize, setPage, getFilteredLeads } =
+  const { leads, filters, setFilters, resetFilters, deleteLead, currentPage, pageSize, setPage, getFilteredLeads } =
     useLeadsStore()
 
   const [searchInput, setSearchInput] = useState(filters.search)
@@ -65,7 +65,7 @@ export default function LeadsPage() {
   const [editingLead, setEditingLead] = useState<Lead | null>(null)
   const [deleteTarget, setDeleteTarget] = useState<Lead | null>(null)
 
-  useMemo(() => {
+  useEffect(() => {
     setFilters({ search: debouncedSearch })
   }, [debouncedSearch, setFilters])
 
