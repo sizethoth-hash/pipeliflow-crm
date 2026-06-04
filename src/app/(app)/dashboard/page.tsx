@@ -1,10 +1,16 @@
+'use client'
+
+import { useWorkspaceStore } from '@/store/useWorkspaceStore'
 import { LayoutDashboard } from 'lucide-react'
 
 export default function DashboardPage() {
+  const { currentUser } = useWorkspaceStore()
+  const firstName = currentUser.name.split(' ')[0]
+
   return (
     <div className="p-6 lg:p-8">
       <div className="mb-8">
-        <p className="text-slate-400 text-sm">Bem-vindo de volta, Carlos 👋</p>
+        <p className="text-slate-400 text-sm">Bem-vindo de volta, {firstName} 👋</p>
         <h2 className="mt-1 text-2xl font-bold text-slate-100">Dashboard</h2>
       </div>
 
