@@ -112,7 +112,7 @@ export default function LeadsPage() {
           <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
           <Input
             placeholder="Buscar por nome, empresa ou e-mail…"
-            className="pl-9"
+            className="pl-9 border-slate-600 bg-slate-700 text-slate-100 placeholder:text-slate-500 focus-visible:ring-indigo-500"
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
           />
@@ -124,10 +124,10 @@ export default function LeadsPage() {
             value={filters.status}
             onValueChange={(v) => setFilters({ status: v as typeof filters.status })}
           >
-            <SelectTrigger className="w-44">
+            <SelectTrigger className="w-44 border-slate-600 bg-slate-700 text-slate-100 focus:ring-indigo-500">
               <SelectValue placeholder="Status" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="border-slate-700 bg-slate-800 text-slate-100">
               <SelectItem value="all">Todos os status</SelectItem>
               <SelectItem value="new">Novo Lead</SelectItem>
               <SelectItem value="contacted">Contato Realizado</SelectItem>
@@ -142,10 +142,10 @@ export default function LeadsPage() {
             value={filters.ownerId}
             onValueChange={(v) => setFilters({ ownerId: v })}
           >
-            <SelectTrigger className="w-44">
+            <SelectTrigger className="w-44 border-slate-600 bg-slate-700 text-slate-100 focus:ring-indigo-500">
               <SelectValue placeholder="Responsável" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="border-slate-700 bg-slate-800 text-slate-100">
               <SelectItem value="all">Todos</SelectItem>
               {mockOwners.map((o) => (
                 <SelectItem key={o.id} value={o.id}>
