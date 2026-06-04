@@ -74,6 +74,16 @@ describe('Sidebar', () => {
     expect(onClose).toHaveBeenCalledTimes(1)
   })
 
+  it('chama onClose ao clicar em um item de navegação', () => {
+    const onClose = vi.fn()
+    render(<Sidebar onClose={onClose} />)
+
+    const leadsLink = screen.getByRole('link', { name: /leads/i })
+    fireEvent.click(leadsLink)
+
+    expect(onClose).toHaveBeenCalledTimes(1)
+  })
+
   it('tem link de logo apontando para /dashboard', () => {
     render(<Sidebar />)
     const logoLink = screen.getByRole('link', { name: /pipeflow/i })
