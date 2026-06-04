@@ -78,20 +78,21 @@ FASE 3 — PRODUTO   (M12 → M14) Stripe, Resend, Deploy
 ---
 
 ### M3 · Autenticação & Onboarding (UI)
-**Branch:** `feat/auth-ui`
+**Branch:** `feat/auth-onboarding-ui` → mergeado em `main` (PR #2)
 **Objetivo:** Fluxo completo de login, cadastro e onboarding com estado local mock (sem Supabase).
 
 #### Entregas
-- [ ] Página `/login`: form com e-mail + senha, link para cadastro, OAuth placeholder
-- [ ] Página `/signup`: form com nome, e-mail, senha, confirmação de senha
-- [ ] Validação com React Hook Form + Zod em ambos os forms
-- [ ] Página `/onboarding`: wizard de 2 passos — (1) nome do workspace, (2) convite de colaboradores (opcional)
-- [ ] `AuthLayout`: layout centralizado para páginas de auth
-- [ ] Zustand store `useAuthStore`: `user`, `workspace`, `isLoading`, `login()`, `logout()`
-- [ ] Mock de autenticação: simula login bem-sucedido e redireciona para `/dashboard`
-- [ ] Rota protegida: middleware mock que redireciona `/dashboard` → `/login` se não autenticado
-- [ ] Página `/forgot-password`: form de recuperação (UI apenas)
-- [ ] Testes unitários dos forms e store
+- [x] Página `/login`: form com e-mail + senha, link para cadastro, OAuth placeholder
+- [x] Página `/signup`: form com nome, e-mail, senha, confirmação de senha
+- [x] Validação com React Hook Form + Zod em ambos os forms
+- [x] Página `/onboarding`: wizard de 2 passos — (1) nome do workspace, (2) confirmação com resumo do plano
+- [x] `AuthLayout`: layout split-screen (branding escuro + formulário branco)
+- [x] Hook `useAuth`: `signIn()`, `signUp()`, `signInWithGoogle()`, `createWorkspaceAndContinue()` com fake delay
+- [x] Mock de autenticação: simula login bem-sucedido e redireciona para `/dashboard`
+- [ ] Zustand store `useAuthStore`: `user`, `workspace`, `isLoading`, `login()`, `logout()` _(adiado para M8)_
+- [ ] Rota protegida: middleware mock que redireciona `/dashboard` → `/login` se não autenticado _(adiado para M8)_
+- [ ] Página `/forgot-password`: form de recuperação (UI apenas) _(não implementado)_
+- [ ] Testes unitários dos forms e store _(não implementado)_
 
 **Commit final:** `feat: auth and onboarding UI with mock state`
 
