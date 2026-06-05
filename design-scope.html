@@ -1,0 +1,1572 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PipeFlow CRM — Design Scope</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --indigo-50:  #eef2ff;
+      --indigo-100: #e0e7ff;
+      --indigo-200: #c7d2fe;
+      --indigo-400: #818cf8;
+      --indigo-500: #6366f1;
+      --indigo-600: #4f46e5;
+      --indigo-700: #4338ca;
+      --indigo-900: #312e81;
+
+      --green-400: #4ade80;
+      --green-500: #22c55e;
+      --green-600: #16a34a;
+
+      --red-400:  #f87171;
+      --red-500:  #ef4444;
+      --red-600:  #dc2626;
+
+      --amber-400: #fbbf24;
+      --amber-500: #f59e0b;
+
+      --sky-400: #38bdf8;
+      --sky-500: #0ea5e9;
+
+      --slate-50:  #f8fafc;
+      --slate-100: #f1f5f9;
+      --slate-200: #e2e8f0;
+      --slate-300: #cbd5e1;
+      --slate-400: #94a3b8;
+      --slate-500: #64748b;
+      --slate-600: #475569;
+      --slate-700: #334155;
+      --slate-800: #1e293b;
+      --slate-900: #0f172a;
+
+      --white: #ffffff;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.06);
+      --shadow-md: 0 4px 12px rgba(0,0,0,.10), 0 2px 4px rgba(0,0,0,.06);
+      --shadow-lg: 0 10px 30px rgba(0,0,0,.12), 0 4px 8px rgba(0,0,0,.06);
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 16px;
+      --radius-xl: 24px;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--slate-50);
+      color: var(--slate-800);
+      line-height: 1.6;
+      font-size: 14px;
+    }
+
+    /* ── PAGE HEADER ── */
+    .page-header {
+      background: var(--slate-900);
+      padding: 56px 64px;
+      position: relative;
+      overflow: hidden;
+    }
+    .page-header::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 60% 80% at 20% 50%, rgba(99,102,241,.25) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 60% at 80% 20%, rgba(34,197,94,.10) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .page-header::after {
+      content: '';
+      position: absolute;
+      right: -60px; bottom: -60px;
+      width: 320px; height: 320px;
+      border-radius: 50%;
+      border: 1px solid rgba(99,102,241,.15);
+      box-shadow: inset 0 0 60px rgba(99,102,241,.08);
+    }
+    .header-inner {
+      position: relative;
+      z-index: 1;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .logo-mark {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 32px;
+    }
+    .logo-icon {
+      width: 44px; height: 44px;
+      background: var(--indigo-500);
+      border-radius: var(--radius-md);
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 0 0 1px rgba(255,255,255,.1), 0 4px 16px rgba(99,102,241,.4);
+    }
+    .logo-name {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--white);
+      letter-spacing: -.4px;
+    }
+    .logo-name span { color: var(--indigo-400); }
+    .page-header h1 {
+      font-size: 48px;
+      font-weight: 800;
+      color: var(--white);
+      letter-spacing: -1.5px;
+      line-height: 1.1;
+      margin-bottom: 16px;
+    }
+    .page-header h1 em {
+      font-style: normal;
+      background: linear-gradient(135deg, var(--indigo-400), var(--green-400));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .page-header p {
+      font-size: 16px;
+      color: var(--slate-400);
+      max-width: 520px;
+      line-height: 1.7;
+    }
+    .header-meta {
+      display: flex;
+      gap: 24px;
+      margin-top: 40px;
+    }
+    .meta-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.10);
+      border-radius: 999px;
+      font-size: 12px;
+      color: var(--slate-400);
+      font-weight: 500;
+      letter-spacing: .2px;
+    }
+    .meta-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--indigo-400);
+    }
+
+    /* ── MAIN LAYOUT ── */
+    .main {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 64px 64px 96px;
+    }
+
+    /* ── SECTION ── */
+    .section {
+      margin-bottom: 72px;
+    }
+    .section-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--indigo-500);
+      margin-bottom: 8px;
+    }
+    .section-title {
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--slate-900);
+      letter-spacing: -.5px;
+      margin-bottom: 6px;
+    }
+    .section-desc {
+      font-size: 14px;
+      color: var(--slate-500);
+      margin-bottom: 36px;
+      max-width: 560px;
+    }
+    .section-divider {
+      height: 1px;
+      background: linear-gradient(90deg, var(--indigo-200), transparent);
+      margin-bottom: 36px;
+    }
+
+    /* ── GRID HELPERS ── */
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+    .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+    .flex-row { display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-start; }
+    .flex-col { display: flex; flex-direction: column; gap: 12px; }
+
+    /* ── CARD BASE ── */
+    .card {
+      background: var(--white);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--slate-200);
+      padding: 24px;
+    }
+
+    /* ── 1. COLOR PALETTE ── */
+    .palette-group { margin-bottom: 28px; }
+    .palette-group-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--slate-500);
+      margin-bottom: 12px;
+    }
+    .swatches { display: flex; gap: 8px; flex-wrap: wrap; }
+    .swatch {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+    .swatch-block {
+      width: 72px; height: 72px;
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-sm);
+      border: 1px solid rgba(0,0,0,.06);
+    }
+    .swatch-info { text-align: center; }
+    .swatch-name {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--slate-700);
+      display: block;
+    }
+    .swatch-hex {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      color: var(--slate-400);
+      display: block;
+    }
+    .swatch-block.primary    { background: var(--indigo-500); }
+    .swatch-block.primary-l  { background: var(--indigo-400); }
+    .swatch-block.primary-d  { background: var(--indigo-700); }
+    .swatch-block.primary-bg { background: var(--indigo-50); border-color: var(--indigo-200); }
+    .swatch-block.green      { background: var(--green-500); }
+    .swatch-block.green-l    { background: var(--green-400); }
+    .swatch-block.red        { background: var(--red-500); }
+    .swatch-block.red-l      { background: var(--red-400); }
+    .swatch-block.amber      { background: var(--amber-500); }
+    .swatch-block.sky        { background: var(--sky-500); }
+    .swatch-block.s900       { background: var(--slate-900); }
+    .swatch-block.s800       { background: var(--slate-800); }
+    .swatch-block.s700       { background: var(--slate-700); }
+    .swatch-block.s500       { background: var(--slate-500); }
+    .swatch-block.s300       { background: var(--slate-300); }
+    .swatch-block.s100       { background: var(--slate-100); border-color: var(--slate-200); }
+    .swatch-block.white      { background: var(--white); }
+
+    /* ── 2. TYPOGRAPHY ── */
+    .type-scale { display: flex; flex-direction: column; gap: 20px; }
+    .type-row {
+      display: flex;
+      align-items: baseline;
+      gap: 24px;
+      padding: 20px 24px;
+      background: var(--white);
+      border: 1px solid var(--slate-200);
+      border-radius: var(--radius-md);
+    }
+    .type-meta {
+      width: 120px;
+      flex-shrink: 0;
+    }
+    .type-tag {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      font-weight: 500;
+      color: var(--indigo-500);
+      background: var(--indigo-50);
+      padding: 2px 8px;
+      border-radius: 4px;
+      display: block;
+      margin-bottom: 4px;
+    }
+    .type-spec {
+      font-size: 10px;
+      color: var(--slate-400);
+      font-family: 'DM Mono', monospace;
+    }
+    .type-sample { flex: 1; color: var(--slate-900); }
+    .ts-h1 { font-size: 36px; font-weight: 800; letter-spacing: -1px; line-height: 1.15; }
+    .ts-h2 { font-size: 28px; font-weight: 700; letter-spacing: -.7px; line-height: 1.2; }
+    .ts-h3 { font-size: 22px; font-weight: 700; letter-spacing: -.4px; line-height: 1.3; }
+    .ts-h4 { font-size: 18px; font-weight: 600; letter-spacing: -.3px; line-height: 1.35; }
+    .ts-h5 { font-size: 16px; font-weight: 600; letter-spacing: -.2px; line-height: 1.4; }
+    .ts-h6 { font-size: 14px; font-weight: 600; letter-spacing: -.1px; line-height: 1.45; }
+    .ts-body { font-size: 14px; font-weight: 400; line-height: 1.6; }
+    .ts-small { font-size: 12px; font-weight: 400; color: var(--slate-500); line-height: 1.5; }
+    .ts-caption { font-size: 11px; font-weight: 500; letter-spacing: .3px; color: var(--slate-500); }
+    .ts-label { font-size: 12px; font-weight: 600; letter-spacing: .5px; text-transform: uppercase; color: var(--slate-600); }
+    .ts-mono { font-family: 'DM Mono', monospace; font-size: 13px; color: var(--indigo-600); }
+
+    /* ── 3. BUTTONS ── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 18px;
+      border-radius: var(--radius-sm);
+      font-size: 14px;
+      font-weight: 600;
+      font-family: 'Inter', sans-serif;
+      cursor: pointer;
+      border: none;
+      transition: all .15s ease;
+      text-decoration: none;
+    }
+    .btn-sm { padding: 6px 14px; font-size: 12px; }
+    .btn-lg { padding: 12px 24px; font-size: 15px; }
+
+    .btn-primary { background: var(--indigo-500); color: #fff; box-shadow: 0 1px 3px rgba(99,102,241,.3); }
+    .btn-primary:hover { background: var(--indigo-600); }
+    .btn-primary:focus { outline: 2px solid var(--indigo-400); outline-offset: 2px; }
+    .btn-primary:active { background: var(--indigo-700); transform: scale(.98); }
+    .btn-primary.disabled { opacity: .45; cursor: not-allowed; }
+
+    .btn-secondary { background: var(--white); color: var(--slate-700); border: 1px solid var(--slate-300); box-shadow: var(--shadow-sm); }
+    .btn-secondary:hover { background: var(--slate-50); border-color: var(--slate-400); }
+    .btn-secondary:active { transform: scale(.98); }
+
+    .btn-ghost { background: transparent; color: var(--indigo-600); }
+    .btn-ghost:hover { background: var(--indigo-50); }
+
+    .btn-danger { background: var(--red-500); color: #fff; box-shadow: 0 1px 3px rgba(239,68,68,.3); }
+    .btn-danger:hover { background: var(--red-600); }
+
+    .btn-success { background: var(--green-500); color: #fff; }
+    .btn-success:hover { background: var(--green-600); }
+
+    .btn-group-title {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--slate-400);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 10px;
+    }
+
+    /* ── 4. BADGES ── */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .2px;
+      white-space: nowrap;
+    }
+    .badge::before {
+      content: '';
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .badge-novo     { background: #eff6ff; color: #1d4ed8; }
+    .badge-novo::before { background: #3b82f6; }
+    .badge-contato  { background: #f0fdf4; color: #15803d; }
+    .badge-contato::before { background: var(--green-500); }
+    .badge-proposta { background: #fefce8; color: #a16207; }
+    .badge-proposta::before { background: var(--amber-500); }
+    .badge-negocio  { background: #fff7ed; color: #c2410c; }
+    .badge-negocio::before { background: #f97316; }
+    .badge-ganho    { background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; }
+    .badge-ganho::before { background: var(--green-500); }
+    .badge-perdido  { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
+    .badge-perdido::before { background: var(--red-500); }
+
+    /* ── 5. LEAD CARDS ── */
+    .lead-card {
+      background: var(--white);
+      border: 1px solid var(--slate-200);
+      border-radius: var(--radius-md);
+      padding: 18px;
+      box-shadow: var(--shadow-sm);
+      transition: box-shadow .2s;
+    }
+    .lead-card:hover { box-shadow: var(--shadow-md); }
+    .lead-card-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+    .avatar {
+      width: 38px; height: 38px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px; font-weight: 700;
+      color: #fff;
+      flex-shrink: 0;
+    }
+    .av-a { background: linear-gradient(135deg, #6366f1, #8b5cf6); }
+    .av-b { background: linear-gradient(135deg, #0ea5e9, #6366f1); }
+    .av-c { background: linear-gradient(135deg, #22c55e, #0ea5e9); }
+    .lead-name { font-size: 14px; font-weight: 600; color: var(--slate-900); margin-bottom: 2px; }
+    .lead-company { font-size: 12px; color: var(--slate-500); }
+    .lead-meta {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      padding-top: 14px;
+      border-top: 1px solid var(--slate-100);
+    }
+    .lead-meta-item label {
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+      color: var(--slate-400);
+      display: block;
+      margin-bottom: 2px;
+    }
+    .lead-meta-item span {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--slate-700);
+    }
+    .lead-meta-item .value { color: var(--green-600); }
+    .lead-meta-item .deadline { color: var(--amber-500); }
+
+    /* ── 6. INPUT FIELDS ── */
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .input-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--slate-700);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .input-label .required { color: var(--red-500); }
+    .input-field {
+      width: 100%;
+      padding: 9px 14px;
+      border: 1px solid var(--slate-300);
+      border-radius: var(--radius-sm);
+      font-size: 14px;
+      font-family: 'Inter', sans-serif;
+      color: var(--slate-800);
+      background: var(--white);
+      outline: none;
+      transition: border-color .15s, box-shadow .15s;
+    }
+    .input-field::placeholder { color: var(--slate-400); }
+    .input-field.focus {
+      border-color: var(--indigo-500);
+      box-shadow: 0 0 0 3px rgba(99,102,241,.15);
+    }
+    .input-field.error {
+      border-color: var(--red-500);
+      box-shadow: 0 0 0 3px rgba(239,68,68,.10);
+    }
+    .input-field.disabled {
+      background: var(--slate-100);
+      color: var(--slate-400);
+      cursor: not-allowed;
+      border-color: var(--slate-200);
+    }
+    .input-hint {
+      font-size: 11px;
+      color: var(--slate-400);
+    }
+    .input-error-msg {
+      font-size: 11px;
+      color: var(--red-500);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    /* ── 7. SIDEBAR MOCKUP ── */
+    .app-shell {
+      display: flex;
+      height: 520px;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: var(--shadow-lg);
+      border: 1px solid var(--slate-200);
+    }
+    .sidebar {
+      width: 220px;
+      background: var(--slate-900);
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      padding: 0;
+    }
+    .sidebar-top {
+      padding: 20px 16px 16px;
+      border-bottom: 1px solid rgba(255,255,255,.06);
+    }
+    .sidebar-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .sidebar-logo-icon {
+      width: 32px; height: 32px;
+      background: var(--indigo-500);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 0 0 1px rgba(255,255,255,.1);
+    }
+    .sidebar-logo-text {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--white);
+      letter-spacing: -.3px;
+    }
+    .sidebar-logo-text span { color: var(--indigo-400); }
+    .workspace-switcher {
+      margin: 12px 0 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 10px;
+      background: rgba(255,255,255,.05);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+    }
+    .ws-dot {
+      width: 24px; height: 24px;
+      border-radius: 6px;
+      background: linear-gradient(135deg, var(--indigo-500), #8b5cf6);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 700; color: #fff;
+    }
+    .ws-name {
+      flex: 1;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--slate-300);
+    }
+    .ws-chevron { color: var(--slate-500); font-size: 10px; }
+
+    .sidebar-nav {
+      flex: 1;
+      padding: 16px 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .nav-section-label {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--slate-600);
+      padding: 0 8px;
+      margin: 12px 0 6px;
+    }
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 10px;
+      border-radius: 7px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--slate-400);
+      cursor: pointer;
+      transition: all .15s;
+    }
+    .nav-item:hover { background: rgba(255,255,255,.06); color: var(--slate-200); }
+    .nav-item.active {
+      background: rgba(99,102,241,.15);
+      color: var(--indigo-300);
+    }
+    .nav-item.active .nav-icon { color: var(--indigo-400); }
+    .nav-icon { width: 16px; height: 16px; flex-shrink: 0; opacity: .8; }
+    .nav-badge {
+      margin-left: auto;
+      background: var(--indigo-500);
+      color: #fff;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 1px 6px;
+      border-radius: 999px;
+    }
+
+    .sidebar-bottom {
+      padding: 12px 10px 16px;
+      border-top: 1px solid rgba(255,255,255,.06);
+    }
+    .user-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 10px;
+      border-radius: 7px;
+      cursor: pointer;
+    }
+    .user-row:hover { background: rgba(255,255,255,.05); }
+    .user-avatar {
+      width: 30px; height: 30px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 700; color: #fff;
+    }
+    .user-info { flex: 1; min-width: 0; }
+    .user-name {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--slate-200);
+      display: block;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .user-plan {
+      font-size: 10px;
+      color: var(--slate-500);
+    }
+
+    /* ── APP CONTENT AREA ── */
+    .app-content {
+      flex: 1;
+      background: var(--slate-50);
+      overflow-y: auto;
+      padding: 24px;
+    }
+    .app-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+    }
+    .app-page-title { font-size: 20px; font-weight: 700; color: var(--slate-900); letter-spacing: -.4px; }
+    .app-topbar-actions { display: flex; gap: 8px; }
+
+    /* ── 8. METRIC CARDS ── */
+    .metrics-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 20px; }
+    .metric-card {
+      background: var(--white);
+      border: 1px solid var(--slate-200);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      box-shadow: var(--shadow-sm);
+    }
+    .metric-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+    .metric-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--slate-500);
+      text-transform: uppercase;
+      letter-spacing: .5px;
+    }
+    .metric-icon {
+      width: 28px; height: 28px;
+      border-radius: 7px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .metric-value {
+      font-size: 26px;
+      font-weight: 800;
+      color: var(--slate-900);
+      letter-spacing: -1px;
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+    .metric-delta {
+      font-size: 11px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 3px;
+    }
+    .delta-up { color: var(--green-500); }
+    .delta-down { color: var(--red-500); }
+
+    /* ── 9. KANBAN ── */
+    .kanban-board {
+      display: flex;
+      gap: 12px;
+      overflow-x: auto;
+      padding-bottom: 8px;
+    }
+    .kanban-col {
+      width: 200px;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .kanban-col-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 12px;
+      background: var(--white);
+      border: 1px solid var(--slate-200);
+      border-radius: var(--radius-sm);
+    }
+    .col-title {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--slate-700);
+      letter-spacing: .2px;
+    }
+    .col-count {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--slate-400);
+      background: var(--slate-100);
+      padding: 1px 6px;
+      border-radius: 999px;
+    }
+    .kanban-card {
+      background: var(--white);
+      border: 1px solid var(--slate-200);
+      border-radius: var(--radius-sm);
+      padding: 12px;
+      box-shadow: 0 1px 2px rgba(0,0,0,.05);
+      cursor: grab;
+      transition: box-shadow .15s, transform .15s;
+    }
+    .kanban-card:hover { box-shadow: var(--shadow-md); transform: translateY(-1px); }
+    .kanban-card-title {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--slate-800);
+      margin-bottom: 4px;
+      line-height: 1.3;
+    }
+    .kanban-card-lead {
+      font-size: 11px;
+      color: var(--slate-400);
+      margin-bottom: 10px;
+    }
+    .kanban-card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .kc-value {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--green-600);
+    }
+    .kc-avatar {
+      width: 20px; height: 20px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--indigo-500), #8b5cf6);
+      font-size: 9px; font-weight: 700; color: #fff;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .col-accent { height: 2px; border-radius: 999px; margin-bottom: 2px; }
+    .accent-blue   { background: #3b82f6; }
+    .accent-green  { background: var(--green-500); }
+    .accent-yellow { background: var(--amber-500); }
+    .accent-orange { background: #f97316; }
+    .accent-emerald{ background: #10b981; }
+    .accent-red    { background: var(--red-500); }
+
+    /* ── 10. ICONOGRAPHY ── */
+    .icon-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .icon-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      padding: 16px;
+      background: var(--white);
+      border: 1px solid var(--slate-200);
+      border-radius: var(--radius-md);
+      width: 88px;
+    }
+    .icon-item svg {
+      color: var(--slate-600);
+    }
+    .icon-name {
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--slate-400);
+      text-align: center;
+      letter-spacing: .2px;
+    }
+
+    /* ── 11. DESIGN PRINCIPLES ── */
+    .principles-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .principle-card {
+      padding: 24px;
+      background: var(--white);
+      border: 1px solid var(--slate-200);
+      border-radius: var(--radius-md);
+      position: relative;
+      overflow: hidden;
+    }
+    .principle-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--indigo-500), #8b5cf6);
+    }
+    .principle-icon {
+      width: 40px; height: 40px;
+      border-radius: 10px;
+      background: var(--indigo-50);
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 14px;
+      color: var(--indigo-500);
+    }
+    .principle-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--slate-900);
+      margin-bottom: 6px;
+      letter-spacing: -.2px;
+    }
+    .principle-text {
+      font-size: 13px;
+      color: var(--slate-500);
+      line-height: 1.65;
+    }
+
+    /* ── FOOTER ── */
+    .page-footer {
+      background: var(--slate-900);
+      padding: 32px 64px;
+      text-align: center;
+    }
+    .footer-text {
+      font-size: 12px;
+      color: var(--slate-600);
+    }
+    .footer-text strong { color: var(--slate-400); }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════
+     PAGE HEADER
+═══════════════════════════════════════════════ -->
+<header class="page-header">
+  <div class="header-inner">
+    <div class="logo-mark">
+      <div class="logo-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+        </svg>
+      </div>
+      <span class="logo-name">Pipe<span>Flow</span> CRM</span>
+    </div>
+    <h1>Design <em>Scope</em></h1>
+    <p>Documento de referência visual do sistema de design — paleta, tipografia, componentes e princípios que definem a identidade do produto.</p>
+    <div class="header-meta">
+      <span class="meta-pill"><span class="meta-dot"></span>v1.0.0</span>
+      <span class="meta-pill"><span class="meta-dot" style="background:var(--green-400)"></span>Junho 2026</span>
+      <span class="meta-pill"><span class="meta-dot" style="background:var(--amber-400)"></span>Tailwind CSS v4 + shadcn/ui</span>
+    </div>
+  </div>
+</header>
+
+<main class="main">
+
+  <!-- ═══════════════════════════════════════════════
+       1. COLOR PALETTE
+  ═══════════════════════════════════════════════ -->
+  <section class="section">
+    <p class="section-label">01 — Identidade Visual</p>
+    <h2 class="section-title">Paleta de Cores</h2>
+    <p class="section-desc">Todas as cores do sistema. A primária define a identidade da marca; os acentos funcionais comunicam estados; os neutros estruturam a interface.</p>
+    <div class="section-divider"></div>
+
+    <div class="palette-group">
+      <p class="palette-group-label">Primária — Indigo</p>
+      <div class="swatches">
+        <div class="swatch"><div class="swatch-block primary-bg"></div><div class="swatch-info"><span class="swatch-name">Indigo 50</span><span class="swatch-hex">#eef2ff</span></div></div>
+        <div class="swatch"><div class="swatch-block primary-l"></div><div class="swatch-info"><span class="swatch-name">Indigo 400</span><span class="swatch-hex">#818cf8</span></div></div>
+        <div class="swatch"><div class="swatch-block primary"></div><div class="swatch-info"><span class="swatch-name">Indigo 500 ★</span><span class="swatch-hex">#6366f1</span></div></div>
+        <div class="swatch"><div class="swatch-block primary-d" style="background:#4f46e5"></div><div class="swatch-info"><span class="swatch-name">Indigo 600</span><span class="swatch-hex">#4f46e5</span></div></div>
+        <div class="swatch"><div class="swatch-block primary-d"></div><div class="swatch-info"><span class="swatch-name">Indigo 700</span><span class="swatch-hex">#4338ca</span></div></div>
+      </div>
+    </div>
+
+    <div class="palette-group">
+      <p class="palette-group-label">Acentos Funcionais</p>
+      <div class="swatches">
+        <div class="swatch"><div class="swatch-block green-l"></div><div class="swatch-info"><span class="swatch-name">Green 400</span><span class="swatch-hex">#4ade80</span></div></div>
+        <div class="swatch"><div class="swatch-block green"></div><div class="swatch-info"><span class="swatch-name">Green 500 ★</span><span class="swatch-hex">#22c55e</span></div></div>
+        <div class="swatch"><div class="swatch-block red-l"></div><div class="swatch-info"><span class="swatch-name">Red 400</span><span class="swatch-hex">#f87171</span></div></div>
+        <div class="swatch"><div class="swatch-block red"></div><div class="swatch-info"><span class="swatch-name">Red 500 ★</span><span class="swatch-hex">#ef4444</span></div></div>
+        <div class="swatch"><div class="swatch-block amber"></div><div class="swatch-info"><span class="swatch-name">Amber 500</span><span class="swatch-hex">#f59e0b</span></div></div>
+        <div class="swatch"><div class="swatch-block sky"></div><div class="swatch-info"><span class="swatch-name">Sky 500</span><span class="swatch-hex">#0ea5e9</span></div></div>
+      </div>
+    </div>
+
+    <div class="palette-group">
+      <p class="palette-group-label">Neutros — Slate</p>
+      <div class="swatches">
+        <div class="swatch"><div class="swatch-block s900"></div><div class="swatch-info"><span class="swatch-name">Slate 900</span><span class="swatch-hex">#0f172a</span></div></div>
+        <div class="swatch"><div class="swatch-block s800"></div><div class="swatch-info"><span class="swatch-name">Slate 800</span><span class="swatch-hex">#1e293b</span></div></div>
+        <div class="swatch"><div class="swatch-block s700"></div><div class="swatch-info"><span class="swatch-name">Slate 700</span><span class="swatch-hex">#334155</span></div></div>
+        <div class="swatch"><div class="swatch-block s500"></div><div class="swatch-info"><span class="swatch-name">Slate 500</span><span class="swatch-hex">#64748b</span></div></div>
+        <div class="swatch"><div class="swatch-block s300"></div><div class="swatch-info"><span class="swatch-name">Slate 300</span><span class="swatch-hex">#cbd5e1</span></div></div>
+        <div class="swatch"><div class="swatch-block s100"></div><div class="swatch-info"><span class="swatch-name">Slate 100</span><span class="swatch-hex">#f1f5f9</span></div></div>
+        <div class="swatch"><div class="swatch-block white"></div><div class="swatch-info"><span class="swatch-name">White</span><span class="swatch-hex">#ffffff</span></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════
+       2. TYPOGRAPHY
+  ═══════════════════════════════════════════════ -->
+  <section class="section">
+    <p class="section-label">02 — Identidade Visual</p>
+    <h2 class="section-title">Tipografia</h2>
+    <p class="section-desc">Fonte primária: <strong>Inter</strong> (Google Fonts). Monospace: <strong>DM Mono</strong> para código, tokens e valores técnicos.</p>
+    <div class="section-divider"></div>
+
+    <div class="type-scale">
+      <div class="type-row">
+        <div class="type-meta"><span class="type-tag">H1</span><span class="type-spec">36px / 800 / -1px</span></div>
+        <div class="type-sample ts-h1">PipeFlow CRM</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta"><span class="type-tag">H2</span><span class="type-spec">28px / 700 / -.7px</span></div>
+        <div class="type-sample ts-h2">Pipeline de Vendas</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta"><span class="type-tag">H3</span><span class="type-spec">22px / 700 / -.4px</span></div>
+        <div class="type-sample ts-h3">Gestão de Leads</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta"><span class="type-tag">H4</span><span class="type-spec">18px / 600 / -.3px</span></div>
+        <div class="type-sample ts-h4">Dashboard de Métricas</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta"><span class="type-tag">H5</span><span class="type-spec">16px / 600 / -.2px</span></div>
+        <div class="type-sample ts-h5">Registro de Atividades</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta"><span class="type-tag">H6</span><span class="type-spec">14px / 600 / -.1px</span></div>
+        <div class="type-sample ts-h6">Configurações do Workspace</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta"><span class="type-tag">Body</span><span class="type-spec">14px / 400 / 1.6</span></div>
+        <div class="type-sample ts-body">Pequenas e médias empresas perdem oportunidades por falta de organização no processo comercial. O PipeFlow CRM centraliza leads, negócios e interações em um único lugar.</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta"><span class="type-tag">Small</span><span class="type-spec">12px / 400</span></div>
+        <div class="type-sample ts-small">Texto auxiliar, descrições e conteúdo de suporte com menor hierarquia visual.</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta"><span class="type-tag">Caption</span><span class="type-spec">11px / 500 / +.3px</span></div>
+        <div class="type-sample ts-caption">Atualizado há 3 minutos · Responsável: Ana Costa</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta"><span class="type-tag">Label</span><span class="type-spec">12px / 600 / +.5px / UP</span></div>
+        <div class="type-sample ts-label">Total de Leads</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta"><span class="type-tag">Mono</span><span class="type-spec">DM Mono 13px</span></div>
+        <div class="type-sample ts-mono">R$ 48.500,00 · workspace_id: a1b2c3</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════
+       3. BUTTONS
+  ═══════════════════════════════════════════════ -->
+  <section class="section">
+    <p class="section-label">03 — Componentes</p>
+    <h2 class="section-title">Botões</h2>
+    <p class="section-desc">Quatro variantes base com três tamanhos. Estados: default, hover (simulado via classe), focus, active e disabled.</p>
+    <div class="section-divider"></div>
+
+    <div class="card" style="display:flex;flex-direction:column;gap:28px;">
+      <div>
+        <p class="btn-group-title">Variantes — Tamanho Padrão</p>
+        <div class="flex-row">
+          <button class="btn btn-primary">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Novo Lead
+          </button>
+          <button class="btn btn-secondary">Exportar CSV</button>
+          <button class="btn btn-ghost">Ver Detalhes</button>
+          <button class="btn btn-danger">Excluir Lead</button>
+          <button class="btn btn-success">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            Confirmar
+          </button>
+        </div>
+      </div>
+
+      <div>
+        <p class="btn-group-title">Tamanhos</p>
+        <div class="flex-row" style="align-items:center;">
+          <button class="btn btn-primary btn-sm">Small</button>
+          <button class="btn btn-primary">Default</button>
+          <button class="btn btn-primary btn-lg">Large</button>
+        </div>
+      </div>
+
+      <div>
+        <p class="btn-group-title">Estados</p>
+        <div class="flex-row">
+          <button class="btn btn-primary">Default</button>
+          <button class="btn btn-primary" style="background:var(--indigo-600);">Hover</button>
+          <button class="btn btn-primary" style="outline:2px solid var(--indigo-400);outline-offset:2px;">Focus</button>
+          <button class="btn btn-primary" style="background:var(--indigo-700);transform:scale(.98);">Active</button>
+          <button class="btn btn-primary disabled" disabled>Disabled</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════
+       4. STATUS BADGES
+  ═══════════════════════════════════════════════ -->
+  <section class="section">
+    <p class="section-label">04 — Componentes</p>
+    <h2 class="section-title">Badges de Status do Pipeline</h2>
+    <p class="section-desc">Tags que representam cada etapa do funil Kanban. Cor e dot são únicos por etapa para facilitar scanning visual.</p>
+    <div class="section-divider"></div>
+
+    <div class="card">
+      <div class="flex-row">
+        <span class="badge badge-novo">Novo Lead</span>
+        <span class="badge badge-contato">Contato Realizado</span>
+        <span class="badge badge-proposta">Proposta Enviada</span>
+        <span class="badge badge-negocio">Negociação</span>
+        <span class="badge badge-ganho">Fechado Ganho</span>
+        <span class="badge badge-perdido">Fechado Perdido</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════
+       5. LEAD / DEAL CARDS
+  ═══════════════════════════════════════════════ -->
+  <section class="section">
+    <p class="section-label">05 — Componentes</p>
+    <h2 class="section-title">Cards de Lead e Negócio</h2>
+    <p class="section-desc">Cards usados na listagem de leads e no detalhe do contato. Hierarquia clara: nome → empresa → metadados → valores.</p>
+    <div class="section-divider"></div>
+
+    <div class="grid-3">
+      <div class="lead-card">
+        <div class="lead-card-header">
+          <div class="avatar av-a">AC</div>
+          <div>
+            <div class="lead-name">Ana Costa</div>
+            <div class="lead-company">Nexus Tecnologia · CEO</div>
+          </div>
+        </div>
+        <div style="margin-bottom:12px;"><span class="badge badge-negocio">Negociação</span></div>
+        <div class="lead-meta">
+          <div class="lead-meta-item"><label>Valor</label><span class="value">R$ 28.000</span></div>
+          <div class="lead-meta-item"><label>Prazo</label><span class="deadline">12 jun</span></div>
+          <div class="lead-meta-item"><label>Responsável</label><span>João Silva</span></div>
+          <div class="lead-meta-item"><label>Etapa</label><span>Pipeline</span></div>
+        </div>
+      </div>
+
+      <div class="lead-card">
+        <div class="lead-card-header">
+          <div class="avatar av-b">MR</div>
+          <div>
+            <div class="lead-name">Marcos Ribeiro</div>
+            <div class="lead-company">Alfa Solutions · Dir. Comercial</div>
+          </div>
+        </div>
+        <div style="margin-bottom:12px;"><span class="badge badge-proposta">Proposta Enviada</span></div>
+        <div class="lead-meta">
+          <div class="lead-meta-item"><label>Valor</label><span class="value">R$ 14.500</span></div>
+          <div class="lead-meta-item"><label>Prazo</label><span>20 jun</span></div>
+          <div class="lead-meta-item"><label>Responsável</label><span>Carla Dias</span></div>
+          <div class="lead-meta-item"><label>Etapa</label><span>Pipeline</span></div>
+        </div>
+      </div>
+
+      <div class="lead-card">
+        <div class="lead-card-header">
+          <div class="avatar av-c">LP</div>
+          <div>
+            <div class="lead-name">Larissa Pinto</div>
+            <div class="lead-company">Freelancer · Dev Frontend</div>
+          </div>
+        </div>
+        <div style="margin-bottom:12px;"><span class="badge badge-ganho">Fechado Ganho</span></div>
+        <div class="lead-meta">
+          <div class="lead-meta-item"><label>Valor</label><span class="value">R$ 6.000</span></div>
+          <div class="lead-meta-item"><label>Prazo</label><span>—</span></div>
+          <div class="lead-meta-item"><label>Responsável</label><span>João Silva</span></div>
+          <div class="lead-meta-item"><label>Etapa</label><span>Pipeline</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════
+       6. INPUT FIELDS
+  ═══════════════════════════════════════════════ -->
+  <section class="section">
+    <p class="section-label">06 — Componentes</p>
+    <h2 class="section-title">Campos de Formulário</h2>
+    <p class="section-desc">Estados visuais de inputs: default, focus, erro e desabilitado. Altura padrão: 38px. Border radius: 6px.</p>
+    <div class="section-divider"></div>
+
+    <div class="card">
+      <div class="grid-2" style="gap:24px;">
+        <div class="input-group">
+          <label class="input-label">Nome completo <span class="required">*</span></label>
+          <input type="text" class="input-field" placeholder="Ex: Ana Costa" />
+          <span class="input-hint">Como o lead prefere ser chamado.</span>
+        </div>
+        <div class="input-group">
+          <label class="input-label">E-mail</label>
+          <input type="text" class="input-field focus" value="ana@nexus.com.br" />
+          <span class="input-hint">Usado para envio de propostas via Resend.</span>
+        </div>
+        <div class="input-group">
+          <label class="input-label">Valor estimado <span class="required">*</span></label>
+          <input type="text" class="input-field error" value="abc" />
+          <span class="input-error-msg">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            Insira um valor numérico válido em R$.
+          </span>
+        </div>
+        <div class="input-group">
+          <label class="input-label">Workspace</label>
+          <input type="text" class="input-field disabled" value="Nexus Tecnologia" disabled />
+          <span class="input-hint">Não pode ser alterado após criação.</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════
+       7. APP SHELL (SIDEBAR + DASHBOARD)
+  ═══════════════════════════════════════════════ -->
+  <section class="section">
+    <p class="section-label">07 — Layout</p>
+    <h2 class="section-title">Shell da Aplicação</h2>
+    <p class="section-desc">Sidebar fixa à esquerda (220px) com fundo slate-900 + área de conteúdo com scroll. Dashboard exibe metric cards e itens com prazo próximo.</p>
+    <div class="section-divider"></div>
+
+    <div class="app-shell">
+      <!-- SIDEBAR -->
+      <aside class="sidebar">
+        <div class="sidebar-top">
+          <div class="sidebar-logo">
+            <div class="sidebar-logo-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+              </svg>
+            </div>
+            <span class="sidebar-logo-text">Pipe<span>Flow</span></span>
+          </div>
+          <div class="workspace-switcher">
+            <div class="ws-dot">N</div>
+            <span class="ws-name">Nexus Tecnologia</span>
+            <span class="ws-chevron">▾</span>
+          </div>
+        </div>
+
+        <nav class="sidebar-nav">
+          <span class="nav-section-label">Principal</span>
+          <div class="nav-item active">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+            Dashboard
+          </div>
+          <div class="nav-item">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            Leads
+            <span class="nav-badge">48</span>
+          </div>
+          <div class="nav-item">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+            Pipeline
+          </div>
+          <div class="nav-item">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            Atividades
+          </div>
+
+          <span class="nav-section-label">Workspace</span>
+          <div class="nav-item">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93l-1.41 1.41M4.93 4.93l1.41 1.41M12 2v2M12 20v2M2 12h2M20 12h2M4.93 19.07l1.41-1.41M19.07 19.07l-1.41-1.41"/></svg>
+            Configurações
+          </div>
+          <div class="nav-item">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12V22H4V12"/><path d="M22 7H2v5h20V7z"/><path d="M12 22V7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg>
+            Planos
+          </div>
+        </nav>
+
+        <div class="sidebar-bottom">
+          <div class="user-row">
+            <div class="user-avatar">JS</div>
+            <div class="user-info">
+              <span class="user-name">João Silva</span>
+              <span class="user-plan">Admin · Plano Pro</span>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- CONTENT -->
+      <div class="app-content">
+        <div class="app-topbar">
+          <span class="app-page-title">Dashboard</span>
+          <div class="app-topbar-actions">
+            <button class="btn btn-secondary btn-sm">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+              Jun 2026
+            </button>
+            <button class="btn btn-primary btn-sm">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              Novo Lead
+            </button>
+          </div>
+        </div>
+
+        <!-- METRIC CARDS -->
+        <div class="metrics-grid">
+          <div class="metric-card">
+            <div class="metric-header">
+              <span class="metric-label">Total de Leads</span>
+              <div class="metric-icon" style="background:#eff6ff;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+              </div>
+            </div>
+            <div class="metric-value">48</div>
+            <div class="metric-delta delta-up">↑ 12% esse mês</div>
+          </div>
+
+          <div class="metric-card">
+            <div class="metric-header">
+              <span class="metric-label">Negócios Abertos</span>
+              <div class="metric-icon" style="background:var(--indigo-50);">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--indigo-500)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+              </div>
+            </div>
+            <div class="metric-value">17</div>
+            <div class="metric-delta delta-up">↑ 3 novos</div>
+          </div>
+
+          <div class="metric-card">
+            <div class="metric-header">
+              <span class="metric-label">Valor do Pipeline</span>
+              <div class="metric-icon" style="background:#f0fdf4;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--green-500)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+              </div>
+            </div>
+            <div class="metric-value" style="font-size:20px;">R$148k</div>
+            <div class="metric-delta delta-up">↑ R$22k vs. mai</div>
+          </div>
+
+          <div class="metric-card">
+            <div class="metric-header">
+              <span class="metric-label">Taxa de Conversão</span>
+              <div class="metric-icon" style="background:#fef9c3;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--amber-500)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+              </div>
+            </div>
+            <div class="metric-value">31%</div>
+            <div class="metric-delta delta-down">↓ 2% vs. mai</div>
+          </div>
+        </div>
+
+        <!-- MINI LIST -->
+        <div style="background:var(--white);border:1px solid var(--slate-200);border-radius:var(--radius-md);padding:16px;box-shadow:var(--shadow-sm);">
+          <p style="font-size:12px;font-weight:700;color:var(--slate-700);margin-bottom:12px;letter-spacing:-.1px;">Negócios com prazo próximo</p>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <div style="display:flex;align-items:center;gap:10px;padding:8px;border-radius:6px;background:var(--slate-50);">
+              <div class="avatar av-a" style="width:28px;height:28px;font-size:10px;">AC</div>
+              <div style="flex:1;min-width:0;">
+                <div style="font-size:12px;font-weight:600;color:var(--slate-800);">Proposta Nexus</div>
+                <div style="font-size:11px;color:var(--slate-400);">Ana Costa</div>
+              </div>
+              <span style="font-size:11px;font-weight:700;color:var(--amber-500);">12 jun</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;padding:8px;border-radius:6px;background:var(--slate-50);">
+              <div class="avatar av-b" style="width:28px;height:28px;font-size:10px;">MR</div>
+              <div style="flex:1;min-width:0;">
+                <div style="font-size:12px;font-weight:600;color:var(--slate-800);">Contrato Alfa</div>
+                <div style="font-size:11px;color:var(--slate-400);">Marcos Ribeiro</div>
+              </div>
+              <span style="font-size:11px;font-weight:700;color:var(--red-500);">Atrasado</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════
+       8. KANBAN BOARD
+  ═══════════════════════════════════════════════ -->
+  <section class="section">
+    <p class="section-label">08 — Componentes</p>
+    <h2 class="section-title">Pipeline Kanban</h2>
+    <p class="section-desc">Seis colunas fixas ordenadas. Cards arrastáveis via @dnd-kit. Cada coluna tem acento colorido único para identificação rápida.</p>
+    <div class="section-divider"></div>
+
+    <div style="background:var(--slate-100);border-radius:var(--radius-lg);padding:20px;border:1px solid var(--slate-200);">
+      <div class="kanban-board">
+        <!-- COL 1 -->
+        <div class="kanban-col">
+          <div class="col-accent accent-blue"></div>
+          <div class="kanban-col-header">
+            <span class="col-title">Novo Lead</span>
+            <span class="col-count">3</span>
+          </div>
+          <div class="kanban-card">
+            <div class="kanban-card-title">Integração ERP</div>
+            <div class="kanban-card-lead">Beta Corp</div>
+            <div class="kanban-card-footer"><span class="kc-value">R$ 12k</span><div class="kc-avatar">J</div></div>
+          </div>
+          <div class="kanban-card">
+            <div class="kanban-card-title">Consultoria BI</div>
+            <div class="kanban-card-lead">Omega SA</div>
+            <div class="kanban-card-footer"><span class="kc-value">R$ 8k</span><div class="kc-avatar" style="background:linear-gradient(135deg,#0ea5e9,#6366f1);">C</div></div>
+          </div>
+        </div>
+        <!-- COL 2 -->
+        <div class="kanban-col">
+          <div class="col-accent accent-green"></div>
+          <div class="kanban-col-header">
+            <span class="col-title">Contato Realizado</span>
+            <span class="col-count">2</span>
+          </div>
+          <div class="kanban-card">
+            <div class="kanban-card-title">Plataforma SaaS</div>
+            <div class="kanban-card-lead">Nexus Tech</div>
+            <div class="kanban-card-footer"><span class="kc-value">R$ 32k</span><div class="kc-avatar">A</div></div>
+          </div>
+        </div>
+        <!-- COL 3 -->
+        <div class="kanban-col">
+          <div class="col-accent accent-yellow"></div>
+          <div class="kanban-col-header">
+            <span class="col-title">Proposta Enviada</span>
+            <span class="col-count">4</span>
+          </div>
+          <div class="kanban-card">
+            <div class="kanban-card-title">Contrato Alfa</div>
+            <div class="kanban-card-lead">Alfa Solutions</div>
+            <div class="kanban-card-footer"><span class="kc-value">R$ 14.5k</span><div class="kc-avatar" style="background:linear-gradient(135deg,#22c55e,#0ea5e9);">M</div></div>
+          </div>
+          <div class="kanban-card">
+            <div class="kanban-card-title">Suporte Premium</div>
+            <div class="kanban-card-lead">Delta Ltd</div>
+            <div class="kanban-card-footer"><span class="kc-value">R$ 5k</span><div class="kc-avatar">J</div></div>
+          </div>
+        </div>
+        <!-- COL 4 -->
+        <div class="kanban-col">
+          <div class="col-accent accent-orange"></div>
+          <div class="kanban-col-header">
+            <span class="col-title">Negociação</span>
+            <span class="col-count">2</span>
+          </div>
+          <div class="kanban-card" style="border-color:var(--indigo-200);box-shadow:0 0 0 2px rgba(99,102,241,.12);">
+            <div class="kanban-card-title">Proposta Nexus</div>
+            <div class="kanban-card-lead">Ana Costa</div>
+            <div class="kanban-card-footer"><span class="kc-value">R$ 28k</span><div class="kc-avatar">J</div></div>
+          </div>
+        </div>
+        <!-- COL 5 -->
+        <div class="kanban-col">
+          <div class="col-accent accent-emerald"></div>
+          <div class="kanban-col-header">
+            <span class="col-title">Fechado Ganho</span>
+            <span class="col-count">5</span>
+          </div>
+          <div class="kanban-card" style="border-left:3px solid var(--green-500);">
+            <div class="kanban-card-title">Dev Frontend</div>
+            <div class="kanban-card-lead">Larissa Pinto</div>
+            <div class="kanban-card-footer"><span class="kc-value">R$ 6k</span><div class="kc-avatar" style="background:linear-gradient(135deg,#22c55e,#0ea5e9);">L</div></div>
+          </div>
+        </div>
+        <!-- COL 6 -->
+        <div class="kanban-col">
+          <div class="col-accent accent-red"></div>
+          <div class="kanban-col-header">
+            <span class="col-title">Fechado Perdido</span>
+            <span class="col-count">1</span>
+          </div>
+          <div class="kanban-card" style="border-left:3px solid var(--red-400);opacity:.7;">
+            <div class="kanban-card-title">CRM Gamma</div>
+            <div class="kanban-card-lead">Gamma Inc</div>
+            <div class="kanban-card-footer"><span style="font-size:12px;font-weight:700;color:var(--red-400);">R$ 19k</span><div class="kc-avatar" style="background:var(--slate-400);">R</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════
+       9. ICONOGRAPHY
+  ═══════════════════════════════════════════════ -->
+  <section class="section">
+    <p class="section-label">09 — Identidade Visual</p>
+    <h2 class="section-title">Iconografia</h2>
+    <p class="section-desc">Ícones Lucide (stroke, 2px, 16–20px). Sempre monocromáticos. Cor herda do contexto — slate-600 neutro, indigo-500 ativo, vermelho para destrutivo.</p>
+    <div class="section-divider"></div>
+
+    <div class="icon-grid">
+      <div class="icon-item">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        <span class="icon-name">dashboard</span>
+      </div>
+      <div class="icon-item">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        <span class="icon-name">leads</span>
+      </div>
+      <div class="icon-item">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        <span class="icon-name">pipeline</span>
+      </div>
+      <div class="icon-item">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        <span class="icon-name">activity</span>
+      </div>
+      <div class="icon-item">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        <span class="icon-name">revenue</span>
+      </div>
+      <div class="icon-item">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        <span class="icon-name">deadline</span>
+      </div>
+      <div class="icon-item">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        <span class="icon-name">email</span>
+      </div>
+      <div class="icon-item">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 9.91a16 16 0 0 0 6.16 6.16l.91-.91a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        <span class="icon-name">call</span>
+      </div>
+      <div class="icon-item">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        <span class="icon-name">note</span>
+      </div>
+      <div class="icon-item">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93l-1.41 1.41M4.93 4.93l1.41 1.41M12 2v2M12 20v2M2 12h2M20 12h2M4.93 19.07l1.41-1.41M19.07 19.07l-1.41-1.41"/></svg>
+        <span class="icon-name">settings</span>
+      </div>
+      <div class="icon-item">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
+        <span class="icon-name">meeting</span>
+      </div>
+      <div class="icon-item">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <span class="icon-name">search</span>
+      </div>
+      <div class="icon-item">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        <span class="icon-name">add</span>
+      </div>
+      <div class="icon-item">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+        <span class="icon-name">delete</span>
+      </div>
+      <div class="icon-item">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+        <span class="icon-name">edit</span>
+      </div>
+      <div class="icon-item">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        <span class="icon-name">export</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════
+       10. DESIGN PRINCIPLES
+  ═══════════════════════════════════════════════ -->
+  <section class="section">
+    <p class="section-label">10 — Filosofia</p>
+    <h2 class="section-title">Princípios de Design</h2>
+    <p class="section-desc">Os princípios que guiam decisões de UX e UI ao longo do desenvolvimento do produto.</p>
+    <div class="section-divider"></div>
+
+    <div class="principles-grid">
+      <div class="principle-card">
+        <div class="principle-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        </div>
+        <div class="principle-title">Clareza sobre Complexidade</div>
+        <p class="principle-text">Cada tela deve comunicar uma coisa principal. Hierarquia visual clara — tamanho, peso e cor guiam o olhar sem necessidade de instrução. Nenhum elemento está presente por decoração.</p>
+      </div>
+
+      <div class="principle-card">
+        <div class="principle-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="13 17 18 12 13 7"/><polyline points="6 17 11 12 6 7"/></svg>
+        </div>
+        <div class="principle-title">Velocidade é Funcionalidade</div>
+        <p class="principle-text">Um CRM lento é um CRM que não é usado. Componentes otimizados para render mínimo. Server Components por padrão. Feedback imediato em toda interação com estado de loading explícito.</p>
+      </div>
+
+      <div class="principle-card">
+        <div class="principle-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        </div>
+        <div class="principle-title">Segurança por Padrão</div>
+        <p class="principle-text">RLS no Supabase garante que nenhum dado vaze entre workspaces. Nunca bypassar via service role no cliente. Toda operação destrutiva exige confirmação explícita do usuário.</p>
+      </div>
+
+      <div class="principle-card">
+        <div class="principle-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </div>
+        <div class="principle-title">Acessibilidade é Obrigatória</div>
+        <p class="principle-text">WCAG 2.2 AA em todos os componentes interativos. Contraste mínimo 4.5:1 para texto, 3:1 para elementos gráficos. Navegação completa por teclado. Focus ring sempre visível.</p>
+      </div>
+
+      <div class="principle-card">
+        <div class="principle-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+        </div>
+        <div class="principle-title">Consistência Sistemática</div>
+        <p class="principle-text">Tokens de design centralizados em variáveis CSS. Mesmos valores de espaçamento, raio e sombra em todo o sistema. Novos componentes seguem os existentes — não inventam novos padrões.</p>
+      </div>
+
+      <div class="principle-card">
+        <div class="principle-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+        </div>
+        <div class="principle-title">Dados no Centro</div>
+        <p class="principle-text">O produto existe para surfaçar informação acionável. Dashboard e métricas não são enfeite — são a razão do CRM existir. Cada decisão visual serve aos dados, não o contrário.</p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="page-footer">
+  <p class="footer-text"><strong>PipeFlow CRM — Design Scope v1.0</strong> · Junho 2026 · Tailwind CSS v4 + shadcn/ui + Next.js 14</p>
+</footer>
+
+</body>
+</html>
