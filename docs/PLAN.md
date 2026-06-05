@@ -125,24 +125,28 @@ FASE 3 — PRODUTO   (M12 → M14) Stripe, Resend, Deploy
 ---
 
 ### M5 · Pipeline Kanban (UI)
-**Branch:** `feat/pipeline-ui`
+**Branch:** `feat/pipeline-ui` → mergeado em `main` (PR #1)
 **Objetivo:** Board Kanban visual com drag-and-drop entre colunas — dados mock persistidos no Zustand.
 
 #### Entregas
-- [ ] Tipos TypeScript: `Deal`, `DealStage`, `PipelineColumn`
-- [ ] Fixtures mock: `src/mocks/deals.ts` com negócios distribuídos nas 6 etapas
-- [ ] Zustand store `useDealsStore`: `columns`, `deals[]`, `moveDeal()`, CRUD actions
-- [ ] Página `/pipeline`: board com 6 colunas fixas
+- [x] Tipos TypeScript: `Deal`, `DealStage`, `PipelineColumn`, `PIPELINE_COLUMNS`
+- [x] Fixtures mock: `src/mocks/deals.ts` com 12 negócios distribuídos nas 6 etapas
+- [x] Zustand store `useDealsStore`: `deals[]`, `moveDeal()`, `addDeal()`, `updateDeal()`, `deleteDeal()`, seletores
+- [x] Página `/pipeline`: board com 6 colunas fixas (Server Component + `PipelineBoard` Client Component)
   - `Novo Lead` | `Contato Realizado` | `Proposta Enviada` | `Negociação` | `Fechado Ganho` | `Fechado Perdido`
-- [ ] Cada coluna exibe: nome da etapa, contador de cards, total em R$
-- [ ] `DealCard`: título, valor (R$), avatar do responsável, prazo, lead vinculado
-- [ ] Drag-and-drop via `@dnd-kit` entre colunas com animação suave
-- [ ] Estado de drag atualiza coluna no Zustand (sem persistência nessa etapa)
-- [ ] Botão "Novo Negócio" em cada coluna → `DealFormModal`
-  - Campos: título, valor, lead vinculado, responsável, prazo, etapa
-- [ ] Ação de editar negócio via drawer lateral (`DealDetailDrawer`)
-- [ ] Ação de excluir negócio com `ConfirmDialog`
-- [ ] Testes unitários do store e da lógica de movimentação
+- [x] Cada coluna exibe: nome da etapa, contador de cards, total em R$ compacto
+- [x] `DealCard`: título, valor (R$), avatar do responsável, badge de prazo colorido, lead vinculado
+- [x] Drag-and-drop via `@dnd-kit` entre colunas com `DragOverlay` e highlight de coluna de destino
+- [x] Estado de drag atualiza coluna no Zustand (sem persistência nessa etapa)
+- [x] Botão "Novo Negócio" no header + botão "+" em cada coluna → `DealFormModal`
+  - Campos: título, valor, lead vinculado (do store, não mock), responsável, prazo, etapa
+- [x] Ação de editar negócio via drawer lateral (`DealDetailDrawer`)
+- [x] Ação de excluir negócio com `ConfirmDialog`
+- [x] Testes unitários do store: 13 testes passando (`useDealsStore.test.ts`)
+- [x] Visual Pipedrive-inspired dark theme com acento colorido por coluna
+- [x] Scroll horizontal com barra visível (`globals.css` scrollbar customizada)
+- [x] Fix: `AppShell` com `overflow-hidden` no `main` para scroll horizontal funcionar no board
+- [x] Fix: `DealFormModal` usa `useLeadsStore` em vez de `mockLeads` para exibir leads criados pelo usuário
 
 **Commit final:** `feat: pipeline kanban UI with dnd-kit drag-and-drop`
 

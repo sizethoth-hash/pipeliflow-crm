@@ -1,9 +1,9 @@
 'use client'
 
+import { useEffect, useState } from 'react'
 import { Sidebar } from '@/components/layout/Sidebar'
 import { TopBar } from '@/components/layout/TopBar'
 import { cn } from '@/lib/utils'
-import { useEffect, useState } from 'react'
 
 interface AppShellProps {
   children: React.ReactNode
@@ -61,7 +61,7 @@ export function AppShell({ children }: AppShellProps) {
       {/* Área principal */}
       <div className="flex min-w-0 flex-1 flex-col overflow-hidden">
         <TopBar onMenuClick={() => setSidebarOpen(true)} />
-        <main className="flex-1 overflow-y-auto">{children}</main>
+        <main className="flex-1 overflow-hidden">{children}</main>
       </div>
     </div>
   )

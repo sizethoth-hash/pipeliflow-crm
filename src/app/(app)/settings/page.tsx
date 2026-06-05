@@ -9,7 +9,7 @@ const SETTING_SECTIONS = [
 
 export default function SettingsPage() {
   return (
-    <div className="p-6 lg:p-8">
+    <div className="h-full overflow-y-auto p-6 lg:p-8">
       <div className="mb-8">
         <h2 className="text-2xl font-bold text-slate-100">Configurações</h2>
         <p className="mt-1 text-sm text-slate-400">Gerencie seu workspace e preferências</p>

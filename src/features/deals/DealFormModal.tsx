@@ -22,8 +22,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/Select'
-import { mockLeads, mockOwners } from '@/mocks/leads'
+import { mockOwners } from '@/mocks/leads'
 import { useDealsStore } from '@/store/useDealsStore'
+import { useLeadsStore } from '@/store/useLeadsStore'
 import type { Deal, DealStage } from '@/types/deal'
 import { PIPELINE_COLUMNS } from '@/types/deal'
 
@@ -58,6 +59,7 @@ export function DealFormModal({
   defaultStage = 'new_lead',
 }: DealFormModalProps) {
   const { addDeal, updateDeal } = useDealsStore()
+  const leads = useLeadsStore((s) => s.leads)
   const isEditing = Boolean(deal)
 
   const {
@@ -94,7 +96,7 @@ export function DealFormModal({
   }, [open, deal, defaultStage, reset])
 
   function onSubmit(data: DealFormData) {
-    const lead = mockLeads.find((l) => l.id === data.leadId)
+    const lead = leads.find((l) => l.id === data.leadId)
     const owner = mockOwners.find((o) => o.id === data.ownerId)
 
     const payload = {
@@ -174,7 +176,7 @@ export function DealFormModal({
                 <SelectValue placeholder="Selecionar lead" />
               </SelectTrigger>
               <SelectContent className="border-slate-700 bg-slate-800 text-slate-100">
-                {mockLeads.map((lead) => (
+                {leads.map((lead) => (
                   <SelectItem key={lead.id} value={lead.id}>
                     {lead.name}
                     {lead.company ? ` — ${lead.company}` : ''}

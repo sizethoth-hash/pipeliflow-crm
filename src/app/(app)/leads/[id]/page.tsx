@@ -1,23 +1,15 @@
 'use client'
 
-import {
-  ArrowLeft,
-  Building2,
-  Calendar,
-  Mail,
-  Pencil,
-  Phone,
-  User,
-} from 'lucide-react'
+import { ArrowLeft, Building2, Calendar, Mail, Pencil, Phone, User } from 'lucide-react'
 import Link from 'next/link'
 import { useParams, useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
 import { Avatar, AvatarFallback } from '@/components/ui/Avatar'
 import { Button } from '@/components/ui/Button'
+import { ActivityTimeline } from '@/features/leads/ActivityTimeline'
 import { LeadFormModal } from '@/features/leads/LeadFormModal'
 import { LeadStatusBadge } from '@/features/leads/LeadStatusBadge'
-import { ActivityTimeline } from '@/features/leads/ActivityTimeline'
 import { useLeadsStore } from '@/store/useLeadsStore'
 
 function getInitials(name: string) {
@@ -40,7 +32,7 @@ function formatDate(iso: string) {
 export default function LeadDetailPage() {
   const params = useParams()
   const router = useRouter()
-  const id = typeof params.id === 'string' ? params.id : params.id?.[0] ?? ''
+  const id = typeof params.id === 'string' ? params.id : (params.id?.[0] ?? '')
 
   const { getLeadById, getActivitiesByLeadId } = useLeadsStore()
   // Subscrever os arrays para reatividade; derivar os dados via getters estáveis
@@ -58,7 +50,7 @@ export default function LeadDetailPage() {
   if (!lead) return null
 
   return (
-    <div className="p-6 lg:p-8">
+    <div className="h-full overflow-y-auto p-6 lg:p-8">
       {/* Breadcrumb */}
       <nav className="mb-6 flex items-center gap-2 text-sm text-slate-500">
         <Link href="/dashboard" className="transition-colors hover:text-slate-300">
@@ -73,7 +65,12 @@ export default function LeadDetailPage() {
       </nav>
 
       {/* Volta */}
-      <Button variant="ghost" size="sm" className="mb-4 -ml-1 text-slate-400 hover:text-white" asChild>
+      <Button
+        variant="ghost"
+        size="sm"
+        className="mb-4 -ml-1 text-slate-400 hover:text-white"
+        asChild
+      >
         <Link href="/leads">
           <ArrowLeft className="h-4 w-4" />
           Voltar para Leads
@@ -94,9 +91,7 @@ export default function LeadDetailPage() {
                 </Avatar>
                 <div>
                   <h1 className="text-lg font-bold text-slate-100">{lead.name}</h1>
-                  {lead.jobTitle && (
-                    <p className="text-sm text-slate-400">{lead.jobTitle}</p>
-                  )}
+                  {lead.jobTitle && <p className="text-sm text-slate-400">{lead.jobTitle}</p>}
                 </div>
               </div>
               <Button
