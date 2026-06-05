@@ -40,9 +40,11 @@ function useDebounce<T>(value: T, delay = 300): T {
 }
 
 function formatDate(iso: string) {
-  return new Intl.DateTimeFormat('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' }).format(
-    new Date(iso)
-  )
+  return new Intl.DateTimeFormat('pt-BR', {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric',
+  }).format(new Date(iso))
 }
 
 function getInitials(name: string) {
@@ -55,8 +57,17 @@ function getInitials(name: string) {
 }
 
 export default function LeadsPage() {
-  const { leads, filters, setFilters, resetFilters, deleteLead, currentPage, pageSize, setPage, getFilteredLeads } =
-    useLeadsStore()
+  const {
+    leads,
+    filters,
+    setFilters,
+    resetFilters,
+    deleteLead,
+    currentPage,
+    pageSize,
+    setPage,
+    getFilteredLeads,
+  } = useLeadsStore()
 
   const [searchInput, setSearchInput] = useState(filters.search)
   const debouncedSearch = useDebounce(searchInput, 300)
@@ -88,16 +99,18 @@ export default function LeadsPage() {
     setDeleteTarget(null)
   }, [deleteTarget, deleteLead])
 
-  const hasActiveFilters = filters.status !== 'all' || filters.ownerId !== 'all' || filters.search !== ''
+  const hasActiveFilters =
+    filters.status !== 'all' || filters.ownerId !== 'all' || filters.search !== ''
 
   return (
-    <div className="p-6 lg:p-8">
+    <div className="h-full overflow-y-auto p-6 lg:p-8">
       {/* Header */}
       <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h2 className="text-2xl font-bold text-slate-100">Leads</h2>
           <p className="mt-0.5 text-sm text-slate-400">
-            {filteredLeads.length} {filteredLeads.length === 1 ? 'lead encontrado' : 'leads encontrados'}
+            {filteredLeads.length}{' '}
+            {filteredLeads.length === 1 ? 'lead encontrado' : 'leads encontrados'}
           </p>
         </div>
         <Button onClick={handleOpenCreate} className="shrink-0">
@@ -138,10 +151,7 @@ export default function LeadsPage() {
             </SelectContent>
           </Select>
 
-          <Select
-            value={filters.ownerId}
-            onValueChange={(v) => setFilters({ ownerId: v })}
-          >
+          <Select value={filters.ownerId} onValueChange={(v) => setFilters({ ownerId: v })}>
             <SelectTrigger className="w-44 border-slate-600 bg-slate-700 text-slate-100 focus:ring-indigo-500">
               <SelectValue placeholder="Responsável" />
             </SelectTrigger>
@@ -156,7 +166,14 @@ export default function LeadsPage() {
           </Select>
 
           {hasActiveFilters && (
-            <Button variant="ghost" size="sm" onClick={() => { resetFilters(); setSearchInput('') }}>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => {
+                resetFilters()
+                setSearchInput('')
+              }}
+            >
               Limpar
             </Button>
           )}
@@ -169,7 +186,9 @@ export default function LeadsPage() {
           <div className="flex flex-col items-center justify-center py-20 text-center">
             <User className="h-10 w-10 text-slate-600" />
             <p className="mt-3 text-sm font-medium text-slate-400">
-              {hasActiveFilters ? 'Nenhum lead corresponde aos filtros' : 'Nenhum lead cadastrado ainda'}
+              {hasActiveFilters
+                ? 'Nenhum lead corresponde aos filtros'
+                : 'Nenhum lead cadastrado ainda'}
             </p>
             {!hasActiveFilters && (
               <Button className="mt-4" size="sm" onClick={handleOpenCreate}>
@@ -184,10 +203,16 @@ export default function LeadsPage() {
               <thead>
                 <tr className="border-b border-slate-700 text-left">
                   <th className="px-4 py-3 font-medium text-slate-400">Nome</th>
-                  <th className="hidden px-4 py-3 font-medium text-slate-400 sm:table-cell">Empresa</th>
+                  <th className="hidden px-4 py-3 font-medium text-slate-400 sm:table-cell">
+                    Empresa
+                  </th>
                   <th className="px-4 py-3 font-medium text-slate-400">Status</th>
-                  <th className="hidden px-4 py-3 font-medium text-slate-400 md:table-cell">Responsável</th>
-                  <th className="hidden px-4 py-3 font-medium text-slate-400 lg:table-cell">Criado em</th>
+                  <th className="hidden px-4 py-3 font-medium text-slate-400 md:table-cell">
+                    Responsável
+                  </th>
+                  <th className="hidden px-4 py-3 font-medium text-slate-400 lg:table-cell">
+                    Criado em
+                  </th>
                   <th className="px-4 py-3 font-medium text-slate-400">
                     <span className="sr-only">Ações</span>
                   </th>
@@ -195,10 +220,7 @@ export default function LeadsPage() {
               </thead>
               <tbody className="divide-y divide-slate-700/50">
                 {paginatedLeads.map((lead) => (
-                  <tr
-                    key={lead.id}
-                    className="group transition-colors hover:bg-slate-700/30"
-                  >
+                  <tr key={lead.id} className="group transition-colors hover:bg-slate-700/30">
                     {/* Nome + email */}
                     <td className="px-4 py-3.5">
                       <Link href={`/leads/${lead.id}`} className="block">
@@ -215,7 +237,9 @@ export default function LeadsPage() {
                         <>
                           <span className="text-slate-200">{lead.company}</span>
                           {lead.jobTitle && (
-                            <span className="mt-0.5 block text-xs text-slate-500">{lead.jobTitle}</span>
+                            <span className="mt-0.5 block text-xs text-slate-500">
+                              {lead.jobTitle}
+                            </span>
                           )}
                         </>
                       ) : (
@@ -308,11 +332,7 @@ export default function LeadsPage() {
       )}
 
       {/* Modais */}
-      <LeadFormModal
-        open={formOpen}
-        onClose={() => setFormOpen(false)}
-        lead={editingLead}
-      />
+      <LeadFormModal open={formOpen} onClose={() => setFormOpen(false)} lead={editingLead} />
 
       <ConfirmDialog
         open={Boolean(deleteTarget)}
