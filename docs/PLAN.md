@@ -42,16 +42,16 @@ FASE 3 — PRODUTO   (M12 → M14) Stripe, Resend, Deploy
 **Objetivo:** Sistema de design base e shell do app autenticado com navegação funcional (dados mock).
 
 #### Entregas
-- [ ] Tokens de design: cores (indigo-500, slate-900, verde, vermelho), fonte Inter
-- [ ] Componentes base: `Button`, `Input`, `Badge`, `Card`, `Avatar`, `Spinner`
-- [ ] Componentes de feedback: `Toast`, `Dialog`, `Tooltip`, `DropdownMenu`
-- [ ] Layout autenticado: `AppLayout` com sidebar fixa + área de conteúdo
-- [ ] `Sidebar` com: logo, nav links (Dashboard, Leads, Pipeline, Settings), workspace switcher dropdown, avatar do usuário
-- [ ] `TopBar` com título da página e slot de ações
-- [ ] Rotas de placeholder: `/dashboard`, `/leads`, `/pipeline`, `/settings`
-- [ ] Responsividade: sidebar colapsável em mobile
+- [x] Tokens de design: cores (indigo-500, slate-900, verde, vermelho), fonte Inter
+- [x] Componentes base: `Button`, `Input`, `Badge`, `Card`, `Avatar`, `Spinner`
+- [x] Componentes de feedback: `Toast`, `Dialog`, `Tooltip`, `DropdownMenu`
+- [x] Layout autenticado: `AppLayout` com sidebar fixa + área de conteúdo
+- [x] `Sidebar` com: logo, nav links (Dashboard, Leads, Pipeline, Settings), workspace switcher dropdown, avatar do usuário
+- [x] `TopBar` com título da página e slot de ações
+- [x] Rotas de placeholder: `/dashboard`, `/leads`, `/pipeline`, `/settings`
+- [x] Responsividade: sidebar colapsável em mobile
 - [ ] Storybook ou página `/dev/components` com catálogo visual (opcional)
-- [ ] Testes unitários dos componentes base (≥ 85% coverage)
+- [x] Testes unitários dos componentes base (≥ 85% coverage)
 
 **Commit final:** `feat: design system and authenticated app shell`
 
@@ -157,20 +157,20 @@ FASE 3 — PRODUTO   (M12 → M14) Stripe, Resend, Deploy
 **Objetivo:** Página de detalhe do lead completa com timeline de atividades e formulário de novo registro.
 
 #### Entregas
-- [ ] Tipos TypeScript: `Activity`, `ActivityType`
-- [ ] Fixtures mock: atividades vinculadas aos leads do mock
-- [ ] Zustand store `useActivitiesStore`: `activities[]`, `addActivity()`, `deleteActivity()`
-- [ ] Completar página `/leads/[id]` com timeline real
-- [ ] `ActivityTimeline`: lista cronológica reversa de atividades
+- [x] Tipos TypeScript: `Activity`, `ActivityType`
+- [x] Fixtures mock: atividades vinculadas aos leads do mock
+- [ ] Zustand store `useActivitiesStore`: `activities[]`, `addActivity()`, `deleteActivity()` _(atividades ficaram no `useLeadsStore`)_
+- [x] Completar página `/leads/[id]` com timeline real
+- [x] `ActivityTimeline`: lista cronológica reversa de atividades
   - Ícone por tipo (Ligação ☎ | E-mail ✉ | Reunião 📅 | Nota 📝)
   - Autor, descrição, data formatada
-- [ ] `AddActivityForm`: form inline na página de detalhe
+- [ ] `AddActivityForm`: form inline na página de detalhe _(não implementado)_
   - Campos: tipo, descrição, data (default: hoje)
   - Validação Zod, submit adiciona ao store
-- [ ] Ação de excluir atividade
-- [ ] Negócios vinculados ao lead: cards resumidos com link para `/pipeline`
-- [ ] Breadcrumb de navegação: Dashboard > Leads > [Nome do Lead]
-- [ ] Testes unitários do store e dos componentes de timeline
+- [ ] Ação de excluir atividade _(não implementado)_
+- [ ] Negócios vinculados ao lead: cards resumidos com link para `/pipeline` _(placeholder sem link)_
+- [x] Breadcrumb de navegação: Dashboard > Leads > [Nome do Lead]
+- [ ] Testes unitários do store e dos componentes de timeline _(não implementado)_
 
 **Commit final:** `feat: lead detail page with activity timeline`
 
