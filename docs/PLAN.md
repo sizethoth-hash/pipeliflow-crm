@@ -42,16 +42,16 @@ FASE 3 — PRODUTO   (M12 → M14) Stripe, Resend, Deploy
 **Objetivo:** Sistema de design base e shell do app autenticado com navegação funcional (dados mock).
 
 #### Entregas
-- [ ] Tokens de design: cores (indigo-500, slate-900, verde, vermelho), fonte Inter
-- [ ] Componentes base: `Button`, `Input`, `Badge`, `Card`, `Avatar`, `Spinner`
-- [ ] Componentes de feedback: `Toast`, `Dialog`, `Tooltip`, `DropdownMenu`
-- [ ] Layout autenticado: `AppLayout` com sidebar fixa + área de conteúdo
-- [ ] `Sidebar` com: logo, nav links (Dashboard, Leads, Pipeline, Settings), workspace switcher dropdown, avatar do usuário
-- [ ] `TopBar` com título da página e slot de ações
-- [ ] Rotas de placeholder: `/dashboard`, `/leads`, `/pipeline`, `/settings`
-- [ ] Responsividade: sidebar colapsável em mobile
+- [x] Tokens de design: cores (indigo-500, slate-900, verde, vermelho), fonte Inter
+- [x] Componentes base: `Button`, `Input`, `Badge`, `Card`, `Avatar`, `Spinner`
+- [x] Componentes de feedback: `Toast`, `Dialog`, `Tooltip`, `DropdownMenu`
+- [x] Layout autenticado: `AppLayout` com sidebar fixa + área de conteúdo
+- [x] `Sidebar` com: logo, nav links (Dashboard, Leads, Pipeline, Settings), workspace switcher dropdown, avatar do usuário
+- [x] `TopBar` com título da página e slot de ações
+- [x] Rotas de placeholder: `/dashboard`, `/leads`, `/pipeline`, `/settings`
+- [x] Responsividade: sidebar colapsável em mobile
 - [ ] Storybook ou página `/dev/components` com catálogo visual (opcional)
-- [ ] Testes unitários dos componentes base (≥ 85% coverage)
+- [x] Testes unitários dos componentes base (≥ 85% coverage)
 
 **Commit final:** `feat: design system and authenticated app shell`
 
@@ -62,16 +62,17 @@ FASE 3 — PRODUTO   (M12 → M14) Stripe, Resend, Deploy
 **Objetivo:** Página pública de apresentação do PipeFlow CRM, publicável de forma independente.
 
 #### Entregas
-- [ ] Layout de marketing: `(marketing)/layout.tsx` sem sidebar
-- [ ] Seção **Hero**: headline, subheadline, CTA "Começar grátis", mockup/screenshot
-- [ ] Seção **Funcionalidades**: 6 cards com ícone, título e descrição
-- [ ] Seção **Pipeline Preview**: imagem/ilustração do Kanban
-- [ ] Seção **Planos e Preços**: tabela Free vs Pro com features e CTAs
-- [ ] Seção **CTA final**: chamada para cadastro
-- [ ] `Navbar` pública: logo + links de âncora + botões Login/Cadastro
-- [ ] `Footer`: links institucionais
-- [ ] Totalmente responsiva (mobile-first)
-- [ ] Acessibilidade: todos os links e botões com `aria-label`
+- [x] Layout de marketing: `(marketing)/layout.tsx` sem sidebar
+- [x] Seção **Hero**: headline, subheadline, CTA "Começar grátis", mockup/screenshot
+- [x] Seção **Funcionalidades**: 6 cards com ícone, título e descrição
+- [x] Seção **Pipeline Preview**: imagem/ilustração do Kanban
+- [x] Seção **Planos e Preços**: tabela Free vs Pro com features e CTAs
+- [x] Seção **CTA final**: chamada para cadastro
+- [x] `Navbar` pública: logo + links de âncora + botões Login/Cadastro
+- [x] `Footer`: links institucionais
+- [x] Totalmente responsiva (mobile-first)
+- [x] Acessibilidade: todos os links e botões com `aria-label`
+- [x] `AnimatedStats`: contagem easeOutExpo disparada por IntersectionObserver
 
 **Commit final:** `feat: marketing landing page — hero, features, pricing, CTA`
 
@@ -157,20 +158,20 @@ FASE 3 — PRODUTO   (M12 → M14) Stripe, Resend, Deploy
 **Objetivo:** Página de detalhe do lead completa com timeline de atividades e formulário de novo registro.
 
 #### Entregas
-- [ ] Tipos TypeScript: `Activity`, `ActivityType`
-- [ ] Fixtures mock: atividades vinculadas aos leads do mock
-- [ ] Zustand store `useActivitiesStore`: `activities[]`, `addActivity()`, `deleteActivity()`
-- [ ] Completar página `/leads/[id]` com timeline real
-- [ ] `ActivityTimeline`: lista cronológica reversa de atividades
+- [x] Tipos TypeScript: `Activity`, `ActivityType`
+- [x] Fixtures mock: atividades vinculadas aos leads do mock
+- [ ] Zustand store `useActivitiesStore`: `activities[]`, `addActivity()`, `deleteActivity()` _(atividades ficaram no `useLeadsStore`)_
+- [x] Completar página `/leads/[id]` com timeline real
+- [x] `ActivityTimeline`: lista cronológica reversa de atividades
   - Ícone por tipo (Ligação ☎ | E-mail ✉ | Reunião 📅 | Nota 📝)
   - Autor, descrição, data formatada
-- [ ] `AddActivityForm`: form inline na página de detalhe
+- [ ] `AddActivityForm`: form inline na página de detalhe _(não implementado)_
   - Campos: tipo, descrição, data (default: hoje)
   - Validação Zod, submit adiciona ao store
-- [ ] Ação de excluir atividade
-- [ ] Negócios vinculados ao lead: cards resumidos com link para `/pipeline`
-- [ ] Breadcrumb de navegação: Dashboard > Leads > [Nome do Lead]
-- [ ] Testes unitários do store e dos componentes de timeline
+- [ ] Ação de excluir atividade _(não implementado)_
+- [ ] Negócios vinculados ao lead: cards resumidos com link para `/pipeline` _(placeholder sem link)_
+- [x] Breadcrumb de navegação: Dashboard > Leads > [Nome do Lead]
+- [ ] Testes unitários do store e dos componentes de timeline _(não implementado)_
 
 **Commit final:** `feat: lead detail page with activity timeline`
 
@@ -181,20 +182,20 @@ FASE 3 — PRODUTO   (M12 → M14) Stripe, Resend, Deploy
 **Objetivo:** Dashboard completo com KPI cards, gráfico de funil e lista de negócios com prazo próximo — dados derivados dos mocks.
 
 #### Entregas
-- [ ] Tipos TypeScript: `DashboardMetrics`, `FunnelData`
-- [ ] Hook `useDashboardMetrics()`: agrega dados dos stores de leads e deals
+- [x] Tipos TypeScript: `DashboardMetrics`, `FunnelData`
+- [x] Hook `useDashboardMetrics()`: agrega dados dos stores de leads e deals
   - Total de leads
   - Negócios abertos (excluindo Fechado Ganho/Perdido)
   - Valor total do pipeline (soma dos negócios abertos)
   - Taxa de conversão (Fechado Ganho / total de negócios)
-- [ ] Página `/dashboard`: grid responsivo de 4 `MetricCard`
-- [ ] `MetricCard`: ícone, label, valor principal, variação percentual (mock)
-- [ ] `SalesFunnelChart`: gráfico de barras horizontais com Recharts mostrando contagem por etapa
-- [ ] `UpcomingDeals`: lista dos 5 negócios com prazo mais próximo
+- [x] Página `/dashboard`: grid responsivo de 4 `MetricCard`
+- [x] `MetricCard`: ícone, label, valor principal, variação percentual (mock)
+- [x] `SalesFunnelChart`: gráfico de barras horizontais com Recharts mostrando contagem por etapa
+- [x] `UpcomingDeals`: lista dos 5 negócios com prazo mais próximo
   - Nome do negócio, valor, responsável, dias restantes (badge colorido)
-- [ ] `RecentLeads`: lista dos 5 leads mais recentes com link para detalhe
-- [ ] Saudação personalizada com nome do usuário mockado
-- [ ] Testes unitários do hook de métricas
+- [x] `RecentLeads`: lista dos 5 leads mais recentes com link para detalhe
+- [x] Saudação personalizada com nome do usuário mockado
+- [x] Testes unitários do hook de métricas
 
 **Commit final:** `feat: dashboard with KPI cards, funnel chart, and upcoming deals`
 
