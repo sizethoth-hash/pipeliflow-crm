@@ -181,20 +181,20 @@ FASE 3 — PRODUTO   (M12 → M14) Stripe, Resend, Deploy
 **Objetivo:** Dashboard completo com KPI cards, gráfico de funil e lista de negócios com prazo próximo — dados derivados dos mocks.
 
 #### Entregas
-- [ ] Tipos TypeScript: `DashboardMetrics`, `FunnelData`
-- [ ] Hook `useDashboardMetrics()`: agrega dados dos stores de leads e deals
+- [x] Tipos TypeScript: `DashboardMetrics`, `FunnelData`
+- [x] Hook `useDashboardMetrics()`: agrega dados dos stores de leads e deals
   - Total de leads
   - Negócios abertos (excluindo Fechado Ganho/Perdido)
   - Valor total do pipeline (soma dos negócios abertos)
   - Taxa de conversão (Fechado Ganho / total de negócios)
-- [ ] Página `/dashboard`: grid responsivo de 4 `MetricCard`
-- [ ] `MetricCard`: ícone, label, valor principal, variação percentual (mock)
-- [ ] `SalesFunnelChart`: gráfico de barras horizontais com Recharts mostrando contagem por etapa
-- [ ] `UpcomingDeals`: lista dos 5 negócios com prazo mais próximo
+- [x] Página `/dashboard`: grid responsivo de 4 `MetricCard`
+- [x] `MetricCard`: ícone, label, valor principal, variação percentual (mock)
+- [x] `SalesFunnelChart`: gráfico de barras horizontais com Recharts mostrando contagem por etapa
+- [x] `UpcomingDeals`: lista dos 5 negócios com prazo mais próximo
   - Nome do negócio, valor, responsável, dias restantes (badge colorido)
-- [ ] `RecentLeads`: lista dos 5 leads mais recentes com link para detalhe
-- [ ] Saudação personalizada com nome do usuário mockado
-- [ ] Testes unitários do hook de métricas
+- [x] `RecentLeads`: lista dos 5 leads mais recentes com link para detalhe
+- [x] Saudação personalizada com nome do usuário mockado
+- [x] Testes unitários do hook de métricas
 
 **Commit final:** `feat: dashboard with KPI cards, funnel chart, and upcoming deals`
 
