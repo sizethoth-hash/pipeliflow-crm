@@ -62,16 +62,17 @@ FASE 3 — PRODUTO   (M12 → M14) Stripe, Resend, Deploy
 **Objetivo:** Página pública de apresentação do PipeFlow CRM, publicável de forma independente.
 
 #### Entregas
-- [ ] Layout de marketing: `(marketing)/layout.tsx` sem sidebar
-- [ ] Seção **Hero**: headline, subheadline, CTA "Começar grátis", mockup/screenshot
-- [ ] Seção **Funcionalidades**: 6 cards com ícone, título e descrição
-- [ ] Seção **Pipeline Preview**: imagem/ilustração do Kanban
-- [ ] Seção **Planos e Preços**: tabela Free vs Pro com features e CTAs
-- [ ] Seção **CTA final**: chamada para cadastro
-- [ ] `Navbar` pública: logo + links de âncora + botões Login/Cadastro
-- [ ] `Footer`: links institucionais
-- [ ] Totalmente responsiva (mobile-first)
-- [ ] Acessibilidade: todos os links e botões com `aria-label`
+- [x] Layout de marketing: `(marketing)/layout.tsx` sem sidebar
+- [x] Seção **Hero**: headline, subheadline, CTA "Começar grátis", mockup/screenshot
+- [x] Seção **Funcionalidades**: 6 cards com ícone, título e descrição
+- [x] Seção **Pipeline Preview**: imagem/ilustração do Kanban
+- [x] Seção **Planos e Preços**: tabela Free vs Pro com features e CTAs
+- [x] Seção **CTA final**: chamada para cadastro
+- [x] `Navbar` pública: logo + links de âncora + botões Login/Cadastro
+- [x] `Footer`: links institucionais
+- [x] Totalmente responsiva (mobile-first)
+- [x] Acessibilidade: todos os links e botões com `aria-label`
+- [x] `AnimatedStats`: contagem easeOutExpo disparada por IntersectionObserver
 
 **Commit final:** `feat: marketing landing page — hero, features, pricing, CTA`
 
