@@ -1,5 +1,5 @@
-import { render, screen, fireEvent } from '@testing-library/react'
-import { describe, expect, it, vi, beforeEach } from 'vitest'
+import { fireEvent, render, screen } from '@testing-library/react'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { Sidebar } from '../Sidebar'
 
 // Mock next/navigation
@@ -9,7 +9,15 @@ vi.mock('next/navigation', () => ({
 
 // Mock next/link
 vi.mock('next/link', () => ({
-  default: ({ href, children, ...props }: { href: string; children: React.ReactNode; [key: string]: unknown }) => (
+  default: ({
+    href,
+    children,
+    ...props
+  }: {
+    href: string
+    children: React.ReactNode
+    [key: string]: unknown
+  }) => (
     <a href={href} {...props}>
       {children}
     </a>
@@ -54,14 +62,14 @@ describe('Sidebar', () => {
     expect(leadsLink).not.toHaveAttribute('aria-current')
   })
 
-  it('renderiza o workspace ativo "Acme Corp"', () => {
+  it('renderiza o workspace ativo "Meu Workspace"', () => {
     render(<Sidebar />)
-    expect(screen.getByText('Acme Corp')).toBeInTheDocument()
+    expect(screen.getByText('Meu Workspace')).toBeInTheDocument()
   })
 
   it('renderiza o nome do usuário atual', () => {
     render(<Sidebar />)
-    expect(screen.getByText('Carlos Silva')).toBeInTheDocument()
+    expect(screen.getByText('Sizenando Miguel')).toBeInTheDocument()
   })
 
   it('chama onClose ao clicar no botão fechar', () => {
