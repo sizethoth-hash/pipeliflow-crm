@@ -3,6 +3,7 @@
 import {
   ChevronLeft,
   ChevronRight,
+  Loader2,
   Pencil,
   Plus,
   Search,
@@ -26,9 +27,8 @@ import {
 } from '@/components/ui/Select'
 import { LeadFormModal } from '@/features/leads/LeadFormModal'
 import { LeadStatusBadge } from '@/features/leads/LeadStatusBadge'
-import { mockOwners } from '@/mocks/leads'
-import { useLeadsStore } from '@/store/useLeadsStore'
-import type { Lead } from '@/types/lead'
+import { useDeleteLead, useLeads } from '@/hooks/useLeads'
+import type { Lead, LeadFilters } from '@/types/lead'
 
 function useDebounce<T>(value: T, delay = 300): T {
   const [debounced, setDebounced] = useState(value)
@@ -57,32 +57,32 @@ function getInitials(name: string) {
 }
 
 export default function LeadsPage() {
-  const {
-    leads,
-    filters,
-    setFilters,
-    resetFilters,
-    deleteLead,
-    currentPage,
-    pageSize,
-    setPage,
-    getFilteredLeads,
-  } = useLeadsStore()
-
-  const [searchInput, setSearchInput] = useState(filters.search)
+  const [searchInput, setSearchInput] = useState('')
   const debouncedSearch = useDebounce(searchInput, 300)
+
+  const [filters, setFiltersState] = useState<Partial<LeadFilters>>({
+    status: 'all',
+  })
+  const [page, setPage] = useState(1)
+
+  const activeFilters: Partial<LeadFilters> = {
+    ...filters,
+    search: debouncedSearch || undefined,
+  }
+
+  const { data, isLoading, isError } = useLeads(activeFilters, page)
+  const deleteMutation = useDeleteLead()
+
+  const leads = data?.leads ?? []
+  const totalPages = data?.totalPages ?? 1
+  const total = data?.total ?? 0
 
   const [formOpen, setFormOpen] = useState(false)
   const [editingLead, setEditingLead] = useState<Lead | null>(null)
   const [deleteTarget, setDeleteTarget] = useState<Lead | null>(null)
 
-  useEffect(() => {
-    setFilters({ search: debouncedSearch })
-  }, [debouncedSearch, setFilters])
-
-  const filteredLeads = getFilteredLeads()
-  const totalPages = Math.max(1, Math.ceil(filteredLeads.length / pageSize))
-  const paginatedLeads = filteredLeads.slice((currentPage - 1) * pageSize, currentPage * pageSize)
+  const hasActiveFilters =
+    (filters.status && filters.status !== 'all') || Boolean(debouncedSearch)
 
   const handleOpenCreate = useCallback(() => {
     setEditingLead(null)
@@ -95,12 +95,26 @@ export default function LeadsPage() {
   }, [])
 
   const handleDeleteConfirm = useCallback(() => {
-    if (deleteTarget) deleteLead(deleteTarget.id)
+    if (deleteTarget) {
+      deleteMutation.mutate(deleteTarget.id)
+    }
     setDeleteTarget(null)
-  }, [deleteTarget, deleteLead])
+  }, [deleteTarget, deleteMutation])
 
-  const hasActiveFilters =
-    filters.status !== 'all' || filters.ownerId !== 'all' || filters.search !== ''
+  function handleStatusChange(v: string) {
+    setFiltersState((f) => ({ ...f, status: v as LeadFilters['status'] }))
+    setPage(1)
+  }
+
+  function handleResetFilters() {
+    setFiltersState({ status: 'all' })
+    setSearchInput('')
+    setPage(1)
+  }
+
+  useEffect(() => {
+    setPage(1)
+  }, [debouncedSearch])
 
   return (
     <div className="h-full overflow-y-auto p-6 lg:p-8">
@@ -109,8 +123,9 @@ export default function LeadsPage() {
         <div>
           <h2 className="text-2xl font-bold text-slate-100">Leads</h2>
           <p className="mt-0.5 text-sm text-slate-400">
-            {filteredLeads.length}{' '}
-            {filteredLeads.length === 1 ? 'lead encontrado' : 'leads encontrados'}
+            {isLoading
+              ? 'Carregando…'
+              : `${total} ${total === 1 ? 'lead encontrado' : 'leads encontrados'}`}
           </p>
         </div>
         <Button onClick={handleOpenCreate} className="shrink-0">
@@ -133,10 +148,7 @@ export default function LeadsPage() {
 
         <div className="flex items-center gap-2">
           <SlidersHorizontal className="h-4 w-4 shrink-0 text-slate-400" />
-          <Select
-            value={filters.status}
-            onValueChange={(v) => setFilters({ status: v as typeof filters.status })}
-          >
+          <Select value={filters.status ?? 'all'} onValueChange={handleStatusChange}>
             <SelectTrigger className="w-44 border-slate-600 bg-slate-700 text-slate-100 focus:ring-indigo-500">
               <SelectValue placeholder="Status" />
             </SelectTrigger>
@@ -151,29 +163,8 @@ export default function LeadsPage() {
             </SelectContent>
           </Select>
 
-          <Select value={filters.ownerId} onValueChange={(v) => setFilters({ ownerId: v })}>
-            <SelectTrigger className="w-44 border-slate-600 bg-slate-700 text-slate-100 focus:ring-indigo-500">
-              <SelectValue placeholder="Responsável" />
-            </SelectTrigger>
-            <SelectContent className="border-slate-700 bg-slate-800 text-slate-100">
-              <SelectItem value="all">Todos</SelectItem>
-              {mockOwners.map((o) => (
-                <SelectItem key={o.id} value={o.id}>
-                  {o.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-
           {hasActiveFilters && (
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => {
-                resetFilters()
-                setSearchInput('')
-              }}
-            >
+            <Button variant="ghost" size="sm" onClick={handleResetFilters}>
               Limpar
             </Button>
           )}
@@ -182,7 +173,15 @@ export default function LeadsPage() {
 
       {/* Tabela */}
       <div className="overflow-hidden rounded-lg border border-slate-700 bg-slate-800/40">
-        {paginatedLeads.length === 0 ? (
+        {isLoading ? (
+          <div className="flex items-center justify-center py-20">
+            <Loader2 className="h-6 w-6 animate-spin text-slate-500" />
+          </div>
+        ) : isError ? (
+          <div className="py-20 text-center text-sm text-red-400">
+            Erro ao carregar leads. Tente novamente.
+          </div>
+        ) : leads.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-20 text-center">
             <User className="h-10 w-10 text-slate-600" />
             <p className="mt-3 text-sm font-medium text-slate-400">
@@ -219,9 +218,8 @@ export default function LeadsPage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-700/50">
-                {paginatedLeads.map((lead) => (
+                {leads.map((lead) => (
                   <tr key={lead.id} className="group transition-colors hover:bg-slate-700/30">
-                    {/* Nome + email */}
                     <td className="px-4 py-3.5">
                       <Link href={`/leads/${lead.id}`} className="block">
                         <span className="font-medium text-slate-100 transition-colors group-hover:text-indigo-400">
@@ -231,7 +229,6 @@ export default function LeadsPage() {
                       </Link>
                     </td>
 
-                    {/* Empresa + cargo */}
                     <td className="hidden px-4 py-3.5 sm:table-cell">
                       {lead.company ? (
                         <>
@@ -247,29 +244,25 @@ export default function LeadsPage() {
                       )}
                     </td>
 
-                    {/* Status */}
                     <td className="px-4 py-3.5">
                       <LeadStatusBadge status={lead.status} />
                     </td>
 
-                    {/* Responsável */}
                     <td className="hidden px-4 py-3.5 md:table-cell">
                       <div className="flex items-center gap-2">
                         <Avatar className="h-6 w-6">
                           <AvatarFallback className="text-[10px]">
-                            {getInitials(lead.ownerName)}
+                            {getInitials(lead.ownerName || lead.name)}
                           </AvatarFallback>
                         </Avatar>
-                        <span className="text-slate-300">{lead.ownerName}</span>
+                        <span className="text-slate-300">{lead.ownerName || '—'}</span>
                       </div>
                     </td>
 
-                    {/* Data */}
                     <td className="hidden px-4 py-3.5 text-slate-400 lg:table-cell">
                       {formatDate(lead.createdAt)}
                     </td>
 
-                    {/* Ações */}
                     <td className="px-4 py-3.5">
                       <div className="flex items-center justify-end gap-1 opacity-0 transition-opacity group-hover:opacity-100">
                         <Button
@@ -304,15 +297,15 @@ export default function LeadsPage() {
       {totalPages > 1 && (
         <div className="mt-4 flex items-center justify-between text-sm text-slate-400">
           <span>
-            Página {currentPage} de {totalPages}
+            Página {page} de {totalPages}
           </span>
           <div className="flex gap-1">
             <Button
               variant="outline"
               size="icon"
               className="h-8 w-8"
-              onClick={() => setPage(currentPage - 1)}
-              disabled={currentPage === 1}
+              onClick={() => setPage((p) => p - 1)}
+              disabled={page === 1}
               aria-label="Página anterior"
             >
               <ChevronLeft className="h-4 w-4" />
@@ -321,8 +314,8 @@ export default function LeadsPage() {
               variant="outline"
               size="icon"
               className="h-8 w-8"
-              onClick={() => setPage(currentPage + 1)}
-              disabled={currentPage === totalPages}
+              onClick={() => setPage((p) => p + 1)}
+              disabled={page === totalPages}
               aria-label="Próxima página"
             >
               <ChevronRight className="h-4 w-4" />
@@ -331,7 +324,6 @@ export default function LeadsPage() {
         </div>
       )}
 
-      {/* Modais */}
       <LeadFormModal open={formOpen} onClose={() => setFormOpen(false)} lead={editingLead} />
 
       <ConfirmDialog

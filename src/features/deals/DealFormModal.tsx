@@ -22,9 +22,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/Select'
-import { mockOwners } from '@/mocks/leads'
-import { useDealsStore } from '@/store/useDealsStore'
-import { useLeadsStore } from '@/store/useLeadsStore'
+import { useCreateDeal, useUpdateDeal } from '@/hooks/useDeals'
+import { useLeads } from '@/hooks/useLeads'
+import { useAuthStore } from '@/store/useAuthStore'
+import { useWorkspaceStore } from '@/store/useWorkspaceStore'
 import type { Deal, DealStage } from '@/types/deal'
 import { PIPELINE_COLUMNS } from '@/types/deal'
 
@@ -38,7 +39,6 @@ const dealSchema = z.object({
     .number({ invalid_type_error: 'Informe um valor válido' })
     .min(0, 'Valor deve ser positivo'),
   leadId: z.string().min(1, 'Selecione um lead'),
-  ownerId: z.string().min(1, 'Selecione um responsável'),
   stage: z.enum(['new_lead', 'contacted', 'proposal', 'negotiation', 'won', 'lost']),
   dueDate: z.string().optional(),
 })
@@ -58,8 +58,12 @@ export function DealFormModal({
   deal,
   defaultStage = 'new_lead',
 }: DealFormModalProps) {
-  const { addDeal, updateDeal } = useDealsStore()
-  const leads = useLeadsStore((s) => s.leads)
+  const createDeal = useCreateDeal()
+  const updateDeal = useUpdateDeal()
+  const userId = useAuthStore((s) => s.user?.id ?? '')
+  const workspaceId = useWorkspaceStore((s) => s.activeWorkspace?.id ?? '')
+  const { data: leadsData } = useLeads(undefined, 1)
+  const leads = leadsData?.leads ?? []
   const isEditing = Boolean(deal)
 
   const {
@@ -68,12 +72,11 @@ export function DealFormModal({
     setValue,
     watch,
     reset,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm<DealFormData>({
     resolver: zodResolver(dealSchema),
     defaultValues: {
       stage: defaultStage,
-      ownerId: 'user-1',
       value: 0,
     },
   })
@@ -85,38 +88,42 @@ export function DealFormModal({
           title: deal.title,
           value: deal.value,
           leadId: deal.leadId,
-          ownerId: deal.ownerId,
           stage: deal.stage,
           dueDate: deal.dueDate ?? '',
         })
       } else {
-        reset({ stage: defaultStage, ownerId: 'user-1', value: 0 })
+        reset({ stage: defaultStage, value: 0 })
       }
     }
   }, [open, deal, defaultStage, reset])
 
-  function onSubmit(data: DealFormData) {
-    const lead = leads.find((l) => l.id === data.leadId)
-    const owner = mockOwners.find((o) => o.id === data.ownerId)
-
-    const payload = {
-      ...data,
-      leadName: lead?.name ?? '',
-      ownerName: owner?.name ?? '',
-      workspaceId: 'ws-1',
-      dueDate: data.dueDate || undefined,
-    }
-
+  async function onSubmit(data: DealFormData) {
     if (isEditing && deal) {
-      updateDeal(deal.id, payload)
+      await updateDeal.mutateAsync({
+        id: deal.id,
+        data: {
+          title: data.title,
+          value: data.value,
+          lead_id: data.leadId,
+          stage: data.stage,
+          due_date: data.dueDate || null,
+        },
+      })
     } else {
-      addDeal(payload)
+      await createDeal.mutateAsync({
+        workspace_id: workspaceId,
+        title: data.title,
+        value: data.value,
+        lead_id: data.leadId,
+        stage: data.stage,
+        due_date: data.dueDate || null,
+        owner_id: userId,
+      })
     }
     onClose()
   }
 
   const stageValue = watch('stage')
-  const ownerValue = watch('ownerId')
   const leadValue = watch('leadId')
 
   return (
@@ -141,7 +148,7 @@ export function DealFormModal({
             {errors.title && <p className="text-xs text-red-400">{errors.title.message}</p>}
           </div>
 
-          {/* Valor + Prazo (2 colunas) */}
+          {/* Valor + Prazo */}
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-1.5">
               <Label htmlFor="deal-value" className="text-slate-300">
@@ -187,45 +194,24 @@ export function DealFormModal({
             {errors.leadId && <p className="text-xs text-red-400">{errors.leadId.message}</p>}
           </div>
 
-          {/* Etapa + Responsável (2 colunas) */}
-          <div className="grid grid-cols-2 gap-3">
-            <div className="space-y-1.5">
-              <Label className="text-slate-300">
-                Etapa <span className="text-red-400">*</span>
-              </Label>
-              <Select value={stageValue} onValueChange={(v) => setValue('stage', v as DealStage)}>
-                <SelectTrigger className={selectCls}>
-                  <SelectValue placeholder="Selecionar etapa" />
-                </SelectTrigger>
-                <SelectContent className="border-slate-700 bg-slate-800 text-slate-100">
-                  {PIPELINE_COLUMNS.map((col) => (
-                    <SelectItem key={col.id} value={col.id}>
-                      {col.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              {errors.stage && <p className="text-xs text-red-400">{errors.stage.message}</p>}
-            </div>
-
-            <div className="space-y-1.5">
-              <Label className="text-slate-300">
-                Responsável <span className="text-red-400">*</span>
-              </Label>
-              <Select value={ownerValue} onValueChange={(v) => setValue('ownerId', v)}>
-                <SelectTrigger className={selectCls}>
-                  <SelectValue placeholder="Selecionar responsável" />
-                </SelectTrigger>
-                <SelectContent className="border-slate-700 bg-slate-800 text-slate-100">
-                  {mockOwners.map((owner) => (
-                    <SelectItem key={owner.id} value={owner.id}>
-                      {owner.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              {errors.ownerId && <p className="text-xs text-red-400">{errors.ownerId.message}</p>}
-            </div>
+          {/* Etapa */}
+          <div className="space-y-1.5">
+            <Label className="text-slate-300">
+              Etapa <span className="text-red-400">*</span>
+            </Label>
+            <Select value={stageValue} onValueChange={(v) => setValue('stage', v as DealStage)}>
+              <SelectTrigger className={selectCls}>
+                <SelectValue placeholder="Selecionar etapa" />
+              </SelectTrigger>
+              <SelectContent className="border-slate-700 bg-slate-800 text-slate-100">
+                {PIPELINE_COLUMNS.map((col) => (
+                  <SelectItem key={col.id} value={col.id}>
+                    {col.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            {errors.stage && <p className="text-xs text-red-400">{errors.stage.message}</p>}
           </div>
 
           <DialogFooter className="pt-2">
@@ -237,7 +223,10 @@ export function DealFormModal({
             >
               Cancelar
             </Button>
-            <Button type="submit" disabled={isSubmitting}>
+            <Button
+              type="submit"
+              disabled={createDeal.isPending || updateDeal.isPending}
+            >
               {isEditing ? 'Salvar alterações' : 'Criar negócio'}
             </Button>
           </DialogFooter>
