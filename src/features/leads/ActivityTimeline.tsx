@@ -161,14 +161,18 @@ export function ActivityTimeline({ leadId, activities, isLoading }: ActivityTime
   const typeValue = watch('type')
 
   async function onSubmit(data: ActivityFormData) {
-    await createActivity.mutateAsync({
-      leadId,
-      type: data.type,
-      description: data.description,
-      scheduledAt: data.scheduledAt || undefined,
-    })
-    reset({ type: 'note' })
-    setFormOpen(false)
+    try {
+      await createActivity.mutateAsync({
+        leadId,
+        type: data.type,
+        description: data.description,
+        scheduledAt: data.scheduledAt || undefined,
+      })
+      reset({ type: 'note' })
+      setFormOpen(false)
+    } catch {
+      // erro exibido abaixo do formulário via createActivity.error
+    }
   }
 
   const inputCls = 'flex w-full rounded-md border border-slate-600 bg-slate-700 px-3 py-2 text-sm text-slate-100 placeholder:text-slate-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500'
@@ -218,6 +222,14 @@ export function ActivityTimeline({ leadId, activities, isLoading }: ActivityTime
           />
           {errors.description && (
             <p className="text-xs text-red-400">{errors.description.message}</p>
+          )}
+
+          {createActivity.error && (
+            <p className="text-xs text-red-400">
+              {createActivity.error.message.includes('scheduled_at')
+                ? 'Execute a migration 008 no Supabase Studio antes de usar este campo.'
+                : createActivity.error.message}
+            </p>
           )}
 
           <div className="flex gap-2 justify-end">
