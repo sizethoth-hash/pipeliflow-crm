@@ -10,7 +10,8 @@ const PAGE_TITLES: Record<string, string> = {
   '/settings': 'Configurações',
 }
 
-function getPageTitle(pathname: string): string {
+function getPageTitle(pathname: string | null): string {
+  if (!pathname) return 'PipeFlow'
   for (const [path, title] of Object.entries(PAGE_TITLES)) {
     if (pathname === path || pathname.startsWith(`${path}/`)) {
       return title
@@ -26,7 +27,7 @@ interface TopBarProps {
 
 export function TopBar({ onMenuClick, actions }: TopBarProps) {
   const pathname = usePathname()
-  const title = getPageTitle(pathname)
+  const title = getPageTitle(pathname ?? null)
 
   return (
     <header className="flex h-16 shrink-0 items-center gap-4 border-b border-slate-800 bg-slate-900 px-4 lg:px-6">

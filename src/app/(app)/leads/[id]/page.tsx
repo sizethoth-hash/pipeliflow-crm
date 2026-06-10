@@ -32,7 +32,8 @@ function formatDate(iso: string) {
 export default function LeadDetailPage() {
   const params = useParams()
   const router = useRouter()
-  const id = typeof params.id === 'string' ? params.id : (params.id?.[0] ?? '')
+  const rawId = params?.id
+  const id = typeof rawId === 'string' ? rawId : (rawId?.[0] ?? '')
 
   const { getLeadById, getActivitiesByLeadId } = useLeadsStore()
   // Subscrever os arrays para reatividade; derivar os dados via getters estáveis
