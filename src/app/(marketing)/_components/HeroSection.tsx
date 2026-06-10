@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { AnimatedStats } from './AnimatedStats'
+import { AnimatedStatsClient } from './AnimatedStatsClient'
 
 export function HeroSection() {
   return (
@@ -61,7 +61,7 @@ export function HeroSection() {
       </div>
 
       {/* Stats animados */}
-      <AnimatedStats />
+      <AnimatedStatsClient />
 
       {/* Mockup do pipeline */}
       <div className="relative mt-10 w-full max-w-5xl md:mt-20" aria-label="Pré-visualização do pipeline Kanban">

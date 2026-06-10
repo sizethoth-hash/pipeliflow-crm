@@ -1,5 +1,7 @@
 import type { ReactNode } from 'react'
 
+export const dynamic = 'force-dynamic'
+
 export default function AuthLayout({ children }: { children: ReactNode }) {
   return (
     <div className="min-h-screen grid lg:grid-cols-2">
@@ -32,9 +34,7 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
               "Organizamos todo nosso processo comercial no PipeFlow. Aumentamos nossa taxa de
               conversão em 40% nos primeiros três meses."
             </p>
-            <footer className="text-slate-500 text-sm">
-              — Mariana Costa, CEO da Vendas360
-            </footer>
+            <footer className="text-slate-500 text-sm">— Mariana Costa, CEO da Vendas360</footer>
           </blockquote>
 
           <div className="grid grid-cols-3 gap-4 pt-4 border-t border-slate-800">

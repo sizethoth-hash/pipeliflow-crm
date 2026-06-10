@@ -208,14 +208,16 @@ FASE 3 — PRODUTO   (M12 → M14) Stripe, Resend, Deploy
 **Objetivo:** Banco de dados configurado, autenticação real funcionando, RLS ativo em todas as tabelas.
 
 #### Entregas
-- [ ] Criar projeto no Supabase
-- [ ] Migrations SQL:
-  - `workspaces` (id, name, plan, owner_id, created_at)
-  - `workspace_members` (workspace_id, user_id, role)
+- [x] Criar projeto no Supabase
+- [x] Migrations SQL:
+  - `workspaces` (id, name, plan, owner_id, created_at) + trigger `set_updated_at`
+  - `workspace_members` (workspace_id, user_id, role) + helpers `is_workspace_member()` / `is_workspace_admin()`
   - `leads` (id, workspace_id, name, email, phone, company, job_title, status, owner_id, created_at)
   - `deals` (id, workspace_id, lead_id, title, value, stage, owner_id, due_date, created_at)
   - `activities` (id, workspace_id, lead_id, type, description, author_id, created_at)
-- [ ] RLS policies para cada tabela: leitura/escrita apenas para membros do workspace
+  - `subscriptions` (workspace_id, stripe_customer_id, plan, status) + trigger auto-cria Free no onboarding
+- [x] RLS policies para cada tabela: leitura/escrita apenas para membros do workspace; `subscriptions` bloqueado para roles normais (apenas service_role via webhook)
+- [x] `src/types/supabase.ts`: tipos TypeScript sincronizados com schema (Row, Insert, Update, Enums, Database)
 - [ ] Substituir mock auth por Supabase Auth (email+password)
 - [x] `lib/supabase/client.ts`: browser client lazy singleton (`getBrowserClient()`)
 - [x] `lib/supabase/server.ts`: server client async com `cookies()` do `@supabase/ssr` (`getServerClient()`)

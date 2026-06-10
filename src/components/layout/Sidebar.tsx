@@ -1,5 +1,19 @@
 'use client'
 
+import {
+  Check,
+  ChevronsUpDown,
+  Kanban,
+  LayoutDashboard,
+  LogOut,
+  Plus,
+  Settings2,
+  UserCircle,
+  Users,
+  X,
+} from 'lucide-react'
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import { Avatar, AvatarFallback } from '@/components/ui/Avatar'
 import { Badge } from '@/components/ui/Badge'
 import {
@@ -13,20 +27,6 @@ import {
 import { cn } from '@/lib/utils'
 import { mockCurrentUser } from '@/mocks/workspaces'
 import { useWorkspaceStore } from '@/store/useWorkspaceStore'
-import {
-  Check,
-  ChevronsUpDown,
-  Kanban,
-  LayoutDashboard,
-  LogOut,
-  Plus,
-  Settings2,
-  Users,
-  UserCircle,
-  X,
-} from 'lucide-react'
-import Link from 'next/link'
-import { usePathname } from 'next/navigation'
 
 const NAV_ITEMS = [
   { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
@@ -137,7 +137,7 @@ export function Sidebar({ onClose }: SidebarProps) {
       <nav className="flex-1 overflow-y-auto p-3" aria-label="Menu principal">
         <ul className="space-y-0.5" role="list">
           {NAV_ITEMS.map(({ href, label, icon: Icon }) => {
-            const isActive = pathname === href || pathname.startsWith(`${href}/`)
+            const isActive = pathname !== null && (pathname === href || pathname.startsWith(`${href}/`))
             return (
               <li key={href}>
                 <Link
