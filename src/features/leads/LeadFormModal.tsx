@@ -28,8 +28,7 @@ import type { Lead } from '@/types/lead'
 
 const inputCls =
   'border-slate-600 bg-slate-700 text-slate-100 placeholder:text-slate-500 focus-visible:ring-indigo-500'
-const selectCls =
-  'border-slate-600 bg-slate-700 text-slate-100 focus:ring-indigo-500'
+const selectCls = 'border-slate-600 bg-slate-700 text-slate-100 focus:ring-indigo-500'
 
 const leadSchema = z.object({
   name: z.string().min(2, 'Nome deve ter pelo menos 2 caracteres'),
@@ -127,7 +126,12 @@ export function LeadFormModal({ open, onClose, lead }: LeadFormModalProps) {
             <Label htmlFor="name" className="text-slate-300">
               Nome <span className="text-red-400">*</span>
             </Label>
-            <Input id="name" placeholder="Ex: Maria Silva" className={inputCls} {...register('name')} />
+            <Input
+              id="name"
+              placeholder="Ex: Maria Silva"
+              className={inputCls}
+              {...register('name')}
+            />
             {errors.name && <p className="text-xs text-red-400">{errors.name.message}</p>}
           </div>
 
@@ -136,30 +140,59 @@ export function LeadFormModal({ open, onClose, lead }: LeadFormModalProps) {
             <Label htmlFor="email" className="text-slate-300">
               E-mail <span className="text-red-400">*</span>
             </Label>
-            <Input id="email" type="email" placeholder="maria@empresa.com" className={inputCls} {...register('email')} />
+            <Input
+              id="email"
+              type="email"
+              placeholder="maria@empresa.com"
+              className={inputCls}
+              {...register('email')}
+            />
             {errors.email && <p className="text-xs text-red-400">{errors.email.message}</p>}
           </div>
 
           {/* Telefone + Empresa (2 colunas) */}
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-1.5">
-              <Label htmlFor="phone" className="text-slate-300">Telefone</Label>
-              <Input id="phone" placeholder="(11) 99999-9999" className={inputCls} {...register('phone')} />
+              <Label htmlFor="phone" className="text-slate-300">
+                Telefone
+              </Label>
+              <Input
+                id="phone"
+                placeholder="(11) 99999-9999"
+                className={inputCls}
+                {...register('phone')}
+              />
             </div>
             <div className="space-y-1.5">
-              <Label htmlFor="company" className="text-slate-300">Empresa</Label>
-              <Input id="company" placeholder="Ex: ACME Corp" className={inputCls} {...register('company')} />
+              <Label htmlFor="company" className="text-slate-300">
+                Empresa
+              </Label>
+              <Input
+                id="company"
+                placeholder="Ex: ACME Corp"
+                className={inputCls}
+                {...register('company')}
+              />
             </div>
           </div>
 
           {/* Cargo + Valor potencial (2 colunas) */}
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-1.5">
-              <Label htmlFor="jobTitle" className="text-slate-300">Cargo</Label>
-              <Input id="jobTitle" placeholder="Ex: Gerente Comercial" className={inputCls} {...register('jobTitle')} />
+              <Label htmlFor="jobTitle" className="text-slate-300">
+                Cargo
+              </Label>
+              <Input
+                id="jobTitle"
+                placeholder="Ex: Gerente Comercial"
+                className={inputCls}
+                {...register('jobTitle')}
+              />
             </div>
             <div className="space-y-1.5">
-              <Label htmlFor="potentialValue" className="text-slate-300">Valor potencial (R$)</Label>
+              <Label htmlFor="potentialValue" className="text-slate-300">
+                Valor potencial (R$)
+              </Label>
               <Input
                 id="potentialValue"
                 type="number"
@@ -177,7 +210,9 @@ export function LeadFormModal({ open, onClose, lead }: LeadFormModalProps) {
 
           {/* Anotações */}
           <div className="space-y-1.5">
-            <Label htmlFor="notes" className="text-slate-300">Anotações</Label>
+            <Label htmlFor="notes" className="text-slate-300">
+              Anotações
+            </Label>
             <textarea
               id="notes"
               rows={3}
@@ -233,7 +268,12 @@ export function LeadFormModal({ open, onClose, lead }: LeadFormModalProps) {
           </div>
 
           <DialogFooter className="pt-2">
-            <Button type="button" variant="ghost" onClick={onClose} className="text-slate-300 hover:text-white">
+            <Button
+              type="button"
+              variant="ghost"
+              onClick={onClose}
+              className="text-slate-300 hover:text-white"
+            >
               Cancelar
             </Button>
             <Button type="submit" disabled={isSubmitting}>

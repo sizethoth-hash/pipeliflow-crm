@@ -135,9 +135,7 @@ export default function OnboardingPage() {
                   {errors.workspaceName.message}
                 </p>
               )}
-              <p className="text-xs text-slate-400">
-                Você poderá convidar colaboradores depois.
-              </p>
+              <p className="text-xs text-slate-400">Você poderá convidar colaboradores depois.</p>
             </div>
 
             <Button type="submit" className="w-full">

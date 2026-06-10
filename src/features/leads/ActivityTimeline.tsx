@@ -82,7 +82,9 @@ function ActivityItem({ activity, isLast }: ActivityItemProps) {
 
         <div className="mt-2 flex items-center gap-1.5">
           <Avatar className="h-5 w-5">
-            <AvatarFallback className="text-[9px]">{getInitials(activity.authorName)}</AvatarFallback>
+            <AvatarFallback className="text-[9px]">
+              {getInitials(activity.authorName)}
+            </AvatarFallback>
           </Avatar>
           <span className="text-xs text-slate-500">{activity.authorName}</span>
         </div>

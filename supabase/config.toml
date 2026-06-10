@@ -1,4 +1,4 @@
-﻿[api]
+[api]
 enabled = true
 port = 54321
 schemas = ["public", "graphql_public"]

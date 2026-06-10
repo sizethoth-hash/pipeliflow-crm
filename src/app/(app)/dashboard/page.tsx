@@ -1,7 +1,7 @@
 'use client'
 
 import { Users, Briefcase, DollarSign, TrendingUp } from 'lucide-react'
-import { useWorkspaceStore } from '@/store/useWorkspaceStore'
+import { useAuthStore } from '@/store/useAuthStore'
 import { useDashboardMetrics } from '@/hooks/useDashboardMetrics'
 import { MetricCard } from '@/features/dashboard/MetricCard'
 import { SalesFunnelChart } from '@/features/dashboard/SalesFunnelChart'
@@ -23,10 +23,11 @@ function compactBRL(value: number): string {
 }
 
 export default function DashboardPage() {
-  const { currentUser } = useWorkspaceStore()
+  const { user } = useAuthStore()
   const { metrics, funnelData, upcomingDeals, recentLeads } = useDashboardMetrics()
 
-  const firstName = currentUser.name.split(' ')[0]
+  const fullName = user?.user_metadata?.full_name ?? user?.email ?? 'Usuário'
+  const firstName = fullName.split(' ')[0]
 
   return (
     <div className="h-full overflow-y-auto p-6 lg:p-8">

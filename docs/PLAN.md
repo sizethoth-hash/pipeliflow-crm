@@ -218,14 +218,17 @@ FASE 3 — PRODUTO   (M12 → M14) Stripe, Resend, Deploy
   - `subscriptions` (workspace_id, stripe_customer_id, plan, status) + trigger auto-cria Free no onboarding
 - [x] RLS policies para cada tabela: leitura/escrita apenas para membros do workspace; `subscriptions` bloqueado para roles normais (apenas service_role via webhook)
 - [x] `src/types/supabase.ts`: tipos TypeScript sincronizados com schema (Row, Insert, Update, Enums, Database)
-- [ ] Substituir mock auth por Supabase Auth (email+password)
+- [x] Substituir mock auth por Supabase Auth (email+password)
 - [x] `lib/supabase/client.ts`: browser client lazy singleton (`getBrowserClient()`)
 - [x] `lib/supabase/server.ts`: server client async com `cookies()` do `@supabase/ssr` (`getServerClient()`)
 - [x] Variáveis de ambiente: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY` — `.env.local` protegido no `.gitignore`
-- [ ] Atualizar `useAuthStore` para usar sessão real do Supabase
-- [ ] Middleware Next.js real: proteger rotas `(app)/` com `@supabase/ssr`
-- [ ] Fluxo de onboarding gravando workspace no banco
-- [ ] Testes de integração: login, logout, criação de workspace
+- [x] Atualizar `useAuthStore` para usar sessão real do Supabase
+- [x] Middleware Next.js real: proteger rotas `(app)/` com `@supabase/ssr`
+- [x] Fluxo de onboarding gravando workspace no banco via RPC atômica `create_workspace_with_admin`
+- [x] Testes de integração: login, logout, criação de workspace (8/8 Playwright passando)
+- [x] Migration 007: `SET search_path = public` em todas as funções `SECURITY DEFINER`
+- [x] SMTP configurado via Resend (`smtp.resend.com:465`) — `mailer_autoconfirm=true` em dev (reativar no M14)
+- [x] `suppressHydrationWarning` no `<body>` para extensões de browser
 
 **Commit final:** `feat: supabase schema, RLS policies, and real authentication`
 

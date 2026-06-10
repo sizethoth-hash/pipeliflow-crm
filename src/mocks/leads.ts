@@ -219,7 +219,8 @@ export const mockActivities: Activity[] = [
     leadId: 'lead-1',
     workspaceId: 'ws-1',
     type: 'call',
-    description: 'Ligação inicial para apresentar a solução. Fernanda demonstrou interesse e pediu uma proposta detalhada.',
+    description:
+      'Ligação inicial para apresentar a solução. Fernanda demonstrou interesse e pediu uma proposta detalhada.',
     authorId: 'user-1',
     authorName: 'Sizenando Miguel',
     createdAt: '2026-05-10T10:30:00Z',
@@ -229,7 +230,8 @@ export const mockActivities: Activity[] = [
     leadId: 'lead-1',
     workspaceId: 'ws-1',
     type: 'email',
-    description: 'Envio de proposta comercial com plano Pro anual. Inclui desconto de 20% para contrato de 12 meses.',
+    description:
+      'Envio de proposta comercial com plano Pro anual. Inclui desconto de 20% para contrato de 12 meses.',
     authorId: 'user-1',
     authorName: 'Sizenando Miguel',
     createdAt: '2026-05-15T09:00:00Z',
@@ -239,7 +241,8 @@ export const mockActivities: Activity[] = [
     leadId: 'lead-1',
     workspaceId: 'ws-1',
     type: 'meeting',
-    description: 'Reunião de alinhamento via Google Meet. Apresentamos o demo ao time de operações. Próximo passo: aprovação do jurídico.',
+    description:
+      'Reunião de alinhamento via Google Meet. Apresentamos o demo ao time de operações. Próximo passo: aprovação do jurídico.',
     authorId: 'user-1',
     authorName: 'Sizenando Miguel',
     createdAt: '2026-05-22T14:00:00Z',
@@ -249,7 +252,8 @@ export const mockActivities: Activity[] = [
     leadId: 'lead-1',
     workspaceId: 'ws-1',
     type: 'note',
-    description: 'Fernanda mencionou que o principal concorrente é o HubSpot. Precisamos destacar o diferencial de preço e simplicidade.',
+    description:
+      'Fernanda mencionou que o principal concorrente é o HubSpot. Precisamos destacar o diferencial de preço e simplicidade.',
     authorId: 'user-1',
     authorName: 'Sizenando Miguel',
     createdAt: '2026-05-28T14:30:00Z',
@@ -269,7 +273,8 @@ export const mockActivities: Activity[] = [
     leadId: 'lead-2',
     workspaceId: 'ws-1',
     type: 'meeting',
-    description: 'Demo realizada. Time de 8 pessoas. Interesse alto, principalmente no pipeline Kanban.',
+    description:
+      'Demo realizada. Time de 8 pessoas. Interesse alto, principalmente no pipeline Kanban.',
     authorId: 'user-1',
     authorName: 'Sizenando Miguel',
     createdAt: '2026-05-19T11:00:00Z',
@@ -279,7 +284,8 @@ export const mockActivities: Activity[] = [
     leadId: 'lead-3',
     workspaceId: 'ws-1',
     type: 'email',
-    description: 'E-mail de prospecção enviado após evento de startups. Camila abriu o e-mail 3 vezes.',
+    description:
+      'E-mail de prospecção enviado após evento de startups. Camila abriu o e-mail 3 vezes.',
     authorId: 'user-2',
     authorName: 'Ana Lima',
     createdAt: '2026-05-14T08:30:00Z',
@@ -289,7 +295,8 @@ export const mockActivities: Activity[] = [
     leadId: 'lead-3',
     workspaceId: 'ws-1',
     type: 'call',
-    description: 'Retorno da Camila. Está avaliando junto com o co-fundador. Retorno previsto em 2 semanas.',
+    description:
+      'Retorno da Camila. Está avaliando junto com o co-fundador. Retorno previsto em 2 semanas.',
     authorId: 'user-2',
     authorName: 'Ana Lima',
     createdAt: '2026-05-20T16:45:00Z',
@@ -299,7 +306,8 @@ export const mockActivities: Activity[] = [
     leadId: 'lead-4',
     workspaceId: 'ws-1',
     type: 'meeting',
-    description: 'Reunião presencial no escritório deles. Contrato assinado na hora. Bruno ficou impressionado com a facilidade de uso.',
+    description:
+      'Reunião presencial no escritório deles. Contrato assinado na hora. Bruno ficou impressionado com a facilidade de uso.',
     authorId: 'user-1',
     authorName: 'Sizenando Miguel',
     createdAt: '2026-05-15T10:00:00Z',
@@ -309,7 +317,8 @@ export const mockActivities: Activity[] = [
     leadId: 'lead-9',
     workspaceId: 'ws-1',
     type: 'call',
-    description: 'Ligação de follow-up. Larissa confirmou que está negociando internamente a aprovação do orçamento.',
+    description:
+      'Ligação de follow-up. Larissa confirmou que está negociando internamente a aprovação do orçamento.',
     authorId: 'user-2',
     authorName: 'Ana Lima',
     createdAt: '2026-05-29T13:00:00Z',

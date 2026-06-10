@@ -3,7 +3,10 @@ import type { LeadStatus } from '@/types/lead'
 
 const STATUS_CONFIG: Record<
   LeadStatus,
-  { label: string; variant: 'default' | 'secondary' | 'destructive' | 'success' | 'outline' | 'warning' }
+  {
+    label: string
+    variant: 'default' | 'secondary' | 'destructive' | 'success' | 'outline' | 'warning'
+  }
 > = {
   new: { label: 'Novo Lead', variant: 'secondary' },
   contacted: { label: 'Contato Realizado', variant: 'default' },
