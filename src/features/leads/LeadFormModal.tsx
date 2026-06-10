@@ -22,8 +22,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/Select'
-import { mockOwners } from '@/mocks/leads'
-import { useLeadsStore } from '@/store/useLeadsStore'
+import { useCreateLead, useUpdateLead } from '@/hooks/useLeads'
 import type { Lead } from '@/types/lead'
 
 const inputCls =
@@ -44,7 +43,6 @@ const leadSchema = z.object({
     .optional(),
   notes: z.string().optional(),
   status: z.enum(['new', 'contacted', 'proposal', 'negotiation', 'won', 'lost']),
-  ownerId: z.string().min(1, 'Selecione um responsável'),
 })
 
 type LeadFormData = z.infer<typeof leadSchema>
@@ -56,7 +54,8 @@ interface LeadFormModalProps {
 }
 
 export function LeadFormModal({ open, onClose, lead }: LeadFormModalProps) {
-  const { addLead, updateLead } = useLeadsStore()
+  const createLead = useCreateLead()
+  const updateLead = useUpdateLead()
   const isEditing = Boolean(lead)
 
   const {
@@ -68,10 +67,7 @@ export function LeadFormModal({ open, onClose, lead }: LeadFormModalProps) {
     formState: { errors, isSubmitting },
   } = useForm<LeadFormData>({
     resolver: zodResolver(leadSchema),
-    defaultValues: {
-      status: 'new',
-      ownerId: 'user-1',
-    },
+    defaultValues: { status: 'new' },
   })
 
   useEffect(() => {
@@ -86,32 +82,48 @@ export function LeadFormModal({ open, onClose, lead }: LeadFormModalProps) {
           potentialValue: lead.potentialValue,
           notes: lead.notes ?? '',
           status: lead.status,
-          ownerId: lead.ownerId,
         })
       } else {
-        reset({ status: 'new', ownerId: 'user-1' })
+        reset({ status: 'new' })
       }
     }
   }, [open, lead, reset])
 
-  function onSubmit(data: LeadFormData) {
-    const owner = mockOwners.find((o) => o.id === data.ownerId)
-    const ownerName = owner?.name ?? ''
-
-    if (isEditing && lead) {
-      updateLead(lead.id, { ...data, ownerName })
-    } else {
-      addLead({
-        ...data,
-        ownerName,
-        workspaceId: 'ws-1',
-      })
+  async function onSubmit(data: LeadFormData) {
+    try {
+      if (isEditing && lead) {
+        await updateLead.mutateAsync({
+          id: lead.id,
+          data: {
+            name: data.name,
+            email: data.email,
+            phone: data.phone || null,
+            company: data.company || null,
+            job_title: data.jobTitle || null,
+            potential_value: data.potentialValue ?? null,
+            notes: data.notes || null,
+            status: data.status,
+          },
+        })
+      } else {
+        await createLead.mutateAsync({
+          name: data.name,
+          email: data.email,
+          phone: data.phone || null,
+          company: data.company || null,
+          job_title: data.jobTitle || null,
+          potential_value: data.potentialValue ?? null,
+          notes: data.notes || null,
+          status: data.status,
+        })
+      }
+      onClose()
+    } catch {
+      // Erro já capturado pelo mutation.error — não fechar o modal
     }
-    onClose()
   }
 
   const statusValue = watch('status')
-  const ownerValue = watch('ownerId')
 
   return (
     <Dialog open={open} onOpenChange={(o) => !o && onClose()}>
@@ -150,7 +162,7 @@ export function LeadFormModal({ open, onClose, lead }: LeadFormModalProps) {
             {errors.email && <p className="text-xs text-red-400">{errors.email.message}</p>}
           </div>
 
-          {/* Telefone + Empresa (2 colunas) */}
+          {/* Telefone + Empresa */}
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-1.5">
               <Label htmlFor="phone" className="text-slate-300">
@@ -176,7 +188,7 @@ export function LeadFormModal({ open, onClose, lead }: LeadFormModalProps) {
             </div>
           </div>
 
-          {/* Cargo + Valor potencial (2 colunas) */}
+          {/* Cargo + Valor potencial */}
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-1.5">
               <Label htmlFor="jobTitle" className="text-slate-300">
@@ -222,52 +234,36 @@ export function LeadFormModal({ open, onClose, lead }: LeadFormModalProps) {
             />
           </div>
 
-          {/* Status + Responsável (2 colunas) */}
-          <div className="grid grid-cols-2 gap-3">
-            <div className="space-y-1.5">
-              <Label className="text-slate-300">
-                Status <span className="text-red-400">*</span>
-              </Label>
-              <Select
-                value={statusValue}
-                onValueChange={(v) => setValue('status', v as LeadFormData['status'])}
-              >
-                <SelectTrigger className={selectCls}>
-                  <SelectValue placeholder="Selecionar status" />
-                </SelectTrigger>
-                <SelectContent className="border-slate-700 bg-slate-800 text-slate-100">
-                  <SelectItem value="new">Novo Lead</SelectItem>
-                  <SelectItem value="contacted">Contato Realizado</SelectItem>
-                  <SelectItem value="proposal">Proposta Enviada</SelectItem>
-                  <SelectItem value="negotiation">Negociação</SelectItem>
-                  <SelectItem value="won">Fechado Ganho</SelectItem>
-                  <SelectItem value="lost">Fechado Perdido</SelectItem>
-                </SelectContent>
-              </Select>
-              {errors.status && <p className="text-xs text-red-400">{errors.status.message}</p>}
-            </div>
-
-            <div className="space-y-1.5">
-              <Label className="text-slate-300">
-                Responsável <span className="text-red-400">*</span>
-              </Label>
-              <Select value={ownerValue} onValueChange={(v) => setValue('ownerId', v)}>
-                <SelectTrigger className={selectCls}>
-                  <SelectValue placeholder="Selecionar responsável" />
-                </SelectTrigger>
-                <SelectContent className="border-slate-700 bg-slate-800 text-slate-100">
-                  {mockOwners.map((owner) => (
-                    <SelectItem key={owner.id} value={owner.id}>
-                      {owner.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              {errors.ownerId && <p className="text-xs text-red-400">{errors.ownerId.message}</p>}
-            </div>
+          {/* Status */}
+          <div className="space-y-1.5">
+            <Label className="text-slate-300">
+              Status <span className="text-red-400">*</span>
+            </Label>
+            <Select
+              value={statusValue}
+              onValueChange={(v) => setValue('status', v as LeadFormData['status'])}
+            >
+              <SelectTrigger className={selectCls}>
+                <SelectValue placeholder="Selecionar status" />
+              </SelectTrigger>
+              <SelectContent className="border-slate-700 bg-slate-800 text-slate-100">
+                <SelectItem value="new">Novo Lead</SelectItem>
+                <SelectItem value="contacted">Contato Realizado</SelectItem>
+                <SelectItem value="proposal">Proposta Enviada</SelectItem>
+                <SelectItem value="negotiation">Negociação</SelectItem>
+                <SelectItem value="won">Fechado Ganho</SelectItem>
+                <SelectItem value="lost">Fechado Perdido</SelectItem>
+              </SelectContent>
+            </Select>
+            {errors.status && <p className="text-xs text-red-400">{errors.status.message}</p>}
           </div>
 
           <DialogFooter className="pt-2">
+            {(createLead.error || updateLead.error) && (
+              <p className="w-full text-xs text-red-400">
+                {(createLead.error ?? updateLead.error)?.message ?? 'Erro ao salvar lead.'}
+              </p>
+            )}
             <Button
               type="button"
               variant="ghost"
@@ -276,7 +272,7 @@ export function LeadFormModal({ open, onClose, lead }: LeadFormModalProps) {
             >
               Cancelar
             </Button>
-            <Button type="submit" disabled={isSubmitting}>
+            <Button type="submit" disabled={isSubmitting || createLead.isPending || updateLead.isPending}>
               {isEditing ? 'Salvar alterações' : 'Criar lead'}
             </Button>
           </DialogFooter>

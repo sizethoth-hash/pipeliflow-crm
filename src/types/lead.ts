@@ -27,6 +27,7 @@ export interface Activity {
   description: string
   authorId: string
   authorName: string
+  scheduledAt?: string
   createdAt: string
 }
 

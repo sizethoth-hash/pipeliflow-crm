@@ -1,6 +1,6 @@
 'use client'
 
-import { ArrowLeft, Building2, Calendar, Mail, Pencil, Phone, User } from 'lucide-react'
+import { ArrowLeft, Building2, Calendar, Loader2, Mail, Pencil, Phone, User } from 'lucide-react'
 import Link from 'next/link'
 import { useParams, useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
@@ -10,7 +10,8 @@ import { Button } from '@/components/ui/Button'
 import { ActivityTimeline } from '@/features/leads/ActivityTimeline'
 import { LeadFormModal } from '@/features/leads/LeadFormModal'
 import { LeadStatusBadge } from '@/features/leads/LeadStatusBadge'
-import { useLeadsStore } from '@/store/useLeadsStore'
+import { useActivities } from '@/hooks/useActivities'
+import { useLead } from '@/hooks/useLeads'
 
 function getInitials(name: string) {
   return name
@@ -35,18 +36,22 @@ export default function LeadDetailPage() {
   const rawId = params?.id
   const id = typeof rawId === 'string' ? rawId : (rawId?.[0] ?? '')
 
-  const { getLeadById, getActivitiesByLeadId } = useLeadsStore()
-  // Subscrever os arrays para reatividade; derivar os dados via getters estáveis
-  useLeadsStore((s) => s.leads)
-  useLeadsStore((s) => s.activities)
-  const lead = getLeadById(id)
-  const activities = getActivitiesByLeadId(id)
+  const { data: lead, isLoading: leadLoading } = useLead(id)
+  const { data: activities = [], isLoading: activitiesLoading } = useActivities(id)
 
   const [editOpen, setEditOpen] = useState(false)
 
   useEffect(() => {
-    if (!lead) router.replace('/leads')
-  }, [lead, router])
+    if (!leadLoading && !lead) router.replace('/leads')
+  }, [lead, leadLoading, router])
+
+  if (leadLoading) {
+    return (
+      <div className="flex h-full items-center justify-center">
+        <Loader2 className="h-6 w-6 animate-spin text-slate-500" />
+      </div>
+    )
+  }
 
   if (!lead) return null
 
@@ -81,7 +86,6 @@ export default function LeadDetailPage() {
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         {/* Coluna esquerda — perfil */}
         <div className="space-y-5 lg:col-span-1">
-          {/* Card de perfil */}
           <div className="rounded-lg border border-slate-700 bg-slate-800/60 p-6">
             <div className="mb-4 flex items-start justify-between">
               <div className="flex items-center gap-3">
@@ -137,7 +141,7 @@ export default function LeadDetailPage() {
 
               <div className="flex items-center gap-3 text-slate-300">
                 <User className="h-4 w-4 shrink-0 text-slate-500" />
-                <span>{lead.ownerName}</span>
+                <span>{lead.ownerName || '—'}</span>
               </div>
 
               <div className="flex items-center gap-3 text-slate-400">
@@ -152,7 +156,6 @@ export default function LeadDetailPage() {
             <h2 className="mb-3 text-sm font-semibold text-slate-300">Negócios</h2>
             <div className="flex flex-col items-center justify-center rounded-md border border-dashed border-slate-700 py-8 text-center">
               <p className="text-xs text-slate-500">Nenhum negócio vinculado</p>
-              <p className="mt-1 text-xs text-slate-600">Disponível no módulo Pipeline (M5)</p>
             </div>
           </div>
         </div>
@@ -168,7 +171,11 @@ export default function LeadDetailPage() {
                 </span>
               )}
             </h2>
-            <ActivityTimeline activities={activities} />
+            <ActivityTimeline
+              leadId={id}
+              activities={activities}
+              isLoading={activitiesLoading}
+            />
           </div>
         </div>
       </div>

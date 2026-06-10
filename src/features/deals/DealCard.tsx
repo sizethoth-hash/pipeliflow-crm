@@ -15,6 +15,7 @@ import {
 } from '@/components/ui/DropdownMenu'
 import { useDealsStore } from '@/store/useDealsStore'
 import type { Deal } from '@/types/deal'
+import { PIPELINE_COLUMNS } from '@/types/deal'
 
 interface DealCardProps {
   deal: Deal
@@ -89,6 +90,7 @@ export function DealCard({ deal, onEdit, onView, stageId, isOverlay = false }: D
 
   const isWon = stageId === 'won'
   const isLost = stageId === 'lost'
+  const stageColor = PIPELINE_COLUMNS.find((c) => c.id === stageId)?.accentColor ?? '#22c55e'
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -180,7 +182,11 @@ export function DealCard({ deal, onEdit, onView, stageId, isOverlay = false }: D
           {/* Footer */}
           <div className="flex items-center justify-between gap-2">
             <span
-              className={`text-[13px] font-bold tabular-nums ${isLost ? 'text-slate-500 line-through' : 'text-emerald-400'}`}
+              className="text-[13px] font-bold tabular-nums transition-colors duration-300"
+              style={isLost
+                ? { color: '#64748b', textDecoration: 'line-through' }
+                : { color: stageColor }
+              }
             >
               {formatCurrency(deal.value)}
             </span>
