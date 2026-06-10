@@ -22,20 +22,18 @@ export function useDeals() {
 
 export function useCreateDeal() {
   const qc = useQueryClient()
-  const workspaceId = useWorkspaceStore((s) => s.activeWorkspace?.id ?? '')
 
   return useMutation({
-    mutationFn: (payload: DealInsert & { leadName?: string; ownerName?: string }) =>
+    mutationFn: (payload: Omit<DealInsert, 'workspace_id' | 'owner_id'> & { leadName?: string; ownerName?: string }) =>
       createDeal(payload),
-    onSuccess: () => {
-      qc.invalidateQueries({ queryKey: dealsKey(workspaceId) })
+    onSuccess: (created) => {
+      qc.invalidateQueries({ queryKey: dealsKey(created.workspaceId) })
     },
   })
 }
 
 export function useUpdateDeal() {
   const qc = useQueryClient()
-  const workspaceId = useWorkspaceStore((s) => s.activeWorkspace?.id ?? '')
 
   return useMutation({
     mutationFn: ({
@@ -45,20 +43,19 @@ export function useUpdateDeal() {
       id: string
       data: DealUpdate & { leadName?: string; ownerName?: string }
     }) => updateDeal(id, data),
-    onSuccess: () => {
-      qc.invalidateQueries({ queryKey: dealsKey(workspaceId) })
+    onSuccess: (updated) => {
+      qc.invalidateQueries({ queryKey: dealsKey(updated.workspaceId) })
     },
   })
 }
 
 export function useDeleteDeal() {
   const qc = useQueryClient()
-  const workspaceId = useWorkspaceStore((s) => s.activeWorkspace?.id ?? '')
 
   return useMutation({
     mutationFn: (id: string) => deleteDeal(id),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: dealsKey(workspaceId) })
+      qc.invalidateQueries({ queryKey: ['deals'] })
     },
   })
 }
@@ -72,22 +69,24 @@ export function useMoveDeal() {
 
     // Optimistic update — drag-and-drop parece instantâneo
     onMutate: async ({ id, stage }) => {
-      await qc.cancelQueries({ queryKey: dealsKey(workspaceId) })
-      const prev = qc.getQueryData<Deal[]>(dealsKey(workspaceId))
+      const key = dealsKey(workspaceId)
+      await qc.cancelQueries({ queryKey: key })
+      const prev = qc.getQueryData<Deal[]>(key)
 
-      qc.setQueryData<Deal[]>(dealsKey(workspaceId), (old) =>
+      qc.setQueryData<Deal[]>(key, (old) =>
         (old ?? []).map((d) => (d.id === id ? { ...d, stage } : d)),
       )
 
-      return { prev }
+      return { prev, workspaceId }
     },
 
     onError: (_err, _vars, ctx) => {
-      if (ctx?.prev) qc.setQueryData(dealsKey(workspaceId), ctx.prev)
+      if (ctx?.prev) qc.setQueryData(dealsKey(ctx.workspaceId), ctx.prev)
     },
 
-    onSettled: () => {
-      qc.invalidateQueries({ queryKey: dealsKey(workspaceId) })
+    onSettled: (_data, _err, _vars, ctx) => {
+      // Invalida pelo workspaceId que estava ativo no momento do drag
+      qc.invalidateQueries({ queryKey: dealsKey(ctx?.workspaceId ?? workspaceId) })
     },
   })
 }

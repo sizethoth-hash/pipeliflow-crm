@@ -1,8 +1,6 @@
 'use client'
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { useWorkspaceStore } from '@/store/useWorkspaceStore'
-import { useAuthStore } from '@/store/useAuthStore'
 import { createActivity, deleteActivity, getActivitiesByLead } from '@/services/leads'
 import type { Activity } from '@/types/lead'
 
@@ -20,8 +18,6 @@ export function useActivities(leadId: string) {
 
 export function useCreateActivity() {
   const qc = useQueryClient()
-  const workspaceId = useWorkspaceStore((s) => s.activeWorkspace?.id ?? '')
-  const userId = useAuthStore((s) => s.user?.id ?? '')
 
   return useMutation({
     mutationFn: ({
@@ -32,14 +28,7 @@ export function useCreateActivity() {
       leadId: string
       type: Activity['type']
       description: string
-    }) =>
-      createActivity({
-        workspaceId,
-        leadId,
-        type,
-        description,
-        authorId: userId,
-      }),
+    }) => createActivity({ leadId, type, description }),
     onSuccess: (_data, vars) => {
       qc.invalidateQueries({ queryKey: activitiesKey(vars.leadId) })
     },

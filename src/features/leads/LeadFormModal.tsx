@@ -23,8 +23,6 @@ import {
   SelectValue,
 } from '@/components/ui/Select'
 import { useCreateLead, useUpdateLead } from '@/hooks/useLeads'
-import { useAuthStore } from '@/store/useAuthStore'
-import { useWorkspaceStore } from '@/store/useWorkspaceStore'
 import type { Lead } from '@/types/lead'
 
 const inputCls =
@@ -58,8 +56,6 @@ interface LeadFormModalProps {
 export function LeadFormModal({ open, onClose, lead }: LeadFormModalProps) {
   const createLead = useCreateLead()
   const updateLead = useUpdateLead()
-  const userId = useAuthStore((s) => s.user?.id ?? '')
-  const workspaceId = useWorkspaceStore((s) => s.activeWorkspace?.id ?? '')
   const isEditing = Boolean(lead)
 
   const {
@@ -94,10 +90,23 @@ export function LeadFormModal({ open, onClose, lead }: LeadFormModalProps) {
   }, [open, lead, reset])
 
   async function onSubmit(data: LeadFormData) {
-    if (isEditing && lead) {
-      await updateLead.mutateAsync({
-        id: lead.id,
-        data: {
+    try {
+      if (isEditing && lead) {
+        await updateLead.mutateAsync({
+          id: lead.id,
+          data: {
+            name: data.name,
+            email: data.email,
+            phone: data.phone || null,
+            company: data.company || null,
+            job_title: data.jobTitle || null,
+            potential_value: data.potentialValue ?? null,
+            notes: data.notes || null,
+            status: data.status,
+          },
+        })
+      } else {
+        await createLead.mutateAsync({
           name: data.name,
           email: data.email,
           phone: data.phone || null,
@@ -106,23 +115,12 @@ export function LeadFormModal({ open, onClose, lead }: LeadFormModalProps) {
           potential_value: data.potentialValue ?? null,
           notes: data.notes || null,
           status: data.status,
-        },
-      })
-    } else {
-      await createLead.mutateAsync({
-        workspace_id: workspaceId,
-        name: data.name,
-        email: data.email,
-        phone: data.phone || null,
-        company: data.company || null,
-        job_title: data.jobTitle || null,
-        potential_value: data.potentialValue ?? null,
-        notes: data.notes || null,
-        status: data.status,
-        owner_id: userId,
-      })
+        })
+      }
+      onClose()
+    } catch {
+      // Erro já capturado pelo mutation.error — não fechar o modal
     }
-    onClose()
   }
 
   const statusValue = watch('status')
@@ -261,6 +259,11 @@ export function LeadFormModal({ open, onClose, lead }: LeadFormModalProps) {
           </div>
 
           <DialogFooter className="pt-2">
+            {(createLead.error || updateLead.error) && (
+              <p className="w-full text-xs text-red-400">
+                {(createLead.error ?? updateLead.error)?.message ?? 'Erro ao salvar lead.'}
+              </p>
+            )}
             <Button
               type="button"
               variant="ghost"

@@ -24,8 +24,6 @@ import {
 } from '@/components/ui/Select'
 import { useCreateDeal, useUpdateDeal } from '@/hooks/useDeals'
 import { useLeads } from '@/hooks/useLeads'
-import { useAuthStore } from '@/store/useAuthStore'
-import { useWorkspaceStore } from '@/store/useWorkspaceStore'
 import type { Deal, DealStage } from '@/types/deal'
 import { PIPELINE_COLUMNS } from '@/types/deal'
 
@@ -60,8 +58,6 @@ export function DealFormModal({
 }: DealFormModalProps) {
   const createDeal = useCreateDeal()
   const updateDeal = useUpdateDeal()
-  const userId = useAuthStore((s) => s.user?.id ?? '')
-  const workspaceId = useWorkspaceStore((s) => s.activeWorkspace?.id ?? '')
   const { data: leadsData } = useLeads(undefined, 1)
   const leads = leadsData?.leads ?? []
   const isEditing = Boolean(deal)
@@ -98,29 +94,31 @@ export function DealFormModal({
   }, [open, deal, defaultStage, reset])
 
   async function onSubmit(data: DealFormData) {
-    if (isEditing && deal) {
-      await updateDeal.mutateAsync({
-        id: deal.id,
-        data: {
+    try {
+      if (isEditing && deal) {
+        await updateDeal.mutateAsync({
+          id: deal.id,
+          data: {
+            title: data.title,
+            value: data.value,
+            lead_id: data.leadId,
+            stage: data.stage,
+            due_date: data.dueDate || null,
+          },
+        })
+      } else {
+        await createDeal.mutateAsync({
           title: data.title,
           value: data.value,
           lead_id: data.leadId,
           stage: data.stage,
           due_date: data.dueDate || null,
-        },
-      })
-    } else {
-      await createDeal.mutateAsync({
-        workspace_id: workspaceId,
-        title: data.title,
-        value: data.value,
-        lead_id: data.leadId,
-        stage: data.stage,
-        due_date: data.dueDate || null,
-        owner_id: userId,
-      })
+        })
+      }
+      onClose()
+    } catch {
+      // Erro exibido pelo mutation.error
     }
-    onClose()
   }
 
   const stageValue = watch('stage')
@@ -215,6 +213,11 @@ export function DealFormModal({
           </div>
 
           <DialogFooter className="pt-2">
+            {(createDeal.error || updateDeal.error) && (
+              <p className="w-full text-xs text-red-400">
+                {(createDeal.error ?? updateDeal.error)?.message ?? 'Erro ao salvar negócio.'}
+              </p>
+            )}
             <Button
               type="button"
               variant="ghost"

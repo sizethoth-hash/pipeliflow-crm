@@ -6,6 +6,23 @@ import type { LeadInsert, LeadUpdate } from '@/types/supabase'
 
 const PAGE_SIZE = 10
 
+// Resolve workspace_id e user_id a partir da sessão — nunca depende do cliente
+async function getSessionContext(): Promise<{ workspaceId: string; userId: string }> {
+  const supabase = await getServerClient()
+  const { data: { user }, error: authErr } = await supabase.auth.getUser()
+  if (authErr || !user) throw new Error('Não autenticado')
+
+  const { data: member, error: memberErr } = await supabase
+    .from('workspace_members')
+    .select('workspace_id')
+    .eq('user_id', user.id)
+    .limit(1)
+    .single()
+
+  if (memberErr || !member) throw new Error('Nenhum workspace encontrado')
+  return { workspaceId: member.workspace_id, userId: user.id }
+}
+
 function rowToLead(row: {
   id: string
   workspace_id: string
@@ -112,11 +129,13 @@ export async function getLead(id: string): Promise<Lead | null> {
   return rowToLead(data)
 }
 
-export async function createLead(payload: LeadInsert): Promise<Lead> {
+export async function createLead(payload: Omit<LeadInsert, 'workspace_id' | 'owner_id'>): Promise<Lead> {
   const supabase = await getServerClient()
+  const { workspaceId, userId } = await getSessionContext()
+
   const { data, error } = await supabase
     .from('leads')
-    .insert(payload)
+    .insert({ ...payload, workspace_id: workspaceId, owner_id: userId })
     .select('id, workspace_id, name, email, phone, company, job_title, status, potential_value, notes, owner_id, created_at, updated_at')
     .single()
 
@@ -177,21 +196,21 @@ export async function getActivitiesByLead(leadId: string): Promise<Activity[]> {
 }
 
 export async function createActivity(payload: {
-  workspaceId: string
   leadId: string
   type: Activity['type']
   description: string
-  authorId: string
 }): Promise<Activity> {
   const supabase = await getServerClient()
+  const { workspaceId, userId } = await getSessionContext()
+
   const { data, error } = await supabase
     .from('activities')
     .insert({
-      workspace_id: payload.workspaceId,
+      workspace_id: workspaceId,
       lead_id: payload.leadId,
       type: payload.type,
       description: payload.description,
-      author_id: payload.authorId,
+      author_id: userId,
     })
     .select('id, workspace_id, lead_id, type, description, author_id, created_at')
     .single()

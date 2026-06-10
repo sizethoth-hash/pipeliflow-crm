@@ -4,6 +4,22 @@ import { getServerClient } from '@/lib/supabase/server'
 import type { Deal, DealStage } from '@/types/deal'
 import type { DealInsert, DealUpdate } from '@/types/supabase'
 
+async function getSessionContext(): Promise<{ workspaceId: string; userId: string }> {
+  const supabase = await getServerClient()
+  const { data: { user }, error: authErr } = await supabase.auth.getUser()
+  if (authErr || !user) throw new Error('Não autenticado')
+
+  const { data: member, error: memberErr } = await supabase
+    .from('workspace_members')
+    .select('workspace_id')
+    .eq('user_id', user.id)
+    .limit(1)
+    .single()
+
+  if (memberErr || !member) throw new Error('Nenhum workspace encontrado')
+  return { workspaceId: member.workspace_id, userId: user.id }
+}
+
 const DEAL_COLS =
   'id, workspace_id, lead_id, title, value, stage, owner_id, due_date, created_at, updated_at'
 
@@ -59,11 +75,13 @@ export async function getDeal(id: string): Promise<Deal | null> {
   return rowToDeal(data)
 }
 
-export async function createDeal(payload: DealInsert): Promise<Deal> {
+export async function createDeal(payload: Omit<DealInsert, 'workspace_id' | 'owner_id'>): Promise<Deal> {
   const supabase = await getServerClient()
+  const { workspaceId, userId } = await getSessionContext()
+
   const { data, error } = await supabase
     .from('deals')
-    .insert(payload)
+    .insert({ ...payload, workspace_id: workspaceId, owner_id: userId })
     .select(DEAL_COLS)
     .single()
 

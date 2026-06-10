@@ -43,7 +43,7 @@ export function KanbanColumn({
   const isLost = column.id === 'lost'
 
   return (
-    <div className="flex w-[272px] shrink-0 flex-col">
+    <div className="flex w-[272px] shrink-0 flex-col" data-column-id={column.id}>
       {/* Accent top bar */}
       <div
         className="h-[3px] w-full rounded-t-xl"
