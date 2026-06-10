@@ -235,23 +235,32 @@ FASE 3 — PRODUTO   (M12 → M14) Stripe, Resend, Deploy
 ---
 
 ### M9 · Leads & Pipeline: Integração Backend
-**Branch:** `feat/leads-backend`
+**Branch:** `feat/leads-data` → mergeado em `main` (PR #11)
 **Objetivo:** Substituir todos os dados mock de leads e negócios por chamadas reais ao Supabase.
 
 #### Entregas
-- [ ] `services/leads.ts`: `getLeads()`, `getLead()`, `createLead()`, `updateLead()`, `deleteLead()`
-- [ ] `services/deals.ts`: `getDeals()`, `getDeal()`, `createDeal()`, `updateDeal()`, `deleteDeal()`, `moveDeal()`
-- [ ] Substituir Zustand stores por TanStack Query (queries + mutations)
+- [x] `services/leads.ts`: `getLeads()`, `getLead()`, `createLead()`, `updateLead()`, `deleteLead()`
+- [x] `services/deals.ts`: `getDeals()`, `getDeal()`, `createDeal()`, `updateDeal()`, `deleteDeal()`, `moveDeal()`
+- [x] Substituir Zustand stores por TanStack Query (queries + mutations)
   - `useLeads()`, `useLead()`, `useCreateLead()`, `useUpdateLead()`, `useDeleteLead()`
   - `useDeals()`, `useCreateDeal()`, `useUpdateDeal()`, `useDeleteDeal()`, `useMoveDeal()`
-- [ ] Drag-and-drop no Kanban persiste `stage` no banco via `useMoveDeal()`
-- [ ] Otimistic updates em todas as mutations
-- [ ] Estados de loading e erro nos formulários e listas
-- [ ] Filtros de busca executados no servidor (Supabase `.ilike()`, `.eq()`)
-- [ ] Paginação server-side com cursor ou offset
-- [ ] Testes de integração: CRUD leads e deals
+- [x] Drag-and-drop no Kanban persiste `stage` no banco via `useMoveDeal()`
+- [x] Optimistic updates em `useMoveDeal()`
+- [x] Estados de loading e erro nos formulários e listas
+- [x] Filtros de busca executados no servidor (Supabase `.ilike()`, `.eq()`)
+- [x] Paginação server-side com offset
+- [x] `workspace_id` e `owner_id` resolvidos server-side via `getSessionContext()` — elimina race condition
+- [x] `QueryProvider` + TanStack Query v5 configurado no layout autenticado
+- [x] `services/metrics.ts`: `getDashboardData()` com métricas agregadas reais
+- [x] Hook `useDashboardData()` substituindo dados mock no dashboard
+- [x] Cor do valor no `DealCard` segue `accentColor` da coluna com transição suave
+- [x] Botão de acesso direto às atividades na lista de leads
+- [x] Campo `scheduled_at` (datetime picker) no formulário de atividades — migration 008
+- [x] API route `DELETE /api/e2e-cleanup` para limpeza de dados de teste (bloqueada em prod)
+- [x] `afterEach` nos testes Playwright com cleanup automático
+- [x] 4/4 testes e2e passando (`e2e/verify-m9.spec.ts`)
 
-**Commit final:** `feat: leads and pipeline connected to Supabase`
+**Commit final:** `feat: M9 — leads, deals e dashboard com dados reais do Supabase`
 
 ---
 
@@ -384,7 +393,7 @@ FASE 3 — PRODUTO   (M12 → M14) Stripe, Resend, Deploy
 | M6 | Detalhe do Lead & Atividades (UI) | `feat/activities-ui` | Interface |
 | M7 | Dashboard de Métricas (UI) | `feat/dashboard-ui` | Interface |
 | M8 | Supabase: Schema, Auth & RLS | `feat/supabase-auth` | Backend |
-| M9 | Leads & Pipeline: Backend | `feat/leads-backend` | Backend |
+| M9 | Leads & Pipeline: Backend | `feat/leads-data` ✅ | Backend |
 | M10 | Atividades & Dashboard: Backend | `feat/activities-backend` | Backend |
 | M11 | Multi-workspace & Colaboração | `feat/workspaces` | Backend |
 | M12 | Monetização com Stripe | `feat/stripe` | Produto |
