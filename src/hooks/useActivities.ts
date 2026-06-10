@@ -24,11 +24,13 @@ export function useCreateActivity() {
       leadId,
       type,
       description,
+      scheduledAt,
     }: {
       leadId: string
       type: Activity['type']
       description: string
-    }) => createActivity({ leadId, type, description }),
+      scheduledAt?: string
+    }) => createActivity({ leadId, type, description, scheduledAt }),
     onSuccess: (_data, vars) => {
       qc.invalidateQueries({ queryKey: activitiesKey(vars.leadId) })
     },

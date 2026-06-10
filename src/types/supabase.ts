@@ -77,6 +77,7 @@ export type ActivityRow = {
   type: ActivityType
   description: string
   author_id: string
+  scheduled_at: string | null
   created_at: string
 }
 
@@ -135,7 +136,7 @@ export type DealInsert = Pick<
 export type ActivityInsert = Pick<
   ActivityRow,
   'workspace_id' | 'lead_id' | 'type' | 'description' | 'author_id'
->
+> & { scheduled_at?: string | null }
 
 // ── Update types (todos os campos opcionais exceto PK) ────────────────────────
 

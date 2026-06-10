@@ -169,6 +169,7 @@ function rowToActivity(row: {
   type: Activity['type']
   description: string
   author_id: string
+  scheduled_at: string | null
   created_at: string
 }): Activity {
   return {
@@ -179,15 +180,18 @@ function rowToActivity(row: {
     description: row.description,
     authorId: row.author_id,
     authorName: '',
+    scheduledAt: row.scheduled_at ?? undefined,
     createdAt: row.created_at,
   }
 }
+
+const ACTIVITY_COLS = 'id, workspace_id, lead_id, type, description, author_id, scheduled_at, created_at'
 
 export async function getActivitiesByLead(leadId: string): Promise<Activity[]> {
   const supabase = await getServerClient()
   const { data, error } = await supabase
     .from('activities')
-    .select('id, workspace_id, lead_id, type, description, author_id, created_at')
+    .select(ACTIVITY_COLS)
     .eq('lead_id', leadId)
     .order('created_at', { ascending: false })
 
@@ -199,6 +203,7 @@ export async function createActivity(payload: {
   leadId: string
   type: Activity['type']
   description: string
+  scheduledAt?: string
 }): Promise<Activity> {
   const supabase = await getServerClient()
   const { workspaceId, userId } = await getSessionContext()
@@ -211,8 +216,9 @@ export async function createActivity(payload: {
       type: payload.type,
       description: payload.description,
       author_id: userId,
+      scheduled_at: payload.scheduledAt ?? null,
     })
-    .select('id, workspace_id, lead_id, type, description, author_id, created_at')
+    .select(ACTIVITY_COLS)
     .single()
 
   if (error) throw new Error(error.message)
