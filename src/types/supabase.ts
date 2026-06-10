@@ -25,7 +25,7 @@ export type SubscriptionStatus =
 
 // ── Row types (shape retornado pelo Supabase) ─────────────────────────────────
 
-export interface WorkspaceRow {
+export type WorkspaceRow = {
   id: string
   name: string
   plan: PlanType
@@ -34,14 +34,14 @@ export interface WorkspaceRow {
   updated_at: string
 }
 
-export interface WorkspaceMemberRow {
+export type WorkspaceMemberRow = {
   workspace_id: string
   user_id: string
   role: MemberRole
   created_at: string
 }
 
-export interface LeadRow {
+export type LeadRow = {
   id: string
   workspace_id: string
   name: string
@@ -57,7 +57,7 @@ export interface LeadRow {
   updated_at: string
 }
 
-export interface DealRow {
+export type DealRow = {
   id: string
   workspace_id: string
   lead_id: string | null
@@ -70,7 +70,7 @@ export interface DealRow {
   updated_at: string
 }
 
-export interface ActivityRow {
+export type ActivityRow = {
   id: string
   workspace_id: string
   lead_id: string
@@ -80,7 +80,7 @@ export interface ActivityRow {
   created_at: string
 }
 
-export interface SubscriptionRow {
+export type SubscriptionRow = {
   id: string
   workspace_id: string
   stripe_customer_id: string | null
@@ -96,11 +96,17 @@ export interface SubscriptionRow {
 
 // ── Insert types (campos obrigatórios para INSERT) ────────────────────────────
 
-export type WorkspaceInsert = Pick<WorkspaceRow, 'name' | 'owner_id'> &
-  Partial<Pick<WorkspaceRow, 'plan'>>
+export type WorkspaceInsert = {
+  name: string
+  owner_id: string
+  plan?: PlanType
+}
 
-export type WorkspaceMemberInsert = Pick<WorkspaceMemberRow, 'workspace_id' | 'user_id'> &
-  Partial<Pick<WorkspaceMemberRow, 'role'>>
+export type WorkspaceMemberInsert = {
+  workspace_id: string
+  user_id: string
+  role?: MemberRole
+}
 
 export type LeadInsert = Pick<
   LeadRow,
@@ -176,31 +182,52 @@ export interface Database {
         Row: WorkspaceRow
         Insert: WorkspaceInsert
         Update: WorkspaceUpdate
+        Relationships: []
       }
       workspace_members: {
         Row: WorkspaceMemberRow
         Insert: WorkspaceMemberInsert
         Update: Partial<Pick<WorkspaceMemberRow, 'role'>>
+        Relationships: []
       }
       leads: {
         Row: LeadRow
         Insert: LeadInsert
         Update: LeadUpdate
+        Relationships: []
       }
       deals: {
         Row: DealRow
         Insert: DealInsert
         Update: DealUpdate
+        Relationships: []
       }
       activities: {
         Row: ActivityRow
         Insert: ActivityInsert
         Update: Partial<Pick<ActivityRow, 'description'>>
+        Relationships: []
       }
       subscriptions: {
         Row: SubscriptionRow
-        Insert: never
+        Insert: Omit<SubscriptionRow, 'id' | 'created_at' | 'updated_at'>
         Update: SubscriptionUpdate
+        Relationships: []
+      }
+    }
+    Views: Record<string, { Row: Record<string, unknown>; Relationships: [] }>
+    Functions: {
+      is_workspace_member: {
+        Args: { p_workspace_id: string }
+        Returns: boolean
+      }
+      is_workspace_admin: {
+        Args: { p_workspace_id: string }
+        Returns: boolean
+      }
+      create_workspace_with_admin: {
+        Args: { p_name: string }
+        Returns: { id: string; name: string; plan: PlanType }
       }
     }
     Enums: {
@@ -211,15 +238,6 @@ export interface Database {
       activity_type: ActivityType
       subscription_status: SubscriptionStatus
     }
-    Functions: {
-      is_workspace_member: {
-        Args: { p_workspace_id: string }
-        Returns: boolean
-      }
-      is_workspace_admin: {
-        Args: { p_workspace_id: string }
-        Returns: boolean
-      }
-    }
+    CompositeTypes: Record<string, unknown>
   }
 }

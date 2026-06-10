@@ -102,7 +102,8 @@ export const useLeadsStore = create<LeadsState>()((set, get) => ({
         (lead.company ?? '').toLowerCase().includes(search) ||
         lead.email.toLowerCase().includes(search)
 
-      const matchesStatus = filters.status === 'all' || lead.status === (filters.status as LeadStatus)
+      const matchesStatus =
+        filters.status === 'all' || lead.status === (filters.status as LeadStatus)
       const matchesOwner = filters.ownerId === 'all' || lead.ownerId === filters.ownerId
 
       return matchesSearch && matchesStatus && matchesOwner

@@ -214,7 +214,9 @@ test.describe('Leads – verificação M4', () => {
 
     await expect(page).toHaveURL(/\/leads\/lead-\d+/)
     // Breadcrumb — link específico no main
-    await expect(page.getByRole('main').getByRole('link', { name: 'Leads', exact: true })).toBeVisible()
+    await expect(
+      page.getByRole('main').getByRole('link', { name: 'Leads', exact: true })
+    ).toBeVisible()
     // Seções esperadas
     await expect(page.getByText('Histórico de Atividades')).toBeVisible()
     await expect(page.getByText('Negócios')).toBeVisible()

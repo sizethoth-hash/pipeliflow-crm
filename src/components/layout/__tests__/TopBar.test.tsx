@@ -1,5 +1,5 @@
-import { render, screen, fireEvent } from '@testing-library/react'
-import { describe, expect, it, vi, beforeEach } from 'vitest'
+import { fireEvent, render, screen } from '@testing-library/react'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { TopBar } from '../TopBar'
 
 vi.mock('next/navigation', () => ({
@@ -60,9 +60,7 @@ describe('TopBar', () => {
   })
 
   it('renderiza slot de actions quando fornecido', () => {
-    render(
-      <TopBar onMenuClick={onMenuClick} actions={<button type="button">Novo Lead</button>} />
-    )
+    render(<TopBar onMenuClick={onMenuClick} actions={<button type="button">Novo Lead</button>} />)
     expect(screen.getByRole('button', { name: 'Novo Lead' })).toBeInTheDocument()
   })
 
