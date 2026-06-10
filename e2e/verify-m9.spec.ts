@@ -4,6 +4,10 @@ const EMAIL = 'teste@pipeliflow.dev'
 const PASSWORD = 'Senha@1234'
 const SS = (name: string) => `e2e/screenshots/verify-m9-${name}.png`
 
+// Nomes criados durante os testes — limpos no afterEach
+const createdLeads: string[] = []
+const createdDeals: string[] = []
+
 async function login(page: Page) {
   await page.goto('/login')
   await page.waitForSelector('label:has-text("E-mail")', { timeout: 15000 })
@@ -20,7 +24,6 @@ async function login(page: Page) {
     }
   }
   await page.waitForURL('**/dashboard', { timeout: 10000 })
-  // Aguarda o workspace switcher carregar (indica activeWorkspace setado)
   await page.waitForFunction(
     () => {
       const el = document.querySelector('[data-workspace-switcher]') ??
@@ -28,37 +31,49 @@ async function login(page: Page) {
       return el && el.textContent && el.textContent.length > 2
     },
     { timeout: 10000 },
-  ).catch(() => {}) // não bloquear se não encontrar
+  ).catch(() => {})
 }
 
 test.describe('M9 — dados reais Supabase', () => {
   test.setTimeout(90000)
 
+  test.afterEach(async ({ request }) => {
+    if (createdLeads.length === 0 && createdDeals.length === 0) return
+
+    await request.delete('/api/e2e-cleanup', {
+      data: {
+        leadNames: [...createdLeads],
+        dealTitles: [...createdDeals],
+      },
+    })
+
+    createdLeads.length = 0
+    createdDeals.length = 0
+  })
+
   test('1. criar lead persiste após reload', async ({ page }) => {
     await login(page)
     await page.goto('/leads')
-    // Aguarda o carregamento inicial da lista (spinner sumir ou estado vazio aparecer)
     await page.waitForFunction(
       () => !document.querySelector('svg.animate-spin'),
       { timeout: 15000 },
     )
     await page.screenshot({ path: SS('leads-before') })
 
-    // Abrir modal Novo Lead
     await page.getByRole('button', { name: /novo lead/i }).click()
-    // Radix UI — esperar pelo título do dialog visível
     await expect(page.getByRole('heading', { name: /novo lead/i })).toBeVisible({ timeout: 8000 })
     await page.screenshot({ path: SS('lead-form-open') })
 
     const ts = Date.now()
     const leadName = `Verify Lead ${ts}`
+    createdLeads.push(leadName)
+
     await page.getByLabel(/nome \*/i).fill(leadName)
     await page.getByLabel(/e-mail \*/i).fill(`verify${ts}@test.com`)
     await page.getByLabel(/empresa/i).fill('Verify Corp')
     await page.screenshot({ path: SS('lead-form-filled') })
 
     await page.getByRole('button', { name: /criar lead/i }).click()
-    // Aguarda o modal fechar e o lead aparecer na tabela
     await expect(page.getByRole('heading', { name: /novo lead/i })).toBeHidden({ timeout: 8000 })
     await page.waitForFunction(
       () => !document.querySelector('svg.animate-spin'),
@@ -67,7 +82,6 @@ test.describe('M9 — dados reais Supabase', () => {
     await page.screenshot({ path: SS('lead-created') })
     await expect(page.getByText(leadName)).toBeVisible({ timeout: 10000 })
 
-    // Reload — o lead deve persistir no banco
     await page.reload()
     await page.waitForFunction(
       () => !document.querySelector('svg.animate-spin'),
@@ -87,8 +101,8 @@ test.describe('M9 — dados reais Supabase', () => {
 
     const ts = Date.now()
     const uniqueName = `FilterTest${ts}`
+    createdLeads.push(uniqueName)
 
-    // Criar lead com nome único
     await page.getByRole('button', { name: /novo lead/i }).click()
     await expect(page.getByRole('heading', { name: /novo lead/i })).toBeVisible({ timeout: 8000 })
     await page.getByLabel(/nome \*/i).fill(uniqueName)
@@ -98,26 +112,22 @@ test.describe('M9 — dados reais Supabase', () => {
     await page.waitForFunction(() => !document.querySelector('svg.animate-spin'), { timeout: 10000 })
     await expect(page.getByText(uniqueName)).toBeVisible({ timeout: 10000 })
 
-    // Buscar pelo nome único — deve ir ao banco via debounce
     const searchInput = page.getByPlaceholder(/buscar por nome/i)
     await searchInput.fill(uniqueName)
-    await page.waitForTimeout(600) // debounce 300ms + latência
+    await page.waitForTimeout(600)
     await page.waitForFunction(() => !document.querySelector('svg.animate-spin'), { timeout: 10000 })
     await page.screenshot({ path: SS('filter-by-name') })
     await expect(page.getByText(uniqueName)).toBeVisible({ timeout: 8000 })
     const rows = page.locator('tbody tr')
     await expect(rows).toHaveCount(1)
 
-    // Limpar busca e filtrar por status "Fechado Ganho" — deve retornar 0 ou mais (sem esse lead)
     await searchInput.fill('')
     await page.waitForTimeout(400)
-    // Filtro de status
     await page.getByRole('combobox').filter({ hasText: /todos os status/i }).click()
     await page.getByRole('option', { name: /novo lead/i }).click()
     await page.waitForTimeout(800)
     await page.waitForFunction(() => !document.querySelector('svg.animate-spin'), { timeout: 10000 })
     await page.screenshot({ path: SS('filter-by-status') })
-    // O lead criado (status new) deve aparecer
     const count = await page.locator('tbody tr').count()
     expect(count).toBeGreaterThan(0)
   })
@@ -131,15 +141,15 @@ test.describe('M9 — dados reais Supabase', () => {
     )
     await page.screenshot({ path: SS('pipeline-before') })
 
-    // Criar deal para arrastar
     await page.getByRole('button', { name: /novo negócio/i }).click()
     await expect(page.getByRole('heading', { name: /novo negócio/i })).toBeVisible({ timeout: 8000 })
     const ts = Date.now()
     const dealTitle = `DragDeal ${ts}`
+    createdDeals.push(dealTitle)
+
     await page.getByLabel(/título/i).fill(dealTitle)
     await page.locator('input[type="number"]').first().fill('5000')
 
-    // Selecionar lead
     const leadSelect = page.locator('[role="combobox"]').filter({ hasText: /selecionar lead/i })
     if (await leadSelect.isVisible({ timeout: 2000 }).catch(() => false)) {
       await leadSelect.click()
@@ -152,11 +162,9 @@ test.describe('M9 — dados reais Supabase', () => {
     await expect(page.getByText(dealTitle)).toBeVisible({ timeout: 10000 })
     await page.screenshot({ path: SS('deal-created') })
 
-    // Drag-and-drop: card de "Novo Lead" → coluna "Contato Realizado"
     const dealCard = page.getByText(dealTitle).first()
     const cardBox = await dealCard.boundingBox()
 
-    // Localizar coluna "Contato Realizado" pelo data-column-id
     const contactedColumn = page.locator('[data-column-id="contacted"]')
     await expect(contactedColumn).toBeVisible({ timeout: 8000 })
     const targetBox = await contactedColumn.boundingBox()
@@ -168,12 +176,11 @@ test.describe('M9 — dados reais Supabase', () => {
     const startX = cardBox.x + cardBox.width / 2
     const startY = cardBox.y + cardBox.height / 2
     const endX = targetBox.x + targetBox.width / 2
-    const endY = targetBox.y + 80 // centro da coluna, abaixo do header
+    const endY = targetBox.y + 80
 
     await page.mouse.move(startX, startY)
     await page.mouse.down()
     await page.waitForTimeout(400)
-    // Movimento gradual para simular drag real com dnd-kit
     const steps = 15
     for (let i = 1; i <= steps; i++) {
       await page.mouse.move(
@@ -184,22 +191,14 @@ test.describe('M9 — dados reais Supabase', () => {
     }
     await page.waitForTimeout(200)
     await page.mouse.up()
-    await page.waitForTimeout(2000) // aguarda optimistic update + query invalidation
+    await page.waitForTimeout(2000)
 
     await page.screenshot({ path: SS('pipeline-after-drag') })
 
-    // O card deve agora estar na coluna "Contato Realizado"
-    // Localizar a coluna e verificar que o deal está nela
-    const contactedColumnArea = page.locator('div').filter({
-      hasText: 'Contato Realizado',
-    }).filter({ has: page.getByText(dealTitle) }).first()
-
-    // Verificação alternativa: contar cards por coluna via reload
     await page.reload()
     await page.waitForFunction(() => !document.querySelector('svg.animate-spin'), { timeout: 15000 })
     await page.screenshot({ path: SS('pipeline-after-reload') })
 
-    // O deal deve aparecer em algum lugar no board (persistência mínima)
     await expect(page.getByText(dealTitle)).toBeVisible({ timeout: 10000 })
   })
 
@@ -218,8 +217,6 @@ test.describe('M9 — dados reais Supabase', () => {
     await expect(page.getByText('Taxa de Conversão')).toBeVisible()
     await expect(page.getByText('Leads Recentes')).toBeVisible()
 
-    // Verificar que o valor de "Total de Leads" é maior que 0 (há dados no banco)
-    // O texto da métrica fica em <p class="text-3xl ...">
     const metricsValues = page.locator('p.text-3xl, p[class*="text-3xl"]')
     const count = await metricsValues.count()
     expect(count).toBeGreaterThanOrEqual(4)
