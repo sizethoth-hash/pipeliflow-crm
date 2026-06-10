@@ -3,6 +3,7 @@
 import {
   ChevronLeft,
   ChevronRight,
+  ClipboardList,
   Loader2,
   Pencil,
   Plus,
@@ -265,6 +266,17 @@ export default function LeadsPage() {
 
                     <td className="px-4 py-3.5">
                       <div className="flex items-center justify-end gap-1 opacity-0 transition-opacity group-hover:opacity-100">
+                        <Link href={`/leads/${lead.id}`}>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            aria-label={`Ver atividades de ${lead.name}`}
+                            className="h-8 w-8 text-slate-400 hover:text-indigo-400"
+                            asChild={false}
+                          >
+                            <ClipboardList className="h-3.5 w-3.5" />
+                          </Button>
+                        </Link>
                         <Button
                           variant="ghost"
                           size="icon"
