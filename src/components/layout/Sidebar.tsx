@@ -5,6 +5,7 @@ import {
   ChevronsUpDown,
   Kanban,
   LayoutDashboard,
+  Loader2,
   LogOut,
   Plus,
   Settings2,
@@ -14,9 +15,21 @@ import {
 } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { z } from 'zod'
 import { Avatar, AvatarFallback } from '@/components/ui/Avatar'
 import { Badge } from '@/components/ui/Badge'
+import { Button } from '@/components/ui/Button'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/Dialog'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -25,10 +38,21 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/DropdownMenu'
+import { Input } from '@/components/ui/Input'
+import { Label } from '@/components/ui/Label'
 import { useAuth } from '@/hooks/useAuth'
+import { useCreateWorkspace } from '@/hooks/useWorkspaces'
 import { cn } from '@/lib/utils'
 import { useAuthStore } from '@/store/useAuthStore'
 import { useWorkspaceStore } from '@/store/useWorkspaceStore'
+
+const newWsSchema = z.object({
+  name: z
+    .string()
+    .min(2, 'Mínimo 2 caracteres')
+    .max(50, 'Máximo 50 caracteres'),
+})
+type NewWsForm = z.infer<typeof newWsSchema>
 
 
 const NAV_ITEMS = [
@@ -51,11 +75,77 @@ interface SidebarProps {
   onClose?: () => void
 }
 
+function NewWorkspaceDialog({
+  open,
+  onClose,
+}: {
+  open: boolean
+  onClose: () => void
+}) {
+  const createWorkspace = useCreateWorkspace()
+  const { setActiveWorkspace } = useWorkspaceStore()
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors, isSubmitting },
+  } = useForm<NewWsForm>({ resolver: zodResolver(newWsSchema) })
+
+  async function onSubmit(data: NewWsForm) {
+    const ws = await createWorkspace.mutateAsync(data.name)
+    setActiveWorkspace(ws)
+    reset()
+    onClose()
+  }
+
+  function handleClose() {
+    reset()
+    onClose()
+  }
+
+  return (
+    <Dialog open={open} onOpenChange={(o) => !o && handleClose()}>
+      <DialogContent className="max-w-sm border-slate-700 bg-slate-900">
+        <DialogHeader>
+          <DialogTitle className="text-slate-100">Novo workspace</DialogTitle>
+          <DialogDescription className="text-slate-400">
+            Crie um workspace separado para outro time ou empresa.
+          </DialogDescription>
+        </DialogHeader>
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          <div className="space-y-1.5">
+            <Label htmlFor="new-ws-name" className="text-slate-300">
+              Nome
+            </Label>
+            <Input
+              id="new-ws-name"
+              placeholder="Ex: Minha empresa"
+              className="border-slate-600 bg-slate-700 text-slate-100 placeholder:text-slate-500 focus-visible:ring-indigo-500"
+              {...register('name')}
+            />
+            {errors.name && <p className="text-xs text-red-400">{errors.name.message}</p>}
+          </div>
+          <DialogFooter>
+            <Button type="button" variant="ghost" onClick={handleClose} className="text-slate-400">
+              Cancelar
+            </Button>
+            <Button type="submit" disabled={isSubmitting}>
+              {isSubmitting ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Criar'}
+            </Button>
+          </DialogFooter>
+        </form>
+      </DialogContent>
+    </Dialog>
+  )
+}
+
 export function Sidebar({ onClose }: SidebarProps) {
   const pathname = usePathname()
   const { signOut } = useAuth()
   const { user } = useAuthStore()
   const { workspaces, activeWorkspace, setActiveWorkspace, loadWorkspaces } = useWorkspaceStore()
+  const [newWsOpen, setNewWsOpen] = useState(false)
 
   useEffect(() => {
     if (user) {
@@ -140,7 +230,10 @@ export function Sidebar({ onClose }: SidebarProps) {
                 </DropdownMenuItem>
               ))}
               <DropdownMenuSeparator className="bg-slate-700" />
-              <DropdownMenuItem className="cursor-pointer text-slate-400 focus:bg-slate-800 focus:text-white">
+              <DropdownMenuItem
+                className="cursor-pointer text-slate-400 focus:bg-slate-800 focus:text-white"
+                onSelect={() => setNewWsOpen(true)}
+              >
                 <Plus className="mr-2 h-4 w-4" aria-hidden="true" />
                 Novo workspace
               </DropdownMenuItem>
@@ -181,6 +274,8 @@ export function Sidebar({ onClose }: SidebarProps) {
           })}
         </ul>
       </nav>
+
+      <NewWorkspaceDialog open={newWsOpen} onClose={() => setNewWsOpen(false)} />
 
       {/* User section */}
       <div className="shrink-0 border-t border-slate-800 p-3">

@@ -81,6 +81,18 @@ export type ActivityRow = {
   created_at: string
 }
 
+export type WorkspaceInviteRow = {
+  id: string
+  workspace_id: string
+  email: string
+  role: MemberRole
+  token: string
+  invited_by: string
+  accepted_at: string | null
+  expires_at: string
+  created_at: string
+}
+
 export type SubscriptionRow = {
   id: string
   workspace_id: string
@@ -215,6 +227,12 @@ export interface Database {
         Update: SubscriptionUpdate
         Relationships: []
       }
+      workspace_invites: {
+        Row: WorkspaceInviteRow
+        Insert: Pick<WorkspaceInviteRow, 'workspace_id' | 'email' | 'role' | 'invited_by'>
+        Update: Partial<Pick<WorkspaceInviteRow, 'accepted_at'>>
+        Relationships: []
+      }
     }
     Views: Record<string, { Row: Record<string, unknown>; Relationships: [] }>
     Functions: {
@@ -229,6 +247,14 @@ export interface Database {
       create_workspace_with_admin: {
         Args: { p_name: string }
         Returns: { id: string; name: string; plan: PlanType }
+      }
+      accept_workspace_invite: {
+        Args: { p_token: string }
+        Returns: { workspace_id: string; role: MemberRole }
+      }
+      get_workspace_member_count: {
+        Args: { p_workspace_id: string }
+        Returns: number
       }
     }
     Enums: {
