@@ -1,6 +1,6 @@
 'use server'
 
-import { getServerClient } from '@/lib/supabase/server'
+import { getServerClient, getServiceRoleClient } from '@/lib/supabase/server'
 import type { MemberRole, WorkspaceInviteRow } from '@/types/supabase'
 import type { Workspace, WorkspaceMember } from '@/types/workspace'
 
@@ -166,7 +166,9 @@ export async function revokeInvite(inviteId: string, workspaceId: string): Promi
 export type InviteWithWorkspace = WorkspaceInviteRow & { workspaces: { name: string } }
 
 export async function getInviteByToken(token: string): Promise<InviteWithWorkspace | null> {
-  const supabase = await getServerClient()
+  // Usa service role para bypassar RLS — o convidado ainda não é membro do workspace
+  // e portanto seria bloqueado pela policy invites_select
+  const supabase = getServiceRoleClient()
 
   const { data, error } = await supabase
     .from('workspace_invites')
