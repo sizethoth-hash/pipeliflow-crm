@@ -136,9 +136,16 @@ export async function POST(request: Request) {
   const safeWorkspaceName = escapeHtml(workspace.name)
   const safeRoleLabel = escapeHtml(roleLabel)
 
+  // Em dev sem domínio verificado, Resend só aceita envios para o dono da conta.
+  // Usamos onboarding@resend.dev como remetente para contornar a restrição de domínio.
+  const fromAddress =
+    process.env.NODE_ENV === 'production'
+      ? 'PipeFlow CRM <no-reply@pipeflow.app>'
+      : 'PipeFlow CRM <onboarding@resend.dev>'
+
   // Envia e-mail via Resend
   const { error: emailError } = await resend.emails.send({
-    from: 'PipeFlow CRM <no-reply@pipeflow.app>',
+    from: fromAddress,
     to: email,
     subject: `${safeInviterName} convidou você para o workspace "${safeWorkspaceName}"`,
     html: `

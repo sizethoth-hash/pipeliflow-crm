@@ -43,13 +43,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/Select'
+import { useQueryClient } from '@tanstack/react-query'
 import {
+  memberCountKey,
   useMemberCount,
   useRemoveMember,
   useRevokeInvite,
   useUpdateMemberRole,
   useWorkspaceInvites,
   useWorkspaceMembers,
+  workspaceInvitesKey,
 } from '@/hooks/useWorkspaces'
 import { useAuthStore } from '@/store/useAuthStore'
 import { useWorkspaceStore } from '@/store/useWorkspaceStore'
@@ -75,6 +78,7 @@ function InviteMemberModal({
   workspaceId: string
   atLimit: boolean
 }) {
+  const qc = useQueryClient()
   const [success, setSuccess] = useState(false)
   const [serverError, setServerError] = useState('')
 
@@ -111,8 +115,16 @@ function InviteMemberModal({
       return
     }
 
+    // Aviso: convite criado mas e-mail falhou
+    if (json.warning) {
+      setServerError(json.warning)
+    }
+
     setSuccess(true)
     reset()
+    // Invalida as queries para refletir o novo convite na lista
+    qc.invalidateQueries({ queryKey: workspaceInvitesKey(workspaceId) })
+    qc.invalidateQueries({ queryKey: memberCountKey(workspaceId) })
     setTimeout(() => {
       setSuccess(false)
       onClose()
