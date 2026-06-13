@@ -4,7 +4,7 @@
 -- auth.admin (service role) em queries de listagem de membros.
 -- ============================================================
 
-create table public.profiles (
+create table if not exists public.profiles (
   id          uuid primary key references auth.users(id) on delete cascade,
   email       text not null,
   full_name   text,
@@ -19,6 +19,9 @@ create trigger trg_profiles_updated_at
 
 -- ── RLS ────────────────────────────────────────────────────
 alter table public.profiles enable row level security;
+
+drop policy if exists "profiles_select" on public.profiles;
+drop policy if exists "profiles_update" on public.profiles;
 
 -- Qualquer usuário autenticado pode ver perfis
 create policy "profiles_select"
@@ -53,6 +56,7 @@ begin
 end;
 $$;
 
+drop trigger if exists trg_auth_users_profile on auth.users;
 create trigger trg_auth_users_profile
   after insert on auth.users
   for each row execute function public.handle_new_user();

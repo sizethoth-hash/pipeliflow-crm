@@ -2,7 +2,7 @@
 -- Migration 009 — workspace_invites
 -- ============================================================
 
-create table public.workspace_invites (
+create table if not exists public.workspace_invites (
   id            uuid primary key default gen_random_uuid(),
   workspace_id  uuid not null references public.workspaces(id) on delete cascade,
   email         text not null,
@@ -14,11 +14,15 @@ create table public.workspace_invites (
   created_at    timestamptz not null default now()
 );
 
-create index idx_workspace_invites_token        on public.workspace_invites(token);
-create index idx_workspace_invites_workspace_id on public.workspace_invites(workspace_id);
+create index if not exists idx_workspace_invites_token        on public.workspace_invites(token);
+create index if not exists idx_workspace_invites_workspace_id on public.workspace_invites(workspace_id);
 
 -- ── RLS ────────────────────────────────────────────────────
 alter table public.workspace_invites enable row level security;
+
+drop policy if exists "invites_select" on public.workspace_invites;
+drop policy if exists "invites_insert" on public.workspace_invites;
+drop policy if exists "invites_delete" on public.workspace_invites;
 
 -- Membros do workspace veem seus convites pendentes
 create policy "invites_select"
