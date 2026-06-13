@@ -81,6 +81,15 @@ export type ActivityRow = {
   created_at: string
 }
 
+export type ProfileRow = {
+  id: string
+  email: string
+  full_name: string | null
+  avatar_url: string | null
+  created_at: string
+  updated_at: string
+}
+
 export type WorkspaceInviteRow = {
   id: string
   workspace_id: string
@@ -225,6 +234,12 @@ export interface Database {
         Row: SubscriptionRow
         Insert: Omit<SubscriptionRow, 'id' | 'created_at' | 'updated_at'>
         Update: SubscriptionUpdate
+        Relationships: []
+      }
+      profiles: {
+        Row: ProfileRow
+        Insert: Omit<ProfileRow, 'created_at' | 'updated_at'>
+        Update: Partial<Pick<ProfileRow, 'full_name' | 'avatar_url'>>
         Relationships: []
       }
       workspace_invites: {

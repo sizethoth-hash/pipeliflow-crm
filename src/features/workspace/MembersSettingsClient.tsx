@@ -248,6 +248,10 @@ function MemberRow({
   const updateRole = useUpdateMemberRole()
   const removeMember = useRemoveMember()
   const [removeOpen, setRemoveOpen] = useState(false)
+  const [roleOpen, setRoleOpen] = useState(false)
+
+  const newRole = member.role === 'admin' ? 'member' : 'admin'
+  const newRoleLabel = newRole === 'admin' ? 'Admin' : 'Membro'
 
   return (
     <div className="flex items-center gap-3 rounded-lg border border-slate-700/50 bg-slate-800/40 p-3">
@@ -286,12 +290,7 @@ function MemberRow({
           >
             <DropdownMenuItem
               className="cursor-pointer text-slate-200 focus:bg-slate-700"
-              onSelect={() =>
-                updateRole.mutate({
-                  userId: member.id,
-                  role: member.role === 'admin' ? 'member' : 'admin',
-                })
-              }
+              onSelect={() => setRoleOpen(true)}
             >
               <Crown className="mr-2 h-4 w-4" aria-hidden="true" />
               {member.role === 'admin' ? 'Tornar Membro' : 'Tornar Admin'}
@@ -307,6 +306,16 @@ function MemberRow({
           </DropdownMenuContent>
         </DropdownMenu>
       )}
+
+      <ConfirmDialog
+        open={roleOpen}
+        onClose={() => setRoleOpen(false)}
+        title={`Alterar papel de ${member.name}`}
+        description={`Tem certeza que deseja tornar ${member.name} um ${newRoleLabel}?${newRole === 'admin' ? ' Ele terá acesso total ao workspace, incluindo convidar e remover membros.' : ''}`}
+        confirmLabel="Confirmar"
+        variant="default"
+        onConfirm={() => updateRole.mutate({ userId: member.id, role: newRole })}
+      />
 
       <ConfirmDialog
         open={removeOpen}

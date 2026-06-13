@@ -1,7 +1,7 @@
 'use server'
 
 import { getServerClient } from '@/lib/supabase/server'
-import type { MemberRole, WorkspaceInviteRow, WorkspaceMemberRow } from '@/types/supabase'
+import type { MemberRole, WorkspaceInviteRow } from '@/types/supabase'
 import type { Workspace, WorkspaceMember } from '@/types/workspace'
 
 // ── Workspaces ──────────────────────────────────────────────
@@ -62,42 +62,22 @@ export async function deleteWorkspace(workspaceId: string): Promise<void> {
 
 // ── Members ─────────────────────────────────────────────────
 
-export interface MemberWithProfile extends WorkspaceMemberRow {
-  name: string
-  email: string
-}
-
 export async function getWorkspaceMembers(workspaceId: string): Promise<WorkspaceMember[]> {
   const supabase = await getServerClient()
 
   const { data, error } = await supabase
     .from('workspace_members')
-    .select('user_id, role, created_at')
+    .select('user_id, role, profiles(email, full_name)')
     .eq('workspace_id', workspaceId)
 
   if (error) throw new Error(error.message)
 
-  if (!data?.length) return []
-
-  // Busca perfis via auth.users com service role
-  const userIds = data.map((m) => m.user_id)
-
-  const { data: users, error: usersError } = await supabase.auth.admin.listUsers()
-
-  if (usersError) throw new Error(usersError.message)
-
-  const userMap = new Map(
-    (users.users ?? [])
-      .filter((u) => userIds.includes(u.id))
-      .map((u) => [u.id, u])
-  )
-
-  return data.map((m) => {
-    const user = userMap.get(m.user_id)
+  return (data ?? []).map((m) => {
+    const profile = m.profiles as unknown as { email: string; full_name: string | null } | null
     return {
       id: m.user_id,
-      name: (user?.user_metadata?.full_name as string | undefined) ?? user?.email ?? 'Usuário',
-      email: user?.email ?? '',
+      name: profile?.full_name ?? profile?.email ?? 'Usuário',
+      email: profile?.email ?? '',
       role: m.role,
     }
   })
@@ -159,13 +139,14 @@ export async function getWorkspaceInvites(workspaceId: string): Promise<Workspac
   return data ?? []
 }
 
-export async function revokeInvite(inviteId: string): Promise<void> {
+export async function revokeInvite(inviteId: string, workspaceId: string): Promise<void> {
   const supabase = await getServerClient()
 
   const { error } = await supabase
     .from('workspace_invites')
     .delete()
     .eq('id', inviteId)
+    .eq('workspace_id', workspaceId)
 
   if (error) throw new Error(error.message)
 }

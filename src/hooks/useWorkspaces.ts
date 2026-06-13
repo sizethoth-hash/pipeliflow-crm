@@ -84,7 +84,7 @@ export function useRevokeInvite() {
   const workspaceId = useWorkspaceStore((s) => s.activeWorkspace?.id ?? '')
 
   return useMutation({
-    mutationFn: (inviteId: string) => revokeInvite(inviteId),
+    mutationFn: (inviteId: string) => revokeInvite(inviteId, workspaceId),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: workspaceInvitesKey(workspaceId) })
     },
@@ -111,7 +111,10 @@ export function useUpdateWorkspaceName() {
   const { activeWorkspace, loadWorkspaces } = useWorkspaceStore()
 
   return useMutation({
-    mutationFn: (name: string) => updateWorkspaceName(activeWorkspace?.id ?? '', name),
+    mutationFn: (name: string) => {
+      if (!activeWorkspace?.id) throw new Error('Nenhum workspace ativo')
+      return updateWorkspaceName(activeWorkspace.id, name)
+    },
     onSuccess: () => {
       loadWorkspaces()
       qc.invalidateQueries({ queryKey: ['workspaces'] })
@@ -123,7 +126,10 @@ export function useDeleteWorkspace() {
   const { activeWorkspace, loadWorkspaces } = useWorkspaceStore()
 
   return useMutation({
-    mutationFn: () => deleteWorkspace(activeWorkspace?.id ?? ''),
+    mutationFn: () => {
+      if (!activeWorkspace?.id) throw new Error('Nenhum workspace ativo')
+      return deleteWorkspace(activeWorkspace.id)
+    },
     onSuccess: () => {
       loadWorkspaces()
     },

@@ -6,6 +6,25 @@ import { z } from 'zod'
 
 const resend = new Resend(process.env.RESEND_API_KEY)
 
+function escapeHtml(str: string): string {
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;')
+}
+
+function getAppUrl(): string {
+  const raw = process.env.NEXT_PUBLIC_APP_URL
+  if (!raw) throw new Error('NEXT_PUBLIC_APP_URL não configurado')
+  try {
+    return new URL(raw).origin
+  } catch {
+    throw new Error(`NEXT_PUBLIC_APP_URL inválido: "${raw}"`)
+  }
+}
+
 const bodySchema = z.object({
   email: z.string().email(),
   role: z.enum(['admin', 'member']),
@@ -100,16 +119,28 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Erro ao criar convite' }, { status: 500 })
   }
 
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000'
+  let appUrl: string
+  try {
+    appUrl = getAppUrl()
+  } catch (err) {
+    console.error('[invite] APP_URL error:', err)
+    return NextResponse.json({ error: 'Configuração de URL inválida no servidor' }, { status: 500 })
+  }
+
   const inviteUrl = `${appUrl}/invite/${invite.token}`
   const inviterName = (user.user_metadata?.full_name as string | undefined) ?? user.email ?? 'Alguém'
   const roleLabel = role === 'admin' ? 'Administrador' : 'Membro'
+
+  // Sanitiza valores dinâmicos antes de injetar no HTML
+  const safeInviterName = escapeHtml(inviterName)
+  const safeWorkspaceName = escapeHtml(workspace.name)
+  const safeRoleLabel = escapeHtml(roleLabel)
 
   // Envia e-mail via Resend
   const { error: emailError } = await resend.emails.send({
     from: 'PipeFlow CRM <no-reply@pipeflow.app>',
     to: email,
-    subject: `${inviterName} convidou você para o workspace "${workspace.name}"`,
+    subject: `${safeInviterName} convidou você para o workspace "${safeWorkspaceName}"`,
     html: `
       <div style="font-family: Inter, sans-serif; max-width: 520px; margin: 0 auto; padding: 32px 24px; background: #fff;">
         <div style="margin-bottom: 32px;">
@@ -122,8 +153,8 @@ export async function POST(request: Request) {
           Você foi convidado!
         </h1>
         <p style="color: #475569; font-size: 15px; line-height: 1.6; margin: 0 0 24px;">
-          <strong>${inviterName}</strong> convidou você para colaborar no workspace
-          <strong>"${workspace.name}"</strong> como <strong>${roleLabel}</strong>.
+          <strong>${safeInviterName}</strong> convidou você para colaborar no workspace
+          <strong>&ldquo;${safeWorkspaceName}&rdquo;</strong> como <strong>${safeRoleLabel}</strong>.
         </p>
 
         <a
