@@ -65,15 +65,27 @@ export async function deleteWorkspace(workspaceId: string): Promise<void> {
 export async function getWorkspaceMembers(workspaceId: string): Promise<WorkspaceMember[]> {
   const supabase = await getServerClient()
 
-  const { data, error } = await supabase
+  const { data: members, error: membersError } = await supabase
     .from('workspace_members')
-    .select('user_id, role, profiles(email, full_name)')
+    .select('user_id, role')
     .eq('workspace_id', workspaceId)
 
-  if (error) throw new Error(error.message)
+  if (membersError) throw new Error(membersError.message)
+  if (!members?.length) return []
 
-  return (data ?? []).map((m) => {
-    const profile = m.profiles as unknown as { email: string; full_name: string | null } | null
+  const userIds = members.map((m) => m.user_id)
+
+  const { data: profiles, error: profilesError } = await supabase
+    .from('profiles')
+    .select('id, email, full_name')
+    .in('id', userIds)
+
+  if (profilesError) throw new Error(profilesError.message)
+
+  const profileMap = new Map((profiles ?? []).map((p) => [p.id, p]))
+
+  return members.map((m) => {
+    const profile = profileMap.get(m.user_id)
     return {
       id: m.user_id,
       name: profile?.full_name ?? profile?.email ?? 'Usuário',
