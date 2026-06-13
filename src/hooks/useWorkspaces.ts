@@ -93,6 +93,7 @@ export function useRevokeInvite() {
     mutationFn: (inviteId: string) => revokeInvite(inviteId, workspaceId),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: workspaceInvitesKey(workspaceId) })
+      qc.invalidateQueries({ queryKey: memberCountKey(workspaceId) })
     },
   })
 }

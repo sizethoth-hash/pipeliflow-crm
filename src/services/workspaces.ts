@@ -198,7 +198,10 @@ export async function acceptInvite(token: string): Promise<{ workspace_id: strin
     if (error.message.includes('invite_invalid_or_expired')) {
       throw new Error('Convite inválido ou expirado.')
     }
-    throw new Error(error.message)
+    if (error.message.includes('invite_email_mismatch')) {
+      throw new Error('Este convite foi enviado para um endereço de e-mail diferente do seu.')
+    }
+    throw new Error('Erro interno ao aceitar convite.')
   }
 
   return data as { workspace_id: string; role: MemberRole }
