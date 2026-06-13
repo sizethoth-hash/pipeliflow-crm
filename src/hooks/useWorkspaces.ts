@@ -28,6 +28,8 @@ export function useWorkspaceMembers() {
     queryKey: workspaceMembersKey(workspaceId),
     queryFn: () => getWorkspaceMembers(workspaceId),
     enabled: Boolean(workspaceId),
+    staleTime: 0,
+    refetchOnWindowFocus: true,
   })
 }
 
@@ -38,6 +40,8 @@ export function useMemberCount() {
     queryKey: memberCountKey(workspaceId),
     queryFn: () => getMemberCount(workspaceId),
     enabled: Boolean(workspaceId),
+    staleTime: 0,
+    refetchOnWindowFocus: true,
   })
 }
 
@@ -76,6 +80,8 @@ export function useWorkspaceInvites() {
     queryKey: workspaceInvitesKey(workspaceId),
     queryFn: () => getWorkspaceInvites(workspaceId),
     enabled: Boolean(workspaceId),
+    staleTime: 0,
+    refetchOnWindowFocus: true,
   })
 }
 
