@@ -24,23 +24,28 @@ export default async function InvitePage({ params }: Props) {
   // Valida o convite (somente para display — a mutação ocorre no client)
   const invite: InviteWithWorkspace | null = await getInviteByToken(token)
 
-  if (!invite) {
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-slate-950 px-4">
-        <div className="w-full max-w-md rounded-2xl border border-slate-800 bg-slate-900 p-8 text-center shadow-xl">
-          <div className="mb-6 flex justify-center">
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-indigo-600 shadow-lg">
-              <Kanban className="h-6 w-6 text-white" aria-hidden="true" />
-            </div>
+  const errorPage = (message: string) => (
+    <div className="flex min-h-screen items-center justify-center bg-slate-950 px-4">
+      <div className="w-full max-w-md rounded-2xl border border-slate-800 bg-slate-900 p-8 text-center shadow-xl">
+        <div className="mb-6 flex justify-center">
+          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-indigo-600 shadow-lg">
+            <Kanban className="h-6 w-6 text-white" aria-hidden="true" />
           </div>
-          <div className="mb-4 flex justify-center">
-            <XCircle className="h-14 w-14 text-red-400" aria-hidden="true" />
-          </div>
-          <h1 className="mb-2 text-xl font-bold text-slate-100">Convite inválido</h1>
-          <p className="text-sm text-slate-400">Este convite é inválido ou já expirou.</p>
         </div>
+        <div className="mb-4 flex justify-center">
+          <XCircle className="h-14 w-14 text-red-400" aria-hidden="true" />
+        </div>
+        <h1 className="mb-2 text-xl font-bold text-slate-100">Convite inválido</h1>
+        <p className="text-sm text-slate-400">{message}</p>
       </div>
-    )
+    </div>
+  )
+
+  if (!invite) return errorPage('Este convite é inválido ou já expirou.')
+
+  // Garante que o convite pertence ao usuário autenticado
+  if (invite.email.toLowerCase() !== (user.email ?? '').toLowerCase()) {
+    return errorPage('Este convite foi enviado para um endereço de e-mail diferente do seu.')
   }
 
   return (
