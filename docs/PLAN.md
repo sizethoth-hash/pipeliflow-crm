@@ -299,6 +299,8 @@ FASE 3 — PRODUTO   (M12 → M14) Stripe, Resend, Deploy
 - [x] Limite do plano Free: bloquear convite ao atingir 2 membros (mostrar upsell)
 - [x] Migration 009: tabela `workspace_invites` + RLS + `accept_workspace_invite` RPC
 - [x] Migration 010: tabela `profiles` com trigger em `auth.users` (elimina auth.admin)
+- [x] Migration 011: validação de email no RPC + partial unique index em `workspace_invites`
+- [x] Review de segurança: email ownership enforced, re-invite após remoção, erros sanitizados
 - [ ] Testes e2e: convite, aceitação, troca de workspace _(adiado para M13)_
 
 **Commit final:** `feat: M11 — workspace collaboration, member invites & settings (#12)`
