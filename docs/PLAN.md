@@ -283,24 +283,25 @@ FASE 3 — PRODUTO   (M12 → M14) Stripe, Resend, Deploy
 ---
 
 ### M11 · Multi-workspace & Colaboração
-**Branch:** `feat/workspaces`
+**Branch:** `feat/collaboration` ✅
 **Objetivo:** Usuário pode criar múltiplos workspaces, convidar membros por e-mail e alternar entre eles.
 
 #### Entregas
-- [ ] `services/workspaces.ts`: `getWorkspaces()`, `createWorkspace()`, `inviteMember()`, `removeMember()`, `updateRole()`
-- [ ] Workspace switcher na sidebar: lista workspaces do usuário, troca contexto global
-- [ ] Store/context de workspace ativo: todos os serviços filtram por `workspace_id` ativo
-- [ ] Página `/settings/workspace`: nome do workspace, plano atual, danger zone (excluir)
-- [ ] Página `/settings/members`: lista de membros com papel, botão convidar, botão remover
-- [ ] `InviteMemberModal`: form com e-mail + papel (Admin/Membro)
-- [ ] Integração Resend: envio de e-mail de convite com link de aceitação
-- [ ] Rota `/invite/[token]`: aceitar convite → login/cadastro → entrar no workspace
-- [ ] Guards de autorização: apenas Admin pode convidar/remover membros
-- [ ] Limite do plano Free: bloquear convite ao atingir 2 membros (mostrar upsell)
-- [ ] Variáveis de ambiente: `RESEND_API_KEY`, `NEXT_PUBLIC_APP_URL`
-- [ ] Testes: convite, aceitação, troca de workspace
+- [x] `services/workspaces.ts`: `getWorkspaces()`, `createWorkspace()`, `updateWorkspaceName()`, `deleteWorkspace()`, `getWorkspaceMembers()`, `updateMemberRole()`, `removeMember()`, `getWorkspaceInvites()`, `revokeInvite()`, `acceptInvite()`
+- [x] Workspace switcher na sidebar: lista workspaces do usuário, troca contexto global
+- [x] Dialog "Novo workspace" na sidebar integrado a `createWorkspace()`
+- [x] Página `/settings/workspace`: nome do workspace, plano atual, danger zone (excluir)
+- [x] Página `/settings/members`: lista de membros com papel, botão convidar, botão remover, convites pendentes
+- [x] `InviteMemberModal`: form com e-mail + papel (Admin/Membro)
+- [x] Integração Resend: envio de e-mail de convite com link de aceitação (`onboarding@resend.dev` em dev)
+- [x] Rota `/invite/[token]`: aceitar convite → login se não autenticado → botão explícito → entrar no workspace
+- [x] Guards de autorização: apenas Admin pode convidar/remover membros
+- [x] Limite do plano Free: bloquear convite ao atingir 2 membros (mostrar upsell)
+- [x] Migration 009: tabela `workspace_invites` + RLS + `accept_workspace_invite` RPC
+- [x] Migration 010: tabela `profiles` com trigger em `auth.users` (elimina auth.admin)
+- [ ] Testes e2e: convite, aceitação, troca de workspace _(adiado para M13)_
 
-**Commit final:** `feat: multi-workspace with member invites via Resend`
+**Commit final:** `feat: M11 — workspace collaboration, member invites & settings (#12)`
 
 ---
 
@@ -394,7 +395,7 @@ FASE 3 — PRODUTO   (M12 → M14) Stripe, Resend, Deploy
 | M8 | Supabase: Schema, Auth & RLS | `feat/supabase-auth` | Backend |
 | M9 | Leads & Pipeline: Backend | `feat/leads-data` ✅ | Backend |
 | M10 | Atividades & Dashboard: Backend | `feat/activities-backend` ✅ | Backend |
-| M11 | Multi-workspace & Colaboração | `feat/workspaces` | Backend |
+| M11 | Multi-workspace & Colaboração | `feat/collaboration` ✅ | Backend |
 | M12 | Monetização com Stripe | `feat/stripe` | Produto |
 | M13 | Qualidade, Testes & Acessibilidade | `feat/quality` | Produto |
 | M14 | Deploy & Produção | `feat/deploy` | Produto |
