@@ -265,19 +265,18 @@ FASE 3 — PRODUTO   (M12 → M14) Stripe, Resend, Deploy
 ---
 
 ### M10 · Atividades & Dashboard: Integração Backend
-**Branch:** `feat/activities-backend`
+**Branch:** `feat/activities-backend` ✅
 **Objetivo:** Timeline de atividades e métricas do dashboard vindas do banco de dados real.
 
 #### Entregas
-- [ ] `services/activities.ts`: `getActivities()`, `createActivity()`, `deleteActivity()`
-- [ ] TanStack Query hooks: `useActivities()`, `useCreateActivity()`, `useDeleteActivity()`
-- [ ] Invalidação automática da query de atividades após mutação
-- [ ] `services/metrics.ts`: queries agregadas para métricas do dashboard
-  - Usar `count`, `sum` e filtros do Supabase para eficiência
-- [ ] Hook `useDashboardMetrics()` substituído por TanStack Query com dados reais
-- [ ] `SalesFunnelChart` com dados reais por etapa
-- [ ] `UpcomingDeals` com deals reais filtrados por `due_date`
-- [ ] Testes de integração: criação de atividade e métricas
+- [x] `services/activities.ts`: `getActivities()`, `createActivity()`, `deleteActivity()` _(implementado em `services/leads.ts`)_
+- [x] TanStack Query hooks: `useActivities()`, `useCreateActivity()`, `useDeleteActivity()`
+- [x] Invalidação automática da query de atividades após mutação
+- [x] `services/metrics.ts`: queries agregadas para métricas do dashboard
+- [x] Hook `useDashboardData()` com TanStack Query e dados reais
+- [x] `SalesFunnelChart` com dados reais por etapa
+- [x] `UpcomingDeals` com deals reais filtrados por `due_date`
+- [ ] Testes de integração: criação de atividade e métricas _(não implementado — adiado para M13)_
 
 **Commit final:** `feat: activities and dashboard metrics connected to Supabase`
 
@@ -394,7 +393,7 @@ FASE 3 — PRODUTO   (M12 → M14) Stripe, Resend, Deploy
 | M7 | Dashboard de Métricas (UI) | `feat/dashboard-ui` | Interface |
 | M8 | Supabase: Schema, Auth & RLS | `feat/supabase-auth` | Backend |
 | M9 | Leads & Pipeline: Backend | `feat/leads-data` ✅ | Backend |
-| M10 | Atividades & Dashboard: Backend | `feat/activities-backend` | Backend |
+| M10 | Atividades & Dashboard: Backend | `feat/activities-backend` ✅ | Backend |
 | M11 | Multi-workspace & Colaboração | `feat/workspaces` | Backend |
 | M12 | Monetização com Stripe | `feat/stripe` | Produto |
 | M13 | Qualidade, Testes & Acessibilidade | `feat/quality` | Produto |
