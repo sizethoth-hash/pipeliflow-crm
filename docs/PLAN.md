@@ -310,27 +310,32 @@ FASE 3 — PRODUTO   (M12 → M14) Stripe, Resend, Deploy
 ## FASE 3 — Produto
 
 ### M12 · Monetização com Stripe
-**Branch:** `feat/stripe`
+**Branch:** `feat/billing-nextjs` → mergeado em `main` (PR #14) ✅
 **Objetivo:** Planos Free e Pro funcionando com checkout, webhook e portal do cliente.
 
 #### Entregas
-- [ ] `lib/stripe.ts`: instância singleton do Stripe SDK
-- [ ] Tabela `subscriptions` no Supabase (workspace_id, stripe_customer_id, stripe_subscription_id, plan, status)
-- [ ] Página `/settings/billing`: plano atual, botão upgrade/gerenciar assinatura
-- [ ] API Route `POST /api/stripe/checkout`: cria Checkout Session para o plano Pro
-- [ ] API Route `POST /api/stripe/portal`: cria Customer Portal Session
-- [ ] API Route `POST /api/stripe/webhook`:
+- [x] `lib/stripe.ts`: instância singleton do Stripe SDK (v17, apiVersion acacia)
+- [x] Migration 012: `ALTER TYPE subscription_status ADD VALUE 'payment_failed'`
+- [x] `src/types/supabase.ts`: `payment_failed` adicionado a `SubscriptionStatus`
+- [x] Página `/settings/billing`: plano atual, comparação Free vs Pro, botão upgrade/gerenciar
+- [x] `src/lib/limits.ts`: `canAddLead()`, `canAddMember()`, `FREE_LIMITS`
+- [x] Route Handler `POST /api/stripe/checkout`: cria Checkout Session para o plano Pro
+- [x] Route Handler `POST /api/stripe/portal`: cria Customer Portal Session
+- [x] Route Handler `POST /api/webhooks/stripe`:
   - `checkout.session.completed` → ativa plano Pro no workspace
   - `customer.subscription.deleted` → reverte para Free
-  - `customer.subscription.updated` → atualiza status
-- [ ] Guards de limite do plano Free:
-  - Bloquear criação de lead ao atingir 50 → modal de upsell
-  - Bloquear convite ao atingir 2 membros → modal de upsell
-- [ ] Variáveis de ambiente: `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `STRIPE_PRICE_ID_PRO`
-- [ ] Testes com Stripe CLI (`stripe listen --forward-to`)
-- [ ] Testes unitários das guards de limite
+  - `invoice.payment_failed` → marca status como `payment_failed`
+- [x] Guards de limite do plano Free:
+  - Bloquear criação de lead ao atingir 50 → `UpsellDialog`
+  - Bloquear convite ao atingir 2 membros → já existia em M11
+- [x] `UpsellDialog`: modal de upsell com link para `/settings/billing`
+- [x] `services/billing.ts`: `getSubscription()`, `createCheckoutSession()`, `createPortalSession()`
+- [x] `hooks/useSubscription.ts`: TanStack Query para subscription
+- [x] Variáveis de ambiente: `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `STRIPE_PRICE_ID_PRO`
+- [x] Checkout testado com Stripe CLI (`stripe listen --forward-to`)
+- [ ] Testes unitários das guards de limite _(adiado para M13)_
 
-**Commit final:** `feat: Stripe billing — checkout, webhook, plan limits`
+**Commit final:** `feat(billing): M12 — Stripe webhook, checkout, portal, plan limits`
 
 ---
 
@@ -398,6 +403,6 @@ FASE 3 — PRODUTO   (M12 → M14) Stripe, Resend, Deploy
 | M9 | Leads & Pipeline: Backend | `feat/leads-data` ✅ | Backend |
 | M10 | Atividades & Dashboard: Backend | `feat/activities-backend` ✅ | Backend |
 | M11 | Multi-workspace & Colaboração | `feat/collaboration` ✅ | Backend |
-| M12 | Monetização com Stripe | `feat/stripe` | Produto |
+| M12 | Monetização com Stripe | `feat/billing-nextjs` ✅ | Produto |
 | M13 | Qualidade, Testes & Acessibilidade | `feat/quality` | Produto |
 | M14 | Deploy & Produção | `feat/deploy` | Produto |
