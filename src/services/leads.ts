@@ -133,6 +133,24 @@ export async function createLead(payload: Omit<LeadInsert, 'workspace_id' | 'own
   const supabase = await getServerClient()
   const { workspaceId, userId } = await getSessionContext()
 
+  // Guard do plano Free: máximo 50 leads
+  const { data: workspace } = await supabase
+    .from('workspaces')
+    .select('plan')
+    .eq('id', workspaceId)
+    .single()
+
+  if (workspace?.plan === 'free') {
+    const { count } = await supabase
+      .from('leads')
+      .select('id', { count: 'exact', head: true })
+      .eq('workspace_id', workspaceId)
+
+    if ((count ?? 0) >= 50) {
+      throw new Error('LEAD_LIMIT_REACHED')
+    }
+  }
+
   const { data, error } = await supabase
     .from('leads')
     .insert({ ...payload, workspace_id: workspaceId, owner_id: userId })

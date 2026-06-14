@@ -1,7 +1,7 @@
 'use client'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
@@ -22,6 +22,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/Select'
+import { UpsellDialog } from '@/components/ui/UpsellDialog'
 import { useCreateLead, useUpdateLead } from '@/hooks/useLeads'
 import type { Lead } from '@/types/lead'
 
@@ -57,6 +58,7 @@ export function LeadFormModal({ open, onClose, lead }: LeadFormModalProps) {
   const createLead = useCreateLead()
   const updateLead = useUpdateLead()
   const isEditing = Boolean(lead)
+  const [showUpsell, setShowUpsell] = useState(false)
 
   const {
     register,
@@ -118,14 +120,25 @@ export function LeadFormModal({ open, onClose, lead }: LeadFormModalProps) {
         })
       }
       onClose()
-    } catch {
-      // Erro já capturado pelo mutation.error — não fechar o modal
+    } catch (err) {
+      if (err instanceof Error && err.message === 'LEAD_LIMIT_REACHED') {
+        setShowUpsell(true)
+        return
+      }
+      // Outros erros ficam capturados pelo mutation.error
     }
   }
 
   const statusValue = watch('status')
 
   return (
+    <>
+    <UpsellDialog
+      open={showUpsell}
+      onClose={() => { setShowUpsell(false); onClose() }}
+      title="Limite de leads atingido"
+      description="O plano Free permite até 50 leads. Faça upgrade para o Pro e adicione leads ilimitados."
+    />
     <Dialog open={open} onOpenChange={(o) => !o && onClose()}>
       <DialogContent className="max-w-lg">
         <DialogHeader>
@@ -279,5 +292,6 @@ export function LeadFormModal({ open, onClose, lead }: LeadFormModalProps) {
         </form>
       </DialogContent>
     </Dialog>
+    </>
   )
 }

@@ -1,9 +1,10 @@
 import Link from 'next/link'
-import { Building2, Users } from 'lucide-react'
+import { Building2, CreditCard, Users } from 'lucide-react'
 
 const SETTINGS_NAV = [
   { href: '/settings/workspace', label: 'Workspace', icon: Building2 },
   { href: '/settings/members', label: 'Membros', icon: Users },
+  { href: '/settings/billing', label: 'Faturamento', icon: CreditCard },
 ]
 
 export default function SettingsLayout({ children }: { children: React.ReactNode }) {
