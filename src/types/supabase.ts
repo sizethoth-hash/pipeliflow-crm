@@ -272,6 +272,15 @@ export interface Database {
         Args: { p_workspace_id: string }
         Returns: number
       }
+      create_invite_if_allowed: {
+        Args: {
+          p_workspace_id: string
+          p_email: string
+          p_role: string
+          p_invited_by: string
+        }
+        Returns: string
+      }
     }
     Enums: {
       plan_type: PlanType

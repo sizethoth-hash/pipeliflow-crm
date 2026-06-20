@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server'
 import { Resend } from 'resend'
 import { getServerClient } from '@/lib/supabase/server'
-import { getMemberCount } from '@/services/workspaces'
 import { z } from 'zod'
 
 const resend = new Resend(process.env.RESEND_API_KEY)
@@ -71,22 +70,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Workspace não encontrado' }, { status: 404 })
   }
 
-  // Verifica limite do plano Free (máx 2 membros)
-  if (workspace.plan === 'free') {
-    const count = await getMemberCount(workspaceId)
-    if (count >= 2) {
-      return NextResponse.json(
-        {
-          error: 'free_plan_limit',
-          message:
-            'O plano Free permite no máximo 2 membros. Faça upgrade para o plano Pro para convidar mais colaboradores.',
-        },
-        { status: 403 },
-      )
-    }
-  }
-
-  // Verifica convite pendente para o mesmo email
+  // Verifica convite pendente para o mesmo email (checagem rápida antes da RPC)
   const { data: existing } = await supabase
     .from('workspace_invites')
     .select('id')
@@ -103,19 +87,36 @@ export async function POST(request: Request) {
     )
   }
 
-  // Cria convite no banco
-  const { data: invite, error: inviteError } = await supabase
+  // Cria convite via RPC atômica — verifica limite do plano Free e insere em uma transação
+  const { data: inviteId, error: inviteError } = await supabase.rpc('create_invite_if_allowed', {
+    p_workspace_id: workspaceId,
+    p_email: email,
+    p_role: role,
+    p_invited_by: user.id,
+  })
+
+  if (inviteError) {
+    if (inviteError.message.includes('free_plan_invite_limit')) {
+      return NextResponse.json(
+        {
+          error: 'free_plan_limit',
+          message:
+            'O plano Free permite no máximo 2 membros. Faça upgrade para o plano Pro para convidar mais colaboradores.',
+        },
+        { status: 403 },
+      )
+    }
+    return NextResponse.json({ error: 'Erro ao criar convite' }, { status: 500 })
+  }
+
+  // Busca token do convite recém-criado
+  const { data: invite, error: tokenError } = await supabase
     .from('workspace_invites')
-    .insert({
-      workspace_id: workspaceId,
-      email,
-      role,
-      invited_by: user.id,
-    })
     .select('token')
+    .eq('id', inviteId)
     .single()
 
-  if (inviteError || !invite) {
+  if (tokenError || !invite) {
     return NextResponse.json({ error: 'Erro ao criar convite' }, { status: 500 })
   }
 

@@ -1,17 +1,37 @@
 import { NextResponse } from 'next/server'
 import { stripe } from '@/lib/stripe'
-import { getServiceRoleClient } from '@/lib/supabase/server'
+import { getServerClient, getServiceRoleClient } from '@/lib/supabase/server'
 
 export async function POST(request: Request) {
-  const { workspaceId } = await request.json()
+  const supabase = await getServerClient()
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+
+  if (!user) {
+    return NextResponse.json({ error: 'Não autenticado' }, { status: 401 })
+  }
+
+  const body = await request.json()
+  const { workspaceId } = body
 
   if (!workspaceId) {
     return NextResponse.json({ error: 'workspaceId obrigatório' }, { status: 400 })
   }
 
-  const supabase = getServiceRoleClient()
+  // Verifica que o usuário autenticado é admin do workspace via RLS
+  const { data: isAdmin } = await supabase.rpc('is_workspace_admin', {
+    p_workspace_id: workspaceId,
+  })
 
-  const { data: sub } = await supabase
+  if (!isAdmin) {
+    return NextResponse.json({ error: 'Acesso negado' }, { status: 403 })
+  }
+
+  const serviceSupabase = getServiceRoleClient()
+
+  const { data: sub } = await serviceSupabase
     .from('subscriptions')
     .select('stripe_customer_id')
     .eq('workspace_id', workspaceId)
