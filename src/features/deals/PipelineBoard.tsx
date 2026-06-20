@@ -108,55 +108,78 @@ export function PipelineBoard() {
   return (
     <div className="flex h-full flex-col bg-slate-950">
       {/* Page header */}
-      <div className="flex shrink-0 items-center justify-between border-b border-slate-800/80 px-6 py-3.5 lg:px-8">
-        <div className="flex items-center gap-6">
-          <div>
-            <h2 className="text-[17px] font-bold tracking-tight text-slate-100">Pipeline</h2>
-            <p className="text-[11px] text-slate-500">
-              {isLoading ? 'Carregando…' : `${deals.length} negócio${deals.length !== 1 ? 's' : ''} no funil`}
-            </p>
+      <div className="shrink-0 border-b border-slate-800/80 px-4 py-3 lg:px-8 lg:py-3.5">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-4 lg:gap-6">
+            <div>
+              <h2 className="text-[17px] font-bold tracking-tight text-slate-100">Pipeline</h2>
+              <p className="text-[11px] text-slate-500">
+                {isLoading ? 'Carregando…' : `${deals.length} negócio${deals.length !== 1 ? 's' : ''} no funil`}
+              </p>
+            </div>
+
+            {!isLoading && (
+              <div className="hidden items-center gap-1 rounded-lg border border-slate-800 bg-slate-900/60 p-1 lg:flex">
+                <div className="px-3 py-1.5">
+                  <p className="text-[9px] font-bold uppercase tracking-widest text-slate-600">
+                    Pipeline aberto
+                  </p>
+                  <p className="text-[13px] font-bold text-emerald-400 tabular-nums">
+                    {formatK(totalPipelineValue)}
+                  </p>
+                </div>
+                <div className="h-6 w-px bg-slate-800" />
+                <div className="px-3 py-1.5">
+                  <p className="text-[9px] font-bold uppercase tracking-widest text-slate-600">
+                    Em andamento
+                  </p>
+                  <p className="text-[13px] font-bold text-slate-200 tabular-nums">
+                    {openDeals.length}
+                  </p>
+                </div>
+                <div className="h-6 w-px bg-slate-800" />
+                <div className="px-3 py-1.5">
+                  <p className="text-[9px] font-bold uppercase tracking-widest text-slate-600">
+                    Ganhos
+                  </p>
+                  <p className="text-[13px] font-bold text-emerald-500 tabular-nums">
+                    {wonDeals.length}
+                  </p>
+                </div>
+              </div>
+            )}
           </div>
 
-          {!isLoading && (
-            <div className="hidden items-center gap-1 rounded-lg border border-slate-800 bg-slate-900/60 p-1 lg:flex">
-              <div className="px-3 py-1.5">
-                <p className="text-[9px] font-bold uppercase tracking-widest text-slate-600">
-                  Pipeline aberto
-                </p>
-                <p className="text-[13px] font-bold text-emerald-400 tabular-nums">
-                  {formatK(totalPipelineValue)}
-                </p>
-              </div>
-              <div className="h-6 w-px bg-slate-800" />
-              <div className="px-3 py-1.5">
-                <p className="text-[9px] font-bold uppercase tracking-widest text-slate-600">
-                  Em andamento
-                </p>
-                <p className="text-[13px] font-bold text-slate-200 tabular-nums">
-                  {openDeals.length}
-                </p>
-              </div>
-              <div className="h-6 w-px bg-slate-800" />
-              <div className="px-3 py-1.5">
-                <p className="text-[9px] font-bold uppercase tracking-widest text-slate-600">
-                  Ganhos
-                </p>
-                <p className="text-[13px] font-bold text-emerald-500 tabular-nums">
-                  {wonDeals.length}
-                </p>
-              </div>
-            </div>
-          )}
+          <Button
+            onClick={() => openNewDeal('new_lead')}
+            size="sm"
+            className="gap-1.5 bg-indigo-600 text-white hover:bg-indigo-500"
+          >
+            <TrendingUp className="h-3.5 w-3.5" />
+            <span className="hidden sm:inline">Novo Negócio</span>
+            <span className="sm:hidden">Novo</span>
+          </Button>
         </div>
 
-        <Button
-          onClick={() => openNewDeal('new_lead')}
-          size="sm"
-          className="gap-1.5 bg-indigo-600 text-white hover:bg-indigo-500"
-        >
-          <TrendingUp className="h-3.5 w-3.5" />
-          Novo Negócio
-        </Button>
+        {/* Stats compactos — mobile only */}
+        {!isLoading && (
+          <div className="mt-2.5 flex items-center gap-4 lg:hidden">
+            <div>
+              <p className="text-[9px] font-bold uppercase tracking-widest text-slate-600">Aberto</p>
+              <p className="text-[12px] font-bold text-emerald-400 tabular-nums">{formatK(totalPipelineValue)}</p>
+            </div>
+            <div className="h-5 w-px bg-slate-800" />
+            <div>
+              <p className="text-[9px] font-bold uppercase tracking-widest text-slate-600">Em andamento</p>
+              <p className="text-[12px] font-bold text-slate-200 tabular-nums">{openDeals.length}</p>
+            </div>
+            <div className="h-5 w-px bg-slate-800" />
+            <div>
+              <p className="text-[9px] font-bold uppercase tracking-widest text-slate-600">Ganhos</p>
+              <p className="text-[12px] font-bold text-emerald-500 tabular-nums">{wonDeals.length}</p>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Kanban board */}
@@ -166,13 +189,20 @@ export function PipelineBoard() {
         </div>
       ) : (
         <div className="flex-1 overflow-x-auto overflow-y-hidden">
+          {/* Hint de scroll em mobile */}
+          <div className="flex items-center gap-1.5 px-4 pt-3 pb-0 text-[11px] text-slate-600 lg:hidden">
+            <svg className="h-3 w-3 shrink-0" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+              <path d="M2 6h8M7 3l3 3-3 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+            Deslize para ver todas as etapas
+          </div>
           <DndContext
             sensors={sensors}
             onDragStart={handleDragStart}
             onDragOver={handleDragOver}
             onDragEnd={handleDragEnd}
           >
-            <div className="flex h-full gap-3 px-6 py-5 lg:px-8">
+            <div className="flex h-full gap-2 px-4 py-3 lg:gap-3 lg:px-8 lg:py-5">
               {PIPELINE_COLUMNS.map((column) => (
                 <KanbanColumn
                   key={column.id}

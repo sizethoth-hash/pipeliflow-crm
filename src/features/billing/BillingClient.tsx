@@ -79,7 +79,7 @@ export function BillingClient() {
   }
 
   return (
-    <div className="p-6 md:p-8 max-w-3xl">
+    <div className="p-4 sm:p-6 md:p-8 max-w-3xl">
       <div className="mb-8">
         <h1 className="text-xl font-semibold text-slate-100">Faturamento</h1>
         <p className="mt-1 text-sm text-slate-400">Gerencie seu plano e assinatura.</p>
@@ -99,7 +99,7 @@ export function BillingClient() {
 
       {/* Plano atual */}
       <div className="mb-8 rounded-xl border border-slate-700 bg-slate-800/60 p-5">
-        <div className="flex items-center justify-between">
+        <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
             <p className="text-xs font-medium uppercase tracking-wider text-slate-500">Plano atual</p>
             <div className="mt-1 flex items-center gap-2">
@@ -118,7 +118,7 @@ export function BillingClient() {
             )}
           </div>
           {isPro && (
-            <Button variant="outline" size="sm" onClick={handlePortal} disabled={isLoading}>
+            <Button variant="outline" size="sm" onClick={handlePortal} disabled={isLoading} className="shrink-0">
               Gerenciar assinatura
             </Button>
           )}

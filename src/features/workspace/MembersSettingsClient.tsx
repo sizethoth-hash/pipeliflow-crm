@@ -360,8 +360,8 @@ export function MembersSettingsClient() {
   const isAdmin = currentUserMember?.role === 'admin'
 
   return (
-    <div className="h-full overflow-y-auto p-6 lg:p-8">
-      <div className="mb-6 flex items-center justify-between">
+    <div className="h-full overflow-y-auto p-4 sm:p-6 lg:p-8">
+      <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-3">
           <Users className="h-6 w-6 text-indigo-400" aria-hidden="true" />
           <div>
@@ -378,6 +378,7 @@ export function MembersSettingsClient() {
             onClick={() => setInviteOpen(true)}
             disabled={atLimit}
             title={atLimit ? 'Limite do plano Free atingido' : undefined}
+            className="shrink-0"
           >
             <UserPlus className="mr-2 h-4 w-4" aria-hidden="true" />
             Convidar
