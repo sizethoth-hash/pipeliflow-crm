@@ -81,7 +81,7 @@ export function BillingClient() {
   return (
     <div className="p-4 sm:p-6 md:p-8 max-w-3xl">
       <div className="mb-8">
-        <h1 className="text-xl font-semibold text-slate-100">Faturamento</h1>
+        <h1 className="text-xl font-semibold text-slate-100">Assinatura</h1>
         <p className="mt-1 text-sm text-slate-400">Gerencie seu plano e assinatura.</p>
       </div>
 

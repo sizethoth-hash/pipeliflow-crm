@@ -8,7 +8,7 @@ import { cn } from '@/lib/utils'
 const SETTINGS_NAV = [
   { href: '/settings/workspace', label: 'Workspace', icon: Building2 },
   { href: '/settings/members', label: 'Membros', icon: Users },
-  { href: '/settings/billing', label: 'Faturamento', icon: CreditCard },
+  { href: '/settings/billing', label: 'Assinatura', icon: CreditCard },
 ]
 
 export default function SettingsLayout({ children }: { children: React.ReactNode }) {
