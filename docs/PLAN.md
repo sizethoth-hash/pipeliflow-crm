@@ -375,13 +375,15 @@ FASE 3 — PRODUTO   (M12 → M14) Stripe, Resend, Deploy
   - `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `STRIPE_PRICE_ID_PRO`
   - `RESEND_API_KEY`, `NEXT_PUBLIC_APP_URL`
 - [ ] Supabase: habilitar Auth email confirmations em produção (próxima aula)
-- [ ] Stripe: criar webhook endpoint de produção com chaves live (próxima aula)
+- [ ] Stripe: ativar chaves live (`sk_live_...`) em produção (próxima aula)
 - [x] Rodar migrations em produção via Supabase CLI (todas 13 já aplicadas)
 - [x] `pnpm build` sem erros no CI
 - [x] Fix: `outputFileTracingRoot` removido do `next.config.mjs` (causava caminho duplicado no Vercel)
 - [x] `vercel.json` adicionado com framework, buildCommand e installCommand
-- [ ] Configurar domínio customizado (opcional)
-- [ ] Smoke test pós-deploy: cadastro → onboarding → lead → pipeline → billing
+- [x] Stripe webhook de sandbox configurado para produção (3 eventos, signing secret atualizado no Vercel)
+- [x] Supabase Auth: Site URL + Redirect URLs configuradas (localhost, *.vercel.app, produção)
+- [x] Smoke test pós-deploy: Landing → Login → Dashboard → Pipeline → Leads → Settings → Billing ✅
+- [ ] Configurar domínio customizado `crm.scintilla.net.br` (aguarda confirmação da Construsite)
 - [ ] Atualizar `README.md` com instruções de setup local
 
 **URL de produção:** `https://pipeliflow-crm.vercel.app`
