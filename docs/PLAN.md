@@ -363,25 +363,28 @@ FASE 3 — PRODUTO   (M12 → M14) Stripe, Resend, Deploy
 
 ---
 
-### M14 · Deploy & Produção
-**Branch:** `feat/deploy`
+### M14 · Deploy & Produção ✅
+**Branch:** `feat/deploy` → mergeado em `main` ✅
 **Objetivo:** Aplicação em produção com CI/CD, variáveis configuradas e domínio ativo.
 
 #### Entregas
-- [ ] Criar projeto no Vercel conectado ao repositório GitHub
-- [ ] Configurar todas as variáveis de ambiente no Vercel:
+- [x] Criar projeto no Vercel conectado ao repositório GitHub
+- [x] Configurar todas as variáveis de ambiente no Vercel:
   - `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`
   - `SUPABASE_SERVICE_ROLE_KEY`
   - `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `STRIPE_PRICE_ID_PRO`
   - `RESEND_API_KEY`, `NEXT_PUBLIC_APP_URL`
-- [ ] Supabase: habilitar Auth email confirmations em produção
-- [ ] Stripe: criar webhook endpoint apontando para URL da Vercel
-- [ ] Rodar migrations em produção via Supabase CLI
-- [ ] `pnpm build` sem erros no CI
-- [ ] Preview deployments automáticos para PRs
+- [ ] Supabase: habilitar Auth email confirmations em produção (próxima aula)
+- [ ] Stripe: criar webhook endpoint de produção com chaves live (próxima aula)
+- [x] Rodar migrations em produção via Supabase CLI (todas 13 já aplicadas)
+- [x] `pnpm build` sem erros no CI
+- [x] Fix: `outputFileTracingRoot` removido do `next.config.mjs` (causava caminho duplicado no Vercel)
+- [x] `vercel.json` adicionado com framework, buildCommand e installCommand
 - [ ] Configurar domínio customizado (opcional)
 - [ ] Smoke test pós-deploy: cadastro → onboarding → lead → pipeline → billing
 - [ ] Atualizar `README.md` com instruções de setup local
+
+**URL de produção:** `https://pipeliflow-crm.vercel.app`
 
 **Commit final:** `chore: production deploy — Vercel, Supabase, Stripe configured`
 
@@ -405,4 +408,4 @@ FASE 3 — PRODUTO   (M12 → M14) Stripe, Resend, Deploy
 | M11 | Multi-workspace & Colaboração | `feat/collaboration` ✅ | Backend |
 | M12 | Monetização com Stripe | `feat/billing-nextjs` ✅ | Produto |
 | M13 | Qualidade, Testes & Acessibilidade | `feat/quality` | Produto |
-| M14 | Deploy & Produção | `feat/deploy` | Produto |
+| M14 | Deploy & Produção | `feat/deploy` ✅ | Produto |
