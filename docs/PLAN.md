@@ -92,7 +92,10 @@ FASE 3 — PRODUTO   (M12 → M14) Stripe, Resend, Deploy
 - [x] Mock de autenticação: simula login bem-sucedido e redireciona para `/dashboard`
 - [ ] Zustand store `useAuthStore`: `user`, `workspace`, `isLoading`, `login()`, `logout()` _(adiado para M8)_
 - [ ] Rota protegida: middleware mock que redireciona `/dashboard` → `/login` se não autenticado _(adiado para M8)_
-- [ ] Página `/forgot-password`: form de recuperação (UI apenas) _(não implementado)_
+- [x] Página `/forgot-password`: solicitação de e-mail + verificação de código OTP em 2 passos
+- [x] Página `/reset-password`: formulário de nova senha, sessão via `verifyOtp`
+- [x] Hook `useAuth`: `requestPasswordReset()` e `verifyRecoveryOtp()` (fluxo OTP, sem link de e-mail)
+- [x] Template de e-mail "Reset Password" no Supabase usando `{{ .Token }}` (código de 8 dígitos) em vez de `{{ .ConfirmationURL }}` — evita quebra de link por click-tracking de domínios de teste
 - [ ] Testes unitários dos forms e store _(não implementado)_
 
 **Commit final:** `feat: auth and onboarding UI with mock state`
@@ -385,10 +388,14 @@ FASE 3 — PRODUTO   (M12 → M14) Stripe, Resend, Deploy
 - [x] Smoke test pós-deploy: Landing → Login → Dashboard → Pipeline → Leads → Settings → Billing ✅
 - [ ] Configurar domínio customizado `crm.scintilla.net.br` (aguarda confirmação da Construsite)
 - [ ] Atualizar `README.md` com instruções de setup local
+- [x] Incidente: projeto Supabase pausado por inatividade teve o ref alterado ao ser reativado (`hmxmtzqbioxyyjqmobyd` → `uptzaaahqvqjgsdgodmb`) — URL, anon key e service role key atualizadas em `.env.local` e Vercel (Production)
+- [x] Banco do novo projeto estava com schema vazio (reativação não migra dados/schema) — as 13 migrations reaplicadas via SQL Editor com RLS habilitado
+- [x] SMTP customizado (Resend, `smtp.resend.com:465`) configurado no Supabase Auth para contornar rate limit do e-mail embutido
 
 **URL de produção:** `https://pipeliflow-crm.vercel.app`
 
 **Commit final:** `chore: production deploy — Vercel, Supabase, Stripe configured`
+**Commit de correção:** `fix: recovery flow via OTP e reativação do projeto Supabase (M3/M14)`
 
 ---
 

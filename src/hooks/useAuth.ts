@@ -74,6 +74,57 @@ export function useAuth() {
     // loading fica true até o redirect do OAuth
   }
 
+  async function requestPasswordReset(email: string) {
+    setLoading(true)
+    setError(null)
+    try {
+      const supabase = getBrowserClient()
+      const { error: authError } = await supabase.auth.resetPasswordForEmail(email)
+      if (authError) throw authError
+      return true
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : 'Erro ao enviar e-mail. Tente novamente.'
+      setError(mapAuthError(msg))
+      return false
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  async function verifyRecoveryOtp(email: string, token: string) {
+    setLoading(true)
+    setError(null)
+    try {
+      const supabase = getBrowserClient()
+      const { error: authError } = await supabase.auth.verifyOtp({ email, token, type: 'recovery' })
+      if (authError) throw authError
+      return true
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : 'Código inválido ou expirado.'
+      setError(mapAuthError(msg))
+      return false
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  async function updatePassword(password: string) {
+    setLoading(true)
+    setError(null)
+    try {
+      const supabase = getBrowserClient()
+      const { error: authError } = await supabase.auth.updateUser({ password })
+      if (authError) throw authError
+      router.push('/dashboard')
+      router.refresh()
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : 'Erro ao redefinir senha. Tente novamente.'
+      setError(mapAuthError(msg))
+    } finally {
+      setLoading(false)
+    }
+  }
+
   async function signOut() {
     setLoading(true)
     try {
@@ -116,6 +167,9 @@ export function useAuth() {
     signIn,
     signUp,
     signInWithGoogle,
+    requestPasswordReset,
+    verifyRecoveryOtp,
+    updatePassword,
     signOut,
     createWorkspaceAndContinue,
   }
