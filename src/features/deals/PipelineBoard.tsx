@@ -114,7 +114,9 @@ export function PipelineBoard() {
             <div>
               <h2 className="text-[17px] font-bold tracking-tight text-slate-100">Pipeline</h2>
               <p className="text-[11px] text-slate-500">
-                {isLoading ? 'Carregando…' : `${deals.length} negócio${deals.length !== 1 ? 's' : ''} no funil`}
+                {isLoading
+                  ? 'Carregando…'
+                  : `${deals.length} negócio${deals.length !== 1 ? 's' : ''} no funil`}
               </p>
             </div>
 
@@ -165,18 +167,30 @@ export function PipelineBoard() {
         {!isLoading && (
           <div className="mt-2.5 flex items-center gap-4 lg:hidden">
             <div>
-              <p className="text-[9px] font-bold uppercase tracking-widest text-slate-600">Aberto</p>
-              <p className="text-[12px] font-bold text-emerald-400 tabular-nums">{formatK(totalPipelineValue)}</p>
+              <p className="text-[9px] font-bold uppercase tracking-widest text-slate-600">
+                Aberto
+              </p>
+              <p className="text-[12px] font-bold text-emerald-400 tabular-nums">
+                {formatK(totalPipelineValue)}
+              </p>
             </div>
             <div className="h-5 w-px bg-slate-800" />
             <div>
-              <p className="text-[9px] font-bold uppercase tracking-widest text-slate-600">Em andamento</p>
-              <p className="text-[12px] font-bold text-slate-200 tabular-nums">{openDeals.length}</p>
+              <p className="text-[9px] font-bold uppercase tracking-widest text-slate-600">
+                Em andamento
+              </p>
+              <p className="text-[12px] font-bold text-slate-200 tabular-nums">
+                {openDeals.length}
+              </p>
             </div>
             <div className="h-5 w-px bg-slate-800" />
             <div>
-              <p className="text-[9px] font-bold uppercase tracking-widest text-slate-600">Ganhos</p>
-              <p className="text-[12px] font-bold text-emerald-500 tabular-nums">{wonDeals.length}</p>
+              <p className="text-[9px] font-bold uppercase tracking-widest text-slate-600">
+                Ganhos
+              </p>
+              <p className="text-[12px] font-bold text-emerald-500 tabular-nums">
+                {wonDeals.length}
+              </p>
             </div>
           </div>
         )}
@@ -192,7 +206,13 @@ export function PipelineBoard() {
           {/* Hint de scroll em mobile */}
           <div className="flex items-center gap-1.5 px-4 pt-3 pb-0 text-[11px] text-slate-600 lg:hidden">
             <svg className="h-3 w-3 shrink-0" viewBox="0 0 12 12" fill="none" aria-hidden="true">
-              <path d="M2 6h8M7 3l3 3-3 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              <path
+                d="M2 6h8M7 3l3 3-3 3"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
             </svg>
             Deslize para ver todas as etapas
           </div>

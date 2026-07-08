@@ -30,7 +30,7 @@ function formatCurrency(value: number) {
 }
 
 function formatDate(dateStr: string) {
-  return new Date(dateStr + 'T00:00:00').toLocaleDateString('pt-BR', {
+  return new Date(`${dateStr}T00:00:00`).toLocaleDateString('pt-BR', {
     day: '2-digit',
     month: 'short',
   })
@@ -40,7 +40,7 @@ function getDueDateStatus(dueDate?: string): 'overdue' | 'urgent' | 'ok' | null 
   if (!dueDate) return null
   const today = new Date()
   today.setHours(0, 0, 0, 0)
-  const due = new Date(dueDate + 'T00:00:00')
+  const due = new Date(`${dueDate}T00:00:00`)
   const diffDays = Math.ceil((due.getTime() - today.getTime()) / 86400000)
   if (diffDays < 0) return 'overdue'
   if (diffDays <= 3) return 'urgent'
@@ -183,9 +183,10 @@ export function DealCard({ deal, onEdit, onView, stageId, isOverlay = false }: D
           <div className="flex items-center justify-between gap-2">
             <span
               className="text-[13px] font-bold tabular-nums transition-colors duration-300"
-              style={isLost
-                ? { color: '#64748b', textDecoration: 'line-through' }
-                : { color: stageColor }
+              style={
+                isLost
+                  ? { color: '#64748b', textDecoration: 'line-through' }
+                  : { color: stageColor }
               }
             >
               {formatCurrency(deal.value)}

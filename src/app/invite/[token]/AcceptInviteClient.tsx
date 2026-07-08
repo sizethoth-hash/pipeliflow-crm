@@ -1,8 +1,8 @@
 'use client'
 
-import { useState } from 'react'
+import { CheckCircle, Crown, Kanban, Loader2, Shield } from 'lucide-react'
 import { useRouter } from 'next/navigation'
-import { CheckCircle, Kanban, Loader2, Shield, Crown } from 'lucide-react'
+import { useState } from 'react'
 import { Button } from '@/components/ui/Button'
 import type { MemberRole } from '@/types/supabase'
 
@@ -59,8 +59,8 @@ export function AcceptInviteClient({ token, workspaceName, inviteEmail, role }: 
             </div>
             <h1 className="mb-2 text-xl font-bold text-slate-100">Convite aceito!</h1>
             <p className="mb-8 text-sm text-slate-400">
-              Você entrou no workspace <strong className="text-slate-200">"{workspaceName}"</strong> como{' '}
-              <strong className="text-slate-200">{roleLabel}</strong>.
+              Você entrou no workspace <strong className="text-slate-200">"{workspaceName}"</strong>{' '}
+              como <strong className="text-slate-200">{roleLabel}</strong>.
             </p>
             <Button className="w-full" onClick={() => router.push('/dashboard')}>
               Ir para o dashboard
@@ -86,15 +86,9 @@ export function AcceptInviteClient({ token, workspaceName, inviteEmail, role }: 
               </div>
             </div>
 
-            {status === 'error' && (
-              <p className="mb-4 text-sm text-red-400">{errorMessage}</p>
-            )}
+            {status === 'error' && <p className="mb-4 text-sm text-red-400">{errorMessage}</p>}
 
-            <Button
-              className="w-full"
-              onClick={handleAccept}
-              disabled={status === 'loading'}
-            >
+            <Button className="w-full" onClick={handleAccept} disabled={status === 'loading'}>
               {status === 'loading' ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
               ) : (

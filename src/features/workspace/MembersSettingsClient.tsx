@@ -1,9 +1,7 @@
 'use client'
 
-import { useState } from 'react'
-import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { z } from 'zod'
+import { useQueryClient } from '@tanstack/react-query'
 import {
   Crown,
   Loader2,
@@ -15,6 +13,9 @@ import {
   Users,
   X,
 } from 'lucide-react'
+import { useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
 import { Avatar, AvatarFallback } from '@/components/ui/Avatar'
 import { Badge } from '@/components/ui/Badge'
 import { Button } from '@/components/ui/Button'
@@ -43,7 +44,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/Select'
-import { useQueryClient } from '@tanstack/react-query'
 import {
   memberCountKey,
   useMemberCount,
@@ -152,8 +152,8 @@ function InviteMemberModal({
           <div className="rounded-lg border border-amber-800/50 bg-amber-950/30 p-4 text-sm text-amber-300">
             <p className="font-medium">Limite do plano Free atingido</p>
             <p className="mt-1 text-amber-400/70">
-              O plano Free permite no máximo 2 membros. Faça upgrade para o plano Pro para
-              convidar mais colaboradores.
+              O plano Free permite no máximo 2 membros. Faça upgrade para o plano Pro para convidar
+              mais colaboradores.
             </p>
           </div>
         ) : success ? (
@@ -180,10 +180,7 @@ function InviteMemberModal({
               <Label htmlFor="invite-role" className="text-slate-300">
                 Papel
               </Label>
-              <Select
-                value={roleValue}
-                onValueChange={(v) => setValue('role', v as MemberRole)}
-              >
+              <Select value={roleValue} onValueChange={(v) => setValue('role', v as MemberRole)}>
                 <SelectTrigger
                   id="invite-role"
                   className="border-slate-600 bg-slate-700 text-slate-100 focus:ring-indigo-500"
@@ -191,7 +188,9 @@ function InviteMemberModal({
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent className="border-slate-700 bg-slate-800 text-slate-100">
-                  <SelectItem value="member">Membro — leitura e escrita em leads e negócios</SelectItem>
+                  <SelectItem value="member">
+                    Membro — leitura e escrita em leads e negócios
+                  </SelectItem>
                   <SelectItem value="admin">Admin — acesso total + convidar membros</SelectItem>
                 </SelectContent>
               </Select>
@@ -200,7 +199,12 @@ function InviteMemberModal({
             {serverError && <p className="text-xs text-red-400">{serverError}</p>}
 
             <DialogFooter>
-              <Button type="button" variant="ghost" onClick={handleClose} className="text-slate-400">
+              <Button
+                type="button"
+                variant="ghost"
+                onClick={handleClose}
+                className="text-slate-400"
+              >
                 Cancelar
               </Button>
               <Button type="submit" disabled={isSubmitting}>
@@ -276,9 +280,7 @@ function MemberRow({
       <div className="min-w-0 flex-1">
         <p className="truncate text-sm font-medium text-slate-100">
           {member.name}
-          {isCurrentUser && (
-            <span className="ml-1.5 text-xs text-slate-500">(você)</span>
-          )}
+          {isCurrentUser && <span className="ml-1.5 text-xs text-slate-500">(você)</span>}
         </p>
         <p className="truncate text-xs text-slate-500">{member.email}</p>
       </div>
@@ -296,10 +298,7 @@ function MemberRow({
               <MoreHorizontal className="h-4 w-4" />
             </button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent
-            align="end"
-            className="w-48 border-slate-700 bg-slate-800"
-          >
+          <DropdownMenuContent align="end" className="w-48 border-slate-700 bg-slate-800">
             <DropdownMenuItem
               className="cursor-pointer text-slate-200 focus:bg-slate-700"
               onSelect={() => setRoleOpen(true)}
@@ -389,7 +388,8 @@ export function MembersSettingsClient() {
       {/* Aviso de limite */}
       {atLimit && isAdmin && (
         <div className="mb-5 rounded-lg border border-amber-800/50 bg-amber-950/30 p-3 text-sm text-amber-300">
-          Você atingiu o limite de 2 membros do plano Free. Faça upgrade para Pro para adicionar mais colaboradores.
+          Você atingiu o limite de 2 membros do plano Free. Faça upgrade para Pro para adicionar
+          mais colaboradores.
         </div>
       )}
 

@@ -1,8 +1,8 @@
 'use client'
 
+import { Building2, CreditCard, Users } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Building2, CreditCard, Users } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 const SETTINGS_NAV = [

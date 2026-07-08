@@ -1,14 +1,8 @@
 'use client'
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { createLead, deleteLead, getLead, getLeads, updateLead } from '@/services/leads'
 import { useWorkspaceStore } from '@/store/useWorkspaceStore'
-import {
-  createLead,
-  deleteLead,
-  getLead,
-  getLeads,
-  updateLead,
-} from '@/services/leads'
 import type { LeadFilters } from '@/types/lead'
 import type { LeadInsert, LeadUpdate } from '@/types/supabase'
 

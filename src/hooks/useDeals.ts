@@ -1,8 +1,8 @@
 'use client'
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { useWorkspaceStore } from '@/store/useWorkspaceStore'
 import { createDeal, deleteDeal, getDeals, moveDeal, updateDeal } from '@/services/deals'
+import { useWorkspaceStore } from '@/store/useWorkspaceStore'
 import type { Deal, DealStage } from '@/types/deal'
 import type { DealInsert, DealUpdate } from '@/types/supabase'
 
@@ -24,8 +24,12 @@ export function useCreateDeal() {
   const qc = useQueryClient()
 
   return useMutation({
-    mutationFn: (payload: Omit<DealInsert, 'workspace_id' | 'owner_id'> & { leadName?: string; ownerName?: string }) =>
-      createDeal(payload),
+    mutationFn: (
+      payload: Omit<DealInsert, 'workspace_id' | 'owner_id'> & {
+        leadName?: string
+        ownerName?: string
+      }
+    ) => createDeal(payload),
     onSuccess: (created) => {
       qc.invalidateQueries({ queryKey: dealsKey(created.workspaceId) })
     },
@@ -74,7 +78,7 @@ export function useMoveDeal() {
       const prev = qc.getQueryData<Deal[]>(key)
 
       qc.setQueryData<Deal[]>(key, (old) =>
-        (old ?? []).map((d) => (d.id === id ? { ...d, stage } : d)),
+        (old ?? []).map((d) => (d.id === id ? { ...d, stage } : d))
       )
 
       return { prev, workspaceId }

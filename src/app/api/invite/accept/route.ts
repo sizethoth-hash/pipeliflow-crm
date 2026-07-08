@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
+import { z } from 'zod'
 import { getServerClient } from '@/lib/supabase/server'
 import { acceptInvite } from '@/services/workspaces'
-import { z } from 'zod'
 
 const bodySchema = z.object({ token: z.string().min(1) })
 

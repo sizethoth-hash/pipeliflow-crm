@@ -41,10 +41,7 @@ export async function createWorkspace(name: string): Promise<Workspace> {
 export async function updateWorkspaceName(workspaceId: string, name: string): Promise<void> {
   const supabase = await getServerClient()
 
-  const { error } = await supabase
-    .from('workspaces')
-    .update({ name })
-    .eq('id', workspaceId)
+  const { error } = await supabase.from('workspaces').update({ name }).eq('id', workspaceId)
 
   if (error) throw new Error(error.message)
 }
@@ -52,10 +49,7 @@ export async function updateWorkspaceName(workspaceId: string, name: string): Pr
 export async function deleteWorkspace(workspaceId: string): Promise<void> {
   const supabase = await getServerClient()
 
-  const { error } = await supabase
-    .from('workspaces')
-    .delete()
-    .eq('id', workspaceId)
+  const { error } = await supabase.from('workspaces').delete().eq('id', workspaceId)
 
   if (error) throw new Error(error.message)
 }
@@ -98,7 +92,7 @@ export async function getWorkspaceMembers(workspaceId: string): Promise<Workspac
 export async function updateMemberRole(
   workspaceId: string,
   userId: string,
-  role: MemberRole,
+  role: MemberRole
 ): Promise<void> {
   const supabase = await getServerClient()
 
@@ -172,7 +166,9 @@ export async function getInviteByToken(token: string): Promise<InviteWithWorkspa
 
   const { data, error } = await supabase
     .from('workspace_invites')
-    .select('id, workspace_id, email, role, token, invited_by, accepted_at, expires_at, created_at, workspaces(name)')
+    .select(
+      'id, workspace_id, email, role, token, invited_by, accepted_at, expires_at, created_at, workspaces(name)'
+    )
     .eq('token', token)
     .is('accepted_at', null)
     .gt('expires_at', new Date().toISOString())
@@ -182,11 +178,13 @@ export async function getInviteByToken(token: string): Promise<InviteWithWorkspa
 
   return {
     ...data,
-    workspaces: (data.workspaces as unknown as { name: string }),
+    workspaces: data.workspaces as unknown as { name: string },
   } as InviteWithWorkspace
 }
 
-export async function acceptInvite(token: string): Promise<{ workspace_id: string; role: MemberRole }> {
+export async function acceptInvite(
+  token: string
+): Promise<{ workspace_id: string; role: MemberRole }> {
   const supabase = await getServerClient()
 
   const { data, error } = await supabase.rpc('accept_workspace_invite', { p_token: token })

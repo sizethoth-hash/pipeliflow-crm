@@ -1,13 +1,7 @@
 // Gerado manualmente — sincronizar com supabase/migrations/ sempre que o schema mudar.
 // Para regenerar automaticamente: npx supabase gen types typescript --project-id hmxmtzqbioxyyjqmobyd
 
-export type Json =
-  | string
-  | number
-  | boolean
-  | null
-  | { [key: string]: Json | undefined }
-  | Json[]
+export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[]
 
 // ── Enums ────────────────────────────────────────────────────────────────────
 
@@ -131,29 +125,11 @@ export type WorkspaceMemberInsert = {
   role?: MemberRole
 }
 
-export type LeadInsert = Pick<
-  LeadRow,
-  'workspace_id' | 'name' | 'email' | 'owner_id'
-> &
-  Partial<
-    Pick<
-      LeadRow,
-      | 'phone'
-      | 'company'
-      | 'job_title'
-      | 'status'
-      | 'potential_value'
-      | 'notes'
-    >
-  >
+export type LeadInsert = Pick<LeadRow, 'workspace_id' | 'name' | 'email' | 'owner_id'> &
+  Partial<Pick<LeadRow, 'phone' | 'company' | 'job_title' | 'status' | 'potential_value' | 'notes'>>
 
-export type DealInsert = Pick<
-  DealRow,
-  'workspace_id' | 'title' | 'owner_id'
-> &
-  Partial<
-    Pick<DealRow, 'lead_id' | 'value' | 'stage' | 'due_date'>
-  >
+export type DealInsert = Pick<DealRow, 'workspace_id' | 'title' | 'owner_id'> &
+  Partial<Pick<DealRow, 'lead_id' | 'value' | 'stage' | 'due_date'>>
 
 export type ActivityInsert = Pick<
   ActivityRow,

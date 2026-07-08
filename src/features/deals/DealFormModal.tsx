@@ -226,10 +226,7 @@ export function DealFormModal({
             >
               Cancelar
             </Button>
-            <Button
-              type="submit"
-              disabled={createDeal.isPending || updateDeal.isPending}
-            >
+            <Button type="submit" disabled={createDeal.isPending || updateDeal.isPending}>
               {isEditing ? 'Salvar alterações' : 'Criar negócio'}
             </Button>
           </DialogFooter>

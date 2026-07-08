@@ -1,7 +1,7 @@
 'use client'
 
-import { useAuthStore } from '@/store/useAuthStore'
 import { useEffect } from 'react'
+import { useAuthStore } from '@/store/useAuthStore'
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const { initialize, initialized } = useAuthStore()

@@ -40,9 +40,7 @@ export function UpsellDialog({ open, onClose, title, description }: UpsellDialog
           <Button variant="ghost" onClick={onClose} className="text-slate-300 hover:text-white">
             Agora não
           </Button>
-          <Button onClick={handleUpgrade}>
-            Ver plano Pro
-          </Button>
+          <Button onClick={handleUpgrade}>Ver plano Pro</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

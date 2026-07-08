@@ -8,10 +8,7 @@ export function HeroSection() {
       aria-label="Apresentação principal do PipeFlow CRM"
     >
       {/* Gradiente de fundo */}
-      <div
-        className="pointer-events-none absolute inset-0 -z-10"
-        aria-hidden="true"
-      >
+      <div className="pointer-events-none absolute inset-0 -z-10" aria-hidden="true">
         <div className="absolute top-0 left-1/2 h-[600px] w-[800px] -translate-x-1/2 rounded-full bg-indigo-600/10 blur-3xl" />
         <div className="absolute top-40 left-1/4 h-[300px] w-[400px] rounded-full bg-violet-600/8 blur-3xl" />
       </div>
@@ -34,8 +31,8 @@ export function HeroSection() {
 
       {/* Subheadline */}
       <p className="mx-auto mt-6 max-w-2xl text-center text-lg leading-relaxed text-slate-400 sm:text-xl">
-        PipeFlow é o CRM para times de vendas que querem visibilidade total do pipeline,
-        histórico de contatos e métricas em tempo real — tudo em um só lugar.
+        PipeFlow é o CRM para times de vendas que querem visibilidade total do pipeline, histórico
+        de contatos e métricas em tempo real — tudo em um só lugar.
       </p>
 
       {/* CTAs */}
@@ -54,7 +51,13 @@ export function HeroSection() {
         >
           Ver funcionalidades
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-            <path d="M8 3L13 8L8 13" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+            <path
+              d="M8 3L13 8L8 13"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
             <path d="M3 8H13" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
           </svg>
         </a>
@@ -64,7 +67,11 @@ export function HeroSection() {
       <AnimatedStatsClient />
 
       {/* Mockup do pipeline */}
-      <div className="relative mt-10 w-full max-w-5xl md:mt-20" aria-label="Pré-visualização do pipeline Kanban">
+      <div
+        className="relative mt-10 w-full max-w-5xl md:mt-20"
+        role="img"
+        aria-label="Pré-visualização do pipeline Kanban"
+      >
         {/* Brilho atrás do mockup */}
         <div
           className="absolute -inset-4 rounded-2xl bg-indigo-600/5 blur-2xl"
@@ -82,16 +89,45 @@ export function HeroSection() {
           {/* Kanban simulado */}
           <div className="flex gap-3 overflow-x-auto p-4">
             {[
-              { stage: 'Novo Lead', color: 'bg-slate-500', count: 4, value: 'R$ 28k', mobileHidden: false },
-              { stage: 'Contato Realizado', color: 'bg-blue-500', count: 6, value: 'R$ 64k', mobileHidden: false },
-              { stage: 'Proposta Enviada', color: 'bg-indigo-500', count: 3, value: 'R$ 95k', mobileHidden: true },
-              { stage: 'Negociação', color: 'bg-violet-500', count: 2, value: 'R$ 120k', mobileHidden: true },
-              { stage: 'Fechado Ganho', color: 'bg-green-500', count: 5, value: 'R$ 210k', mobileHidden: true },
+              {
+                stage: 'Novo Lead',
+                color: 'bg-slate-500',
+                count: 4,
+                value: 'R$ 28k',
+                mobileHidden: false,
+              },
+              {
+                stage: 'Contato Realizado',
+                color: 'bg-blue-500',
+                count: 6,
+                value: 'R$ 64k',
+                mobileHidden: false,
+              },
+              {
+                stage: 'Proposta Enviada',
+                color: 'bg-indigo-500',
+                count: 3,
+                value: 'R$ 95k',
+                mobileHidden: true,
+              },
+              {
+                stage: 'Negociação',
+                color: 'bg-violet-500',
+                count: 2,
+                value: 'R$ 120k',
+                mobileHidden: true,
+              },
+              {
+                stage: 'Fechado Ganho',
+                color: 'bg-green-500',
+                count: 5,
+                value: 'R$ 210k',
+                mobileHidden: true,
+              },
             ].map((col) => (
               <div
                 key={col.stage}
                 className={`min-w-[120px] flex-1 ${col.mobileHidden ? 'hidden sm:block' : ''}`}
-                aria-label={`Coluna ${col.stage}`}
               >
                 <div className="mb-3 flex items-center justify-between">
                   <div className="flex items-center gap-2">
@@ -103,9 +139,12 @@ export function HeroSection() {
                   </span>
                 </div>
                 <div className="space-y-2">
-                  {Array.from({ length: Math.min(col.count, 3) }).map((_, i) => (
+                  {Array.from(
+                    { length: Math.min(col.count, 3) },
+                    (_, i) => `${col.stage}-${i}`
+                  ).map((cardKey) => (
                     <div
-                      key={i}
+                      key={cardKey}
                       className="rounded-lg border border-slate-700/50 bg-slate-800/60 p-3"
                       aria-hidden="true"
                     >

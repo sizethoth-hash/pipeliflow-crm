@@ -1,12 +1,12 @@
 'use client'
 
 import { Briefcase, DollarSign, Loader2, TrendingUp, Users } from 'lucide-react'
-import { useAuthStore } from '@/store/useAuthStore'
-import { useDashboardData } from '@/hooks/useDashboardData'
 import { MetricCard } from '@/features/dashboard/MetricCard'
+import { RecentLeads } from '@/features/dashboard/RecentLeads'
 import { SalesFunnelChart } from '@/features/dashboard/SalesFunnelChart'
 import { UpcomingDeals } from '@/features/dashboard/UpcomingDeals'
-import { RecentLeads } from '@/features/dashboard/RecentLeads'
+import { useDashboardData } from '@/hooks/useDashboardData'
+import { useAuthStore } from '@/store/useAuthStore'
 
 function compactBRL(value: number): string {
   if (value >= 1_000_000) return `R$ ${(value / 1_000_000).toFixed(1)}M`
@@ -25,7 +25,12 @@ export default function DashboardPage() {
   const fullName = user?.user_metadata?.full_name ?? user?.email ?? 'Usuário'
   const firstName = fullName.split(' ')[0]
 
-  const metrics = data?.metrics ?? { totalLeads: 0, openDeals: 0, pipelineValue: 0, conversionRate: 0 }
+  const metrics = data?.metrics ?? {
+    totalLeads: 0,
+    openDeals: 0,
+    pipelineValue: 0,
+    conversionRate: 0,
+  }
   const funnelData = data?.funnelData ?? []
   const upcomingDeals = data?.upcomingDeals ?? []
   const recentLeads = data?.recentLeads ?? []

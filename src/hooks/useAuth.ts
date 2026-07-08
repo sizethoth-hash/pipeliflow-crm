@@ -1,8 +1,8 @@
 'use client'
 
-import { getBrowserClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
+import { getBrowserClient } from '@/lib/supabase/client'
 
 export function useAuth() {
   const router = useRouter()

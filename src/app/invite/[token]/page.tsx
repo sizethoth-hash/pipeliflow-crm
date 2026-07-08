@@ -1,5 +1,5 @@
+import { Kanban, XCircle } from 'lucide-react'
 import { redirect } from 'next/navigation'
-import { XCircle, Kanban } from 'lucide-react'
 import { getServerClient } from '@/lib/supabase/server'
 import { getInviteByToken, type InviteWithWorkspace } from '@/services/workspaces'
 import { AcceptInviteClient } from './AcceptInviteClient'

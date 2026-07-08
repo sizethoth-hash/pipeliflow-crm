@@ -5,7 +5,9 @@ import type { SubscriptionRow } from '@/types/supabase'
 
 export async function getSubscription(): Promise<SubscriptionRow | null> {
   const supabase = await getServerClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
   if (!user) return null
 
   const { data: member } = await supabase

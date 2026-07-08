@@ -1,4 +1,4 @@
-import { test, expect, type Page } from '@playwright/test'
+import { expect, type Page, test } from '@playwright/test'
 
 // Usuário criado via service role com email confirmado
 const TEST_EMAIL = 'teste@pipeliflow.dev'
@@ -12,7 +12,6 @@ async function gotoLogin(page: Page) {
 }
 
 test.describe('Auth flow — login, onboarding, dashboard, logout, proteção de rotas', () => {
-
   // ── 1. Rotas protegidas redirecionam para /login ─────────────────
   test('rotas protegidas redirecionam para /login sem sessão', async ({ page }) => {
     for (const path of ['/dashboard', '/leads', '/pipeline', '/settings']) {
@@ -23,7 +22,9 @@ test.describe('Auth flow — login, onboarding, dashboard, logout, proteção de
   })
 
   // ── 2. Login com credenciais válidas ────────────────────────────
-  test('login com credenciais válidas redireciona para /dashboard ou /onboarding', async ({ page }) => {
+  test('login com credenciais válidas redireciona para /dashboard ou /onboarding', async ({
+    page,
+  }) => {
     await gotoLogin(page)
     await expect(page.getByRole('heading', { name: /Bem-vindo de volta/i })).toBeVisible()
 
@@ -74,19 +75,20 @@ test.describe('Auth flow — login, onboarding, dashboard, logout, proteção de
 
     // Workspace switcher ou skeleton de loading aparece na sidebar
     await expect(
-      page.locator('div').filter({ has: page.locator('button[aria-label="Selecionar workspace"]') }).or(
-        page.locator('.animate-pulse').first()
-      )
+      page
+        .locator('div')
+        .filter({ has: page.locator('button[aria-label="Selecionar workspace"]') })
+        .or(page.locator('.animate-pulse').first())
     ).toBeVisible({ timeout: 8000 })
 
     // Botão de usuário
-    await expect(
-      page.locator('button[aria-label="Menu do usuário"]')
-    ).toBeVisible()
+    await expect(page.locator('button[aria-label="Menu do usuário"]')).toBeVisible()
 
     // Sem erros de console críticos
     const errors: string[] = []
-    page.on('console', msg => { if (msg.type() === 'error') errors.push(msg.text()) })
+    page.on('console', (msg) => {
+      if (msg.type() === 'error') errors.push(msg.text())
+    })
     await page.waitForTimeout(2000)
 
     await page.screenshot({ path: 'e2e/screenshots/03-dashboard-loaded.png', fullPage: true })
@@ -106,7 +108,10 @@ test.describe('Auth flow — login, onboarding, dashboard, logout, proteção de
       { href: '/settings', label: 'Configurações' },
     ]) {
       // Clica no link da sidebar (nav principal), não em outros links da página
-      await page.locator('nav[aria-label="Menu principal"]').getByRole('link', { name: label, exact: true }).click()
+      await page
+        .locator('nav[aria-label="Menu principal"]')
+        .getByRole('link', { name: label, exact: true })
+        .click()
       await page.waitForURL(`**${href}`, { timeout: 8000 })
       expect(page.url()).toContain(href)
     }
@@ -161,9 +166,9 @@ test.describe('Auth flow — login, onboarding, dashboard, logout, proteção de
     await page.locator('#password').fill('senha-errada-123')
     await page.getByRole('button', { name: /^Entrar$/i }).click()
 
-    await expect(
-      page.getByRole('alert').filter({ hasText: /incorretos|inválid/i })
-    ).toBeVisible({ timeout: 8000 })
+    await expect(page.getByRole('alert').filter({ hasText: /incorretos|inválid/i })).toBeVisible({
+      timeout: 8000,
+    })
 
     expect(page.url()).toContain('/login')
   })

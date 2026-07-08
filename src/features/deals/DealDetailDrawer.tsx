@@ -29,7 +29,7 @@ function getDueDateStatus(dueDate?: string): 'overdue' | 'urgent' | 'ok' | null 
   if (!dueDate) return null
   const today = new Date()
   today.setHours(0, 0, 0, 0)
-  const due = new Date(dueDate + 'T00:00:00')
+  const due = new Date(`${dueDate}T00:00:00`)
   const diffDays = Math.ceil((due.getTime() - today.getTime()) / 86400000)
   if (diffDays < 0) return 'overdue'
   if (diffDays <= 3) return 'urgent'

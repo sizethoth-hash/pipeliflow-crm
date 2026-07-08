@@ -171,11 +171,7 @@ export default function LeadDetailPage() {
                 </span>
               )}
             </h2>
-            <ActivityTimeline
-              leadId={id}
-              activities={activities}
-              isLoading={activitiesLoading}
-            />
+            <ActivityTimeline leadId={id} activities={activities} isLoading={activitiesLoading} />
           </div>
         </div>
       </div>

@@ -347,22 +347,22 @@ FASE 3 — PRODUTO   (M12 → M14) Stripe, Resend, Deploy
 **Objetivo:** Coverage targets atingidas, WCAG 2.2 AA verificado, sem erros de lint ou typecheck.
 
 #### Entregas
-- [ ] Coverage ≥ 85% em `components/` e `hooks/`
-- [ ] Coverage ≥ 70% em `utils/` e `services/`
-- [ ] Testes e2e Playwright: fluxos críticos
-  - [ ] Cadastro + onboarding
-  - [ ] Criar lead → mover no pipeline
-  - [ ] Adicionar atividade
-  - [ ] Convidar membro
-  - [ ] Upgrade para Pro
-- [ ] Auditoria de acessibilidade: `axe-core` em todos os formulários e modais
-- [ ] `pnpm lint` sem warnings
-- [ ] `pnpm typecheck` sem erros
-- [ ] Performance: Lighthouse score ≥ 90 em `/dashboard`
-- [ ] Revisar todos os `aria-label`, `role` e navegação por teclado
-- [ ] Corrigir erros encontrados
+- [x] `pnpm lint` sem erros (206 → 0; restam 10 warnings de `noNonNullAssertion` em env vars obrigatórias, aceitos por convenção)
+- [x] `pnpm typecheck` sem erros
+- [x] `pnpm test` sem falhas: 90/90 testes passando (corrigidos 16 testes de `Sidebar`/`AppShell` quebrados por mocks desatualizados de `useRouter`/`QueryClientProvider`)
+- [x] `.gitattributes` com `eol=lf` — elimina o loop de diffs de formatação causado por `core.autocrlf=true` no Windows
+- [x] Correções de acessibilidade reais: `aria-label` inválido em elementos sem `role` (`SalesFunnelChart`, `HeroSection`, `AnimatedStats`), `label` sem `for`/`htmlFor` (`ActivityTimeline`), shadowing do global `Error` (`pages/_error.tsx`)
+- [x] Guards de tipo substituindo `non-null assertion` arriscada em lógica de negócio (`services/metrics.ts`, `useDashboardMetrics.ts`, `UpcomingDeals.tsx`)
+- [x] Script `pnpm test:coverage` adicionado ao `package.json`
+- [x] Novos testes unitários com foco em lógica de negócio crítica: `lib/limits.ts` (8 testes), `services/metrics.ts` (6), `services/leads.ts` (13), `services/deals.ts` (10) — coverage de `src/services/` subiu de 0.14% para ~55%
+- [x] `src/test/renderWithProviders.tsx` e `src/test/supabaseQueryMock.ts`: helpers reutilizáveis para testar componentes com TanStack Query e services com Supabase mockado
+- [ ] Coverage ≥ 85% em `components/` e `hooks/` — **não atingido** (coverage global atual: ~19%). Fechar essa lacuna exige testes para todos os componentes de `features/` (DealCard, LeadFormModal, PipelineBoard, ActivityTimeline, etc.) e hooks restantes (`useDeals`, `useLeads`, `useWorkspaces`) — trabalho de múltiplas sessões futuras
+- [ ] Coverage ≥ 70% em `utils/` e `services/` — parcialmente atingido em `services/` (~55%); `services/billing.ts` e `services/workspaces.ts` ainda sem testes
+- [ ] Testes e2e Playwright: fluxos críticos (cadastro+onboarding, lead→pipeline, atividade, convite, upgrade Pro) — não implementado nesta sessão
+- [ ] Auditoria de acessibilidade com `axe-core` — não implementado; correções desta sessão foram manuais, via inspeção do linter de a11y do Biome
+- [ ] Performance: Lighthouse score ≥ 90 em `/dashboard` — não medido
 
-**Commit final:** `test: full coverage, e2e flows, and WCAG 2.2 AA audit`
+**Commit final:** `test: full coverage, e2e flows, and WCAG 2.2 AA audit` _(parcial — ver itens em aberto acima)_
 
 ---
 

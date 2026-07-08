@@ -51,7 +51,8 @@
       "!**/coverage",
       "!**/playwright-report",
       "!**/test-results",
-      "!**/*.css"
+      "!**/*.css",
+      "!design-scope.html"
     ]
   }
 }

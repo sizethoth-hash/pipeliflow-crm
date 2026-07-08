@@ -1,18 +1,18 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { z } from 'zod'
 import { Building2, Loader2, Trash2 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
+import { useEffect, useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
+import { Badge } from '@/components/ui/Badge'
 import { Button } from '@/components/ui/Button'
+import { ConfirmDialog } from '@/components/ui/ConfirmDialog'
 import { Input } from '@/components/ui/Input'
 import { Label } from '@/components/ui/Label'
-import { ConfirmDialog } from '@/components/ui/ConfirmDialog'
+import { useDeleteWorkspace, useUpdateWorkspaceName } from '@/hooks/useWorkspaces'
 import { useWorkspaceStore } from '@/store/useWorkspaceStore'
-import { useUpdateWorkspaceName, useDeleteWorkspace } from '@/hooks/useWorkspaces'
-import { Badge } from '@/components/ui/Badge'
 
 const nameSchema = z.object({
   name: z.string().min(2, 'Nome deve ter pelo menos 2 caracteres').max(50, 'Máximo 50 caracteres'),
@@ -100,16 +100,10 @@ export function WorkspaceSettingsClient() {
                 {...register('name')}
                 className="border-slate-600 bg-slate-700 text-slate-100 focus-visible:ring-indigo-500"
               />
-              {errors.name && (
-                <p className="text-xs text-red-400">{errors.name.message}</p>
-              )}
+              {errors.name && <p className="text-xs text-red-400">{errors.name.message}</p>}
             </div>
             <div className="flex items-center gap-3">
-              <Button
-                type="submit"
-                size="sm"
-                disabled={!isDirty || updateName.isPending}
-              >
+              <Button type="submit" size="sm" disabled={!isDirty || updateName.isPending}>
                 {updateName.isPending ? (
                   <Loader2 className="h-3.5 w-3.5 animate-spin" />
                 ) : saved ? (
@@ -129,8 +123,8 @@ export function WorkspaceSettingsClient() {
         <section className="rounded-xl border border-red-900/40 bg-red-950/20 p-5">
           <h3 className="mb-1 text-sm font-semibold text-red-400">Zona de perigo</h3>
           <p className="mb-4 text-xs text-slate-500">
-            Excluir o workspace remove permanentemente todos os leads, negócios e atividades.
-            Esta ação não pode ser desfeita.
+            Excluir o workspace remove permanentemente todos os leads, negócios e atividades. Esta
+            ação não pode ser desfeita.
           </p>
           <Button
             type="button"

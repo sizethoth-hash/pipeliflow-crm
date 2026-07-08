@@ -2,10 +2,7 @@ import Link from 'next/link'
 
 export function CtaSection() {
   return (
-    <section
-      className="px-6 py-24"
-      aria-labelledby="cta-heading"
-    >
+    <section className="px-6 py-24" aria-labelledby="cta-heading">
       <div className="mx-auto max-w-4xl">
         <div className="relative overflow-hidden rounded-2xl border border-indigo-500/30 bg-gradient-to-br from-indigo-600/20 via-slate-900 to-violet-600/10 px-8 py-16 text-center shadow-2xl shadow-indigo-500/10">
           {/* Decoração de fundo */}
@@ -26,8 +23,8 @@ export function CtaSection() {
               Pronto para fechar mais negócios?
             </h2>
             <p className="mx-auto mt-4 max-w-xl text-lg text-slate-400">
-              Junte-se a mais de 1200 times que já usam o PipeFlow para organizar vendas,
-              acompanhar leads e bater metas com mais consistência.
+              Junte-se a mais de 1200 times que já usam o PipeFlow para organizar vendas, acompanhar
+              leads e bater metas com mais consistência.
             </p>
 
             <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">

@@ -133,165 +133,171 @@ export function LeadFormModal({ open, onClose, lead }: LeadFormModalProps) {
 
   return (
     <>
-    <UpsellDialog
-      open={showUpsell}
-      onClose={() => { setShowUpsell(false); onClose() }}
-      title="Limite de leads atingido"
-      description="O plano Free permite até 50 leads. Faça upgrade para o Pro e adicione leads ilimitados."
-    />
-    <Dialog open={open} onOpenChange={(o) => !o && onClose()}>
-      <DialogContent className="max-w-lg">
-        <DialogHeader>
-          <DialogTitle>{isEditing ? 'Editar Lead' : 'Novo Lead'}</DialogTitle>
-        </DialogHeader>
+      <UpsellDialog
+        open={showUpsell}
+        onClose={() => {
+          setShowUpsell(false)
+          onClose()
+        }}
+        title="Limite de leads atingido"
+        description="O plano Free permite até 50 leads. Faça upgrade para o Pro e adicione leads ilimitados."
+      />
+      <Dialog open={open} onOpenChange={(o) => !o && onClose()}>
+        <DialogContent className="max-w-lg">
+          <DialogHeader>
+            <DialogTitle>{isEditing ? 'Editar Lead' : 'Novo Lead'}</DialogTitle>
+          </DialogHeader>
 
-        <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-4">
-          {/* Nome */}
-          <div className="space-y-1.5">
-            <Label htmlFor="name" className="text-slate-300">
-              Nome <span className="text-red-400">*</span>
-            </Label>
-            <Input
-              id="name"
-              placeholder="Ex: Maria Silva"
-              className={inputCls}
-              {...register('name')}
-            />
-            {errors.name && <p className="text-xs text-red-400">{errors.name.message}</p>}
-          </div>
-
-          {/* E-mail */}
-          <div className="space-y-1.5">
-            <Label htmlFor="email" className="text-slate-300">
-              E-mail <span className="text-red-400">*</span>
-            </Label>
-            <Input
-              id="email"
-              type="email"
-              placeholder="maria@empresa.com"
-              className={inputCls}
-              {...register('email')}
-            />
-            {errors.email && <p className="text-xs text-red-400">{errors.email.message}</p>}
-          </div>
-
-          {/* Telefone + Empresa */}
-          <div className="grid grid-cols-2 gap-3">
+          <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-4">
+            {/* Nome */}
             <div className="space-y-1.5">
-              <Label htmlFor="phone" className="text-slate-300">
-                Telefone
+              <Label htmlFor="name" className="text-slate-300">
+                Nome <span className="text-red-400">*</span>
               </Label>
               <Input
-                id="phone"
-                placeholder="(11) 99999-9999"
+                id="name"
+                placeholder="Ex: Maria Silva"
                 className={inputCls}
-                {...register('phone')}
+                {...register('name')}
+              />
+              {errors.name && <p className="text-xs text-red-400">{errors.name.message}</p>}
+            </div>
+
+            {/* E-mail */}
+            <div className="space-y-1.5">
+              <Label htmlFor="email" className="text-slate-300">
+                E-mail <span className="text-red-400">*</span>
+              </Label>
+              <Input
+                id="email"
+                type="email"
+                placeholder="maria@empresa.com"
+                className={inputCls}
+                {...register('email')}
+              />
+              {errors.email && <p className="text-xs text-red-400">{errors.email.message}</p>}
+            </div>
+
+            {/* Telefone + Empresa */}
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-1.5">
+                <Label htmlFor="phone" className="text-slate-300">
+                  Telefone
+                </Label>
+                <Input
+                  id="phone"
+                  placeholder="(11) 99999-9999"
+                  className={inputCls}
+                  {...register('phone')}
+                />
+              </div>
+              <div className="space-y-1.5">
+                <Label htmlFor="company" className="text-slate-300">
+                  Empresa
+                </Label>
+                <Input
+                  id="company"
+                  placeholder="Ex: ACME Corp"
+                  className={inputCls}
+                  {...register('company')}
+                />
+              </div>
+            </div>
+
+            {/* Cargo + Valor potencial */}
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-1.5">
+                <Label htmlFor="jobTitle" className="text-slate-300">
+                  Cargo
+                </Label>
+                <Input
+                  id="jobTitle"
+                  placeholder="Ex: Gerente Comercial"
+                  className={inputCls}
+                  {...register('jobTitle')}
+                />
+              </div>
+              <div className="space-y-1.5">
+                <Label htmlFor="potentialValue" className="text-slate-300">
+                  Valor potencial (R$)
+                </Label>
+                <Input
+                  id="potentialValue"
+                  type="number"
+                  min="0"
+                  step="0.01"
+                  placeholder="0,00"
+                  className={inputCls}
+                  {...register('potentialValue', { valueAsNumber: true })}
+                />
+                {errors.potentialValue && (
+                  <p className="text-xs text-red-400">{errors.potentialValue.message}</p>
+                )}
+              </div>
+            </div>
+
+            {/* Anotações */}
+            <div className="space-y-1.5">
+              <Label htmlFor="notes" className="text-slate-300">
+                Anotações
+              </Label>
+              <textarea
+                id="notes"
+                rows={3}
+                placeholder="Observações internas sobre este lead…"
+                className={`flex w-full resize-none rounded-md border px-3 py-2 text-sm leading-relaxed ${inputCls} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-offset-slate-800`}
+                {...register('notes')}
               />
             </div>
-            <div className="space-y-1.5">
-              <Label htmlFor="company" className="text-slate-300">
-                Empresa
-              </Label>
-              <Input
-                id="company"
-                placeholder="Ex: ACME Corp"
-                className={inputCls}
-                {...register('company')}
-              />
-            </div>
-          </div>
 
-          {/* Cargo + Valor potencial */}
-          <div className="grid grid-cols-2 gap-3">
+            {/* Status */}
             <div className="space-y-1.5">
-              <Label htmlFor="jobTitle" className="text-slate-300">
-                Cargo
+              <Label className="text-slate-300">
+                Status <span className="text-red-400">*</span>
               </Label>
-              <Input
-                id="jobTitle"
-                placeholder="Ex: Gerente Comercial"
-                className={inputCls}
-                {...register('jobTitle')}
-              />
+              <Select
+                value={statusValue}
+                onValueChange={(v) => setValue('status', v as LeadFormData['status'])}
+              >
+                <SelectTrigger className={selectCls}>
+                  <SelectValue placeholder="Selecionar status" />
+                </SelectTrigger>
+                <SelectContent className="border-slate-700 bg-slate-800 text-slate-100">
+                  <SelectItem value="new">Novo Lead</SelectItem>
+                  <SelectItem value="contacted">Contato Realizado</SelectItem>
+                  <SelectItem value="proposal">Proposta Enviada</SelectItem>
+                  <SelectItem value="negotiation">Negociação</SelectItem>
+                  <SelectItem value="won">Fechado Ganho</SelectItem>
+                  <SelectItem value="lost">Fechado Perdido</SelectItem>
+                </SelectContent>
+              </Select>
+              {errors.status && <p className="text-xs text-red-400">{errors.status.message}</p>}
             </div>
-            <div className="space-y-1.5">
-              <Label htmlFor="potentialValue" className="text-slate-300">
-                Valor potencial (R$)
-              </Label>
-              <Input
-                id="potentialValue"
-                type="number"
-                min="0"
-                step="0.01"
-                placeholder="0,00"
-                className={inputCls}
-                {...register('potentialValue', { valueAsNumber: true })}
-              />
-              {errors.potentialValue && (
-                <p className="text-xs text-red-400">{errors.potentialValue.message}</p>
+
+            <DialogFooter className="pt-2">
+              {(createLead.error || updateLead.error) && (
+                <p className="w-full text-xs text-red-400">
+                  {(createLead.error ?? updateLead.error)?.message ?? 'Erro ao salvar lead.'}
+                </p>
               )}
-            </div>
-          </div>
-
-          {/* Anotações */}
-          <div className="space-y-1.5">
-            <Label htmlFor="notes" className="text-slate-300">
-              Anotações
-            </Label>
-            <textarea
-              id="notes"
-              rows={3}
-              placeholder="Observações internas sobre este lead…"
-              className={`flex w-full resize-none rounded-md border px-3 py-2 text-sm leading-relaxed ${inputCls} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-offset-slate-800`}
-              {...register('notes')}
-            />
-          </div>
-
-          {/* Status */}
-          <div className="space-y-1.5">
-            <Label className="text-slate-300">
-              Status <span className="text-red-400">*</span>
-            </Label>
-            <Select
-              value={statusValue}
-              onValueChange={(v) => setValue('status', v as LeadFormData['status'])}
-            >
-              <SelectTrigger className={selectCls}>
-                <SelectValue placeholder="Selecionar status" />
-              </SelectTrigger>
-              <SelectContent className="border-slate-700 bg-slate-800 text-slate-100">
-                <SelectItem value="new">Novo Lead</SelectItem>
-                <SelectItem value="contacted">Contato Realizado</SelectItem>
-                <SelectItem value="proposal">Proposta Enviada</SelectItem>
-                <SelectItem value="negotiation">Negociação</SelectItem>
-                <SelectItem value="won">Fechado Ganho</SelectItem>
-                <SelectItem value="lost">Fechado Perdido</SelectItem>
-              </SelectContent>
-            </Select>
-            {errors.status && <p className="text-xs text-red-400">{errors.status.message}</p>}
-          </div>
-
-          <DialogFooter className="pt-2">
-            {(createLead.error || updateLead.error) && (
-              <p className="w-full text-xs text-red-400">
-                {(createLead.error ?? updateLead.error)?.message ?? 'Erro ao salvar lead.'}
-              </p>
-            )}
-            <Button
-              type="button"
-              variant="ghost"
-              onClick={onClose}
-              className="text-slate-300 hover:text-white"
-            >
-              Cancelar
-            </Button>
-            <Button type="submit" disabled={isSubmitting || createLead.isPending || updateLead.isPending}>
-              {isEditing ? 'Salvar alterações' : 'Criar lead'}
-            </Button>
-          </DialogFooter>
-        </form>
-      </DialogContent>
-    </Dialog>
+              <Button
+                type="button"
+                variant="ghost"
+                onClick={onClose}
+                className="text-slate-300 hover:text-white"
+              >
+                Cancelar
+              </Button>
+              <Button
+                type="submit"
+                disabled={isSubmitting || createLead.isPending || updateLead.isPending}
+              >
+                {isEditing ? 'Salvar alterações' : 'Criar lead'}
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
     </>
   )
 }
