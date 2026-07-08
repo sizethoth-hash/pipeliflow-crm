@@ -6,7 +6,10 @@ import type { DealInsert, DealUpdate } from '@/types/supabase'
 
 async function getSessionContext(): Promise<{ workspaceId: string; userId: string }> {
   const supabase = await getServerClient()
-  const { data: { user }, error: authErr } = await supabase.auth.getUser()
+  const {
+    data: { user },
+    error: authErr,
+  } = await supabase.auth.getUser()
   if (authErr || !user) throw new Error('Não autenticado')
 
   const { data: member, error: memberErr } = await supabase
@@ -65,17 +68,15 @@ export async function getDeals(workspaceId: string): Promise<Deal[]> {
 
 export async function getDeal(id: string): Promise<Deal | null> {
   const supabase = await getServerClient()
-  const { data, error } = await supabase
-    .from('deals')
-    .select(DEAL_COLS)
-    .eq('id', id)
-    .single()
+  const { data, error } = await supabase.from('deals').select(DEAL_COLS).eq('id', id).single()
 
   if (error) return null
   return rowToDeal(data)
 }
 
-export async function createDeal(payload: Omit<DealInsert, 'workspace_id' | 'owner_id'>): Promise<Deal> {
+export async function createDeal(
+  payload: Omit<DealInsert, 'workspace_id' | 'owner_id'>
+): Promise<Deal> {
   const supabase = await getServerClient()
   const { workspaceId, userId } = await getSessionContext()
 
@@ -91,7 +92,7 @@ export async function createDeal(payload: Omit<DealInsert, 'workspace_id' | 'own
 
 export async function updateDeal(
   id: string,
-  payload: DealUpdate & { leadName?: string; ownerName?: string },
+  payload: DealUpdate & { leadName?: string; ownerName?: string }
 ): Promise<Deal> {
   const supabase = await getServerClient()
   const { leadName: _l, ownerName: _o, ...update } = payload

@@ -8,7 +8,11 @@ export function Navbar() {
         aria-label="Navegação principal"
       >
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-2" aria-label="PipeFlow CRM — Página inicial">
+        <Link
+          href="/"
+          className="flex items-center gap-2"
+          aria-label="PipeFlow CRM — Página inicial"
+        >
           <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-500">
             <svg
               width="18"
@@ -27,7 +31,7 @@ export function Navbar() {
         </Link>
 
         {/* Links de âncora — ocultos em mobile */}
-        <ul className="hidden items-center gap-8 md:flex" role="list">
+        <ul className="hidden items-center gap-8 md:flex">
           <li>
             <a
               href="#features"

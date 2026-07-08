@@ -1,5 +1,5 @@
 import { createClient } from '@supabase/supabase-js'
-import { NextRequest, NextResponse } from 'next/server'
+import { type NextRequest, NextResponse } from 'next/server'
 import type { Database } from '@/types/supabase'
 
 // Só disponível fora de production — protege contra chamadas acidentais em prod
@@ -13,25 +13,20 @@ export async function DELETE(req: NextRequest) {
     return NextResponse.json({ error: 'SUPABASE_SERVICE_ROLE_KEY not set' }, { status: 500 })
   }
 
-  const { leadNames, dealTitles } = await req.json() as {
+  const { leadNames, dealTitles } = (await req.json()) as {
     leadNames?: string[]
     dealTitles?: string[]
   }
 
-  const admin = createClient<Database>(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    serviceKey,
-    { auth: { persistSession: false } },
-  )
+  const admin = createClient<Database>(process.env.NEXT_PUBLIC_SUPABASE_URL!, serviceKey, {
+    auth: { persistSession: false },
+  })
 
   const errors: string[] = []
 
   if (leadNames?.length) {
     // Deletar atividades vinculadas primeiro (FK)
-    const { data: leads } = await admin
-      .from('leads')
-      .select('id')
-      .in('name', leadNames)
+    const { data: leads } = await admin.from('leads').select('id').in('name', leadNames)
 
     if (leads?.length) {
       const ids = leads.map((l) => l.id)

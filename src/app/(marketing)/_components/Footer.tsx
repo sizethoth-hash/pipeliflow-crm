@@ -35,7 +35,7 @@ export function Footer() {
 
         {/* Links institucionais */}
         <nav aria-label="Links institucionais do rodapé">
-          <ul className="flex flex-wrap items-center justify-center gap-6" role="list">
+          <ul className="flex flex-wrap items-center justify-center gap-6">
             {links.map((link) => (
               <li key={link.label}>
                 <Link

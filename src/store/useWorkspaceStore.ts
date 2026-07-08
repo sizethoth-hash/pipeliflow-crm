@@ -1,6 +1,6 @@
+import { create } from 'zustand'
 import { getBrowserClient } from '@/lib/supabase/client'
 import type { Workspace } from '@/types/workspace'
-import { create } from 'zustand'
 
 interface WorkspaceState {
   workspaces: Workspace[]

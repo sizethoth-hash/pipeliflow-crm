@@ -1,8 +1,8 @@
 import { useMemo } from 'react'
 import { useDealsStore } from '@/store/useDealsStore'
 import { useLeadsStore } from '@/store/useLeadsStore'
-import { PIPELINE_COLUMNS } from '@/types/deal'
 import type { DashboardMetrics, FunnelData } from '@/types/dashboard'
+import { PIPELINE_COLUMNS } from '@/types/deal'
 
 const CLOSED_STAGES = new Set(['won', 'lost'])
 const OPEN_STAGES = new Set(['new_lead', 'contacted', 'proposal', 'negotiation'])
@@ -22,8 +22,7 @@ export function useDashboardMetrics(): {
     const totalDeals = deals.filter((d) => CLOSED_STAGES.has(d.stage) || OPEN_STAGES.has(d.stage))
 
     const pipelineValue = openDeals.reduce((sum, d) => sum + d.value, 0)
-    const conversionRate =
-      totalDeals.length > 0 ? (wonDeals.length / totalDeals.length) * 100 : 0
+    const conversionRate = totalDeals.length > 0 ? (wonDeals.length / totalDeals.length) * 100 : 0
 
     const funnelData: FunnelData[] = PIPELINE_COLUMNS.map((col) => {
       const colDeals = deals.filter((d) => d.stage === col.id)
@@ -36,12 +35,13 @@ export function useDashboardMetrics(): {
       }
     })
 
-    const today = new Date()
+    const _today = new Date()
     const upcomingDeals = deals
-      .filter((d) => OPEN_STAGES.has(d.stage) && d.dueDate != null)
+      .filter(
+        (d): d is typeof d & { dueDate: string } => OPEN_STAGES.has(d.stage) && d.dueDate != null
+      )
       .sort((a, b) => {
-        const diff =
-          new Date(a.dueDate!).getTime() - new Date(b.dueDate!).getTime()
+        const diff = new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime()
         // Deals already past due come first (most urgent)
         return diff
       })

@@ -1,7 +1,7 @@
 'use client'
 
 import type { LucideIcon } from 'lucide-react'
-import { TrendingUp, TrendingDown } from 'lucide-react'
+import { TrendingDown, TrendingUp } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 interface MetricCardProps {
@@ -42,17 +42,12 @@ export function MetricCard({
             <TrendingDown className="h-3.5 w-3.5 text-red-400" aria-hidden="true" />
           )}
           <span
-            className={cn(
-              'text-xs font-medium',
-              isPositive ? 'text-emerald-400' : 'text-red-400'
-            )}
+            className={cn('text-xs font-medium', isPositive ? 'text-emerald-400' : 'text-red-400')}
           >
             {isPositive ? '+' : ''}
             {trend.toFixed(1)}%
           </span>
-          {trendLabel && (
-            <span className="text-xs text-slate-500">{trendLabel}</span>
-          )}
+          {trendLabel && <span className="text-xs text-slate-500">{trendLabel}</span>}
         </div>
       )}
     </div>

@@ -73,12 +73,7 @@ function XIcon({ className }: { className?: string }) {
       xmlns="http://www.w3.org/2000/svg"
       className={className}
     >
-      <path
-        d="M4 4l8 8M12 4l-8 8"
-        stroke="currentColor"
-        strokeWidth="1.75"
-        strokeLinecap="round"
-      />
+      <path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" />
     </svg>
   )
 }
@@ -113,7 +108,7 @@ function PlanCard({ plan }: { plan: typeof freePlan }) {
       </div>
 
       {/* Lista de features */}
-      <ul className="mb-8 flex-1 space-y-3" role="list" aria-label={`Recursos do plano ${plan.name}`}>
+      <ul className="mb-8 flex-1 space-y-3" aria-label={`Recursos do plano ${plan.name}`}>
         {plan.features.map((feature) => (
           <li key={feature.text} className="flex items-center gap-3">
             {feature.included ? (
@@ -126,10 +121,9 @@ function PlanCard({ plan }: { plan: typeof freePlan }) {
               </span>
             )}
             <span
-              className={[
-                'text-sm',
-                feature.included ? 'text-slate-300' : 'text-slate-600',
-              ].join(' ')}
+              className={['text-sm', feature.included ? 'text-slate-300' : 'text-slate-600'].join(
+                ' '
+              )}
             >
               {feature.text}
             </span>
@@ -156,11 +150,7 @@ function PlanCard({ plan }: { plan: typeof freePlan }) {
 
 export function PricingSection() {
   return (
-    <section
-      id="pricing"
-      className="px-6 py-24"
-      aria-labelledby="pricing-heading"
-    >
+    <section id="pricing" className="px-6 py-24" aria-labelledby="pricing-heading">
       <div className="mx-auto max-w-4xl">
         {/* Cabeçalho */}
         <div className="mx-auto mb-16 max-w-2xl text-center">

@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import { Resend } from 'resend'
-import { getServerClient } from '@/lib/supabase/server'
 import { z } from 'zod'
+import { getServerClient } from '@/lib/supabase/server'
 
 const resend = new Resend(process.env.RESEND_API_KEY)
 
@@ -83,7 +83,7 @@ export async function POST(request: Request) {
   if (existing) {
     return NextResponse.json(
       { error: 'Já existe um convite pendente para este e-mail' },
-      { status: 409 },
+      { status: 409 }
     )
   }
 
@@ -103,7 +103,7 @@ export async function POST(request: Request) {
           message:
             'O plano Free permite no máximo 2 membros. Faça upgrade para o plano Pro para convidar mais colaboradores.',
         },
-        { status: 403 },
+        { status: 403 }
       )
     }
     return NextResponse.json({ error: 'Erro ao criar convite' }, { status: 500 })
@@ -129,7 +129,8 @@ export async function POST(request: Request) {
   }
 
   const inviteUrl = `${appUrl}/invite/${invite.token}`
-  const inviterName = (user.user_metadata?.full_name as string | undefined) ?? user.email ?? 'Alguém'
+  const inviterName =
+    (user.user_metadata?.full_name as string | undefined) ?? user.email ?? 'Alguém'
   const roleLabel = role === 'admin' ? 'Administrador' : 'Membro'
 
   // Sanitiza valores dinâmicos antes de injetar no HTML
@@ -189,7 +190,7 @@ export async function POST(request: Request) {
     console.error('[invite] Resend error:', emailError)
     return NextResponse.json(
       { warning: 'Convite criado, mas o e-mail não pôde ser enviado.', token: invite.token },
-      { status: 201 },
+      { status: 201 }
     )
   }
 

@@ -12,14 +12,14 @@ interface Stat {
 
 const stats: Stat[] = [
   { prefix: '+', value: 47, decimals: 0, suffix: '%', label: 'em taxa de conversão' },
-  { prefix: '',  value: 3.2, decimals: 1, suffix: 'x', label: 'leads qualificados' },
+  { prefix: '', value: 3.2, decimals: 1, suffix: 'x', label: 'leads qualificados' },
   { prefix: '-', value: 62, decimals: 0, suffix: '%', label: 'no ciclo de venda' },
-  { prefix: '',  value: 1200, decimals: 0, suffix: '+', label: 'times usando hoje' },
+  { prefix: '', value: 1200, decimals: 0, suffix: '+', label: 'times usando hoje' },
 ]
 
 // easeOutExpo — arranca rápido e desacelera no final (efeito de dial)
 function easeOutExpo(t: number): number {
-  return t === 1 ? 1 : 1 - Math.pow(2, -10 * t)
+  return t === 1 ? 1 : 1 - 2 ** (-10 * t)
 }
 
 function useCountUp(target: number, decimals: number, duration: number, active: boolean) {
@@ -57,11 +57,20 @@ function StatItem({ stat, active }: { stat: Stat; active: boolean }) {
     <div className="flex flex-col items-center gap-1 text-center">
       <span
         className="text-3xl font-extrabold tabular-nums text-white sm:text-4xl"
-        aria-label={`${stat.prefix}${stat.value}${stat.suffix} ${stat.label}`}
+        aria-hidden="true"
       >
-        {stat.prefix}{count}{stat.suffix}
+        {stat.prefix}
+        {count}
+        {stat.suffix}
       </span>
-      <span className="text-sm text-slate-500" aria-hidden="true">{stat.label}</span>
+      <span className="sr-only">
+        {stat.prefix}
+        {stat.value}
+        {stat.suffix} {stat.label}
+      </span>
+      <span className="text-sm text-slate-500" aria-hidden="true">
+        {stat.label}
+      </span>
     </div>
   )
 }
@@ -74,7 +83,12 @@ export function AnimatedStats() {
     const el = ref.current
     if (!el) return
     const observer = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) { setActive(true); observer.disconnect() } },
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setActive(true)
+          observer.disconnect()
+        }
+      },
       { threshold: 0.4 }
     )
     observer.observe(el)

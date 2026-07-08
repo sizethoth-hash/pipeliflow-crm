@@ -1,5 +1,6 @@
 'use client'
 
+import { zodResolver } from '@hookform/resolvers/zod'
 import {
   Check,
   ChevronsUpDown,
@@ -17,7 +18,6 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { Avatar, AvatarFallback } from '@/components/ui/Avatar'
 import { Badge } from '@/components/ui/Badge'
@@ -47,13 +47,9 @@ import { useAuthStore } from '@/store/useAuthStore'
 import { useWorkspaceStore } from '@/store/useWorkspaceStore'
 
 const newWsSchema = z.object({
-  name: z
-    .string()
-    .min(2, 'Mínimo 2 caracteres')
-    .max(50, 'Máximo 50 caracteres'),
+  name: z.string().min(2, 'Mínimo 2 caracteres').max(50, 'Máximo 50 caracteres'),
 })
 type NewWsForm = z.infer<typeof newWsSchema>
-
 
 const NAV_ITEMS = [
   { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
@@ -75,13 +71,7 @@ interface SidebarProps {
   onClose?: () => void
 }
 
-function NewWorkspaceDialog({
-  open,
-  onClose,
-}: {
-  open: boolean
-  onClose: () => void
-}) {
+function NewWorkspaceDialog({ open, onClose }: { open: boolean; onClose: () => void }) {
   const createWorkspace = useCreateWorkspace()
   const { setActiveWorkspace } = useWorkspaceStore()
 
@@ -249,9 +239,10 @@ export function Sidebar({ onClose }: SidebarProps) {
 
       {/* Navigation */}
       <nav className="flex-1 overflow-y-auto p-3" aria-label="Menu principal">
-        <ul className="space-y-0.5" role="list">
+        <ul className="space-y-0.5">
           {NAV_ITEMS.map(({ href, label, icon: Icon }) => {
-            const isActive = pathname !== null && (pathname === href || pathname.startsWith(`${href}/`))
+            const isActive =
+              pathname !== null && (pathname === href || pathname.startsWith(`${href}/`))
             return (
               <li key={href}>
                 <Link

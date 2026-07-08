@@ -1,11 +1,11 @@
-import { beforeEach, describe, expect, it } from 'vitest'
 import { renderHook } from '@testing-library/react'
+import { beforeEach, describe, expect, it } from 'vitest'
 import { mockDeals } from '@/mocks/deals'
 import { mockLeads } from '@/mocks/leads'
 import { useDealsStore } from '@/store/useDealsStore'
 import { useLeadsStore } from '@/store/useLeadsStore'
-import { useDashboardMetrics } from './useDashboardMetrics'
 import type { Deal } from '@/types/deal'
+import { useDashboardMetrics } from './useDashboardMetrics'
 
 beforeEach(() => {
   useDealsStore.setState({ deals: [...mockDeals] })
@@ -36,9 +36,7 @@ describe('useDashboardMetrics', () => {
     })
 
     it('retorna 0 quando só há deals fechados', () => {
-      const closedOnly: Deal[] = mockDeals.filter((d) =>
-        ['won', 'lost'].includes(d.stage)
-      )
+      const closedOnly: Deal[] = mockDeals.filter((d) => ['won', 'lost'].includes(d.stage))
       useDealsStore.setState({ deals: closedOnly })
       const { result } = renderHook(() => useDashboardMetrics())
       expect(result.current.metrics.openDeals).toBe(0)
@@ -118,8 +116,8 @@ describe('useDashboardMetrics', () => {
     it('deals são ordenados por dueDate crescente', () => {
       const { result } = renderHook(() => useDashboardMetrics())
       const dates = result.current.upcomingDeals
-        .filter((d) => d.dueDate != null)
-        .map((d) => new Date(d.dueDate!).getTime())
+        .filter((d): d is typeof d & { dueDate: string } => d.dueDate != null)
+        .map((d) => new Date(d.dueDate).getTime())
       for (let i = 1; i < dates.length; i++) {
         expect(dates[i]).toBeGreaterThanOrEqual(dates[i - 1])
       }

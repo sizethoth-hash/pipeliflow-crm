@@ -1,9 +1,9 @@
 'use client'
 
+import { zodResolver } from '@hookform/resolvers/zod'
 import { CalendarDays, Loader2, Mail, MessageSquare, Phone, Trash2, Video } from 'lucide-react'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 
 import { Avatar, AvatarFallback } from '@/components/ui/Avatar'
@@ -22,10 +22,10 @@ const ACTIVITY_CONFIG: Record<
   ActivityType,
   { icon: React.ComponentType<{ className?: string }>; label: string; color: string; bg: string }
 > = {
-  call:    { icon: Phone,         label: 'Ligação',  color: 'text-indigo-400', bg: 'bg-indigo-500/10' },
-  email:   { icon: Mail,          label: 'E-mail',   color: 'text-sky-400',    bg: 'bg-sky-500/10'    },
-  meeting: { icon: Video,         label: 'Reunião',  color: 'text-violet-400', bg: 'bg-violet-500/10' },
-  note:    { icon: MessageSquare, label: 'Nota',     color: 'text-amber-400',  bg: 'bg-amber-500/10'  },
+  call: { icon: Phone, label: 'Ligação', color: 'text-indigo-400', bg: 'bg-indigo-500/10' },
+  email: { icon: Mail, label: 'E-mail', color: 'text-sky-400', bg: 'bg-sky-500/10' },
+  meeting: { icon: Video, label: 'Reunião', color: 'text-violet-400', bg: 'bg-violet-500/10' },
+  note: { icon: MessageSquare, label: 'Nota', color: 'text-amber-400', bg: 'bg-amber-500/10' },
 }
 
 const activitySchema = z.object({
@@ -51,7 +51,7 @@ function formatRelativeDate(iso: string) {
 
 function formatTime(iso: string) {
   return new Intl.DateTimeFormat('pt-BR', { hour: '2-digit', minute: '2-digit' }).format(
-    new Date(iso),
+    new Date(iso)
   )
 }
 
@@ -127,7 +127,9 @@ function ActivityItem({
         <p className="mt-1.5 text-sm leading-relaxed text-slate-300">{activity.description}</p>
         <div className="mt-2 flex items-center gap-1.5">
           <Avatar className="h-5 w-5">
-            <AvatarFallback className="text-[9px]">{getInitials(activity.authorName)}</AvatarFallback>
+            <AvatarFallback className="text-[9px]">
+              {getInitials(activity.authorName)}
+            </AvatarFallback>
           </Avatar>
           <span className="text-xs text-slate-500">{activity.authorName}</span>
         </div>
@@ -175,7 +177,8 @@ export function ActivityTimeline({ leadId, activities, isLoading }: ActivityTime
     }
   }
 
-  const inputCls = 'flex w-full rounded-md border border-slate-600 bg-slate-700 px-3 py-2 text-sm text-slate-100 placeholder:text-slate-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500'
+  const inputCls =
+    'flex w-full rounded-md border border-slate-600 bg-slate-700 px-3 py-2 text-sm text-slate-100 placeholder:text-slate-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500'
 
   return (
     <div>
@@ -201,12 +204,16 @@ export function ActivityTimeline({ leadId, activities, isLoading }: ActivityTime
 
           {/* Data agendada */}
           <div className="space-y-1">
-            <label className="flex items-center gap-1.5 text-xs text-slate-400">
+            <label
+              htmlFor="scheduledAt"
+              className="flex items-center gap-1.5 text-xs text-slate-400"
+            >
               <CalendarDays className="h-3.5 w-3.5" />
               Data agendada
               <span className="text-slate-600">(opcional)</span>
             </label>
             <input
+              id="scheduledAt"
               type="datetime-local"
               className={inputCls}
               style={{ colorScheme: 'dark' }}
@@ -237,7 +244,10 @@ export function ActivityTimeline({ leadId, activities, isLoading }: ActivityTime
               type="button"
               variant="ghost"
               size="sm"
-              onClick={() => { reset({ type: 'note' }); setFormOpen(false) }}
+              onClick={() => {
+                reset({ type: 'note' })
+                setFormOpen(false)
+              }}
               className="text-slate-400 hover:text-white"
             >
               Cancelar
@@ -270,7 +280,9 @@ export function ActivityTimeline({ leadId, activities, isLoading }: ActivityTime
         <div className="flex flex-col items-center justify-center rounded-md border border-dashed border-slate-700 py-12 text-center">
           <MessageSquare className="h-8 w-8 text-slate-600" />
           <p className="mt-3 text-sm text-slate-500">Nenhuma atividade registrada</p>
-          <p className="mt-1 text-xs text-slate-600">Clique em "Registrar atividade" para começar</p>
+          <p className="mt-1 text-xs text-slate-600">
+            Clique em "Registrar atividade" para começar
+          </p>
         </div>
       ) : (
         <div>

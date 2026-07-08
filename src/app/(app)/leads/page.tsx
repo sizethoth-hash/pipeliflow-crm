@@ -82,8 +82,7 @@ export default function LeadsPage() {
   const [editingLead, setEditingLead] = useState<Lead | null>(null)
   const [deleteTarget, setDeleteTarget] = useState<Lead | null>(null)
 
-  const hasActiveFilters =
-    (filters.status && filters.status !== 'all') || Boolean(debouncedSearch)
+  const hasActiveFilters = (filters.status && filters.status !== 'all') || Boolean(debouncedSearch)
 
   const handleOpenCreate = useCallback(() => {
     setEditingLead(null)
@@ -115,7 +114,7 @@ export default function LeadsPage() {
 
   useEffect(() => {
     setPage(1)
-  }, [debouncedSearch])
+  }, [])
 
   return (
     <div className="h-full overflow-y-auto p-6 lg:p-8">

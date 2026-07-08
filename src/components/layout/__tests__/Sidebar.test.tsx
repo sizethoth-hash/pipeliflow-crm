@@ -1,10 +1,23 @@
-import { fireEvent, render, screen } from '@testing-library/react'
+import { fireEvent, screen } from '@testing-library/react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { useAuthStore } from '@/store/useAuthStore'
+import { useWorkspaceStore } from '@/store/useWorkspaceStore'
+import { renderWithProviders } from '@/test/renderWithProviders'
 import { Sidebar } from '../Sidebar'
+
+const mockWorkspace = {
+  id: 'ws-1',
+  name: 'Meu Workspace',
+  plan: 'free' as const,
+}
 
 // Mock next/navigation
 vi.mock('next/navigation', () => ({
   usePathname: vi.fn(() => '/dashboard'),
+  useRouter: vi.fn(() => ({
+    push: vi.fn(),
+    refresh: vi.fn(),
+  })),
 }))
 
 // Mock next/link
@@ -27,15 +40,26 @@ vi.mock('next/link', () => ({
 describe('Sidebar', () => {
   beforeEach(() => {
     vi.clearAllMocks()
+    useWorkspaceStore.setState({
+      workspaces: [mockWorkspace],
+      activeWorkspace: mockWorkspace,
+    })
+    useAuthStore.setState({
+      user: {
+        id: 'user-1',
+        email: 'sizenando@pipeflow.dev',
+        user_metadata: { full_name: 'Sizenando Miguel' },
+      } as never,
+    })
   })
 
   it('renderiza o logo PipeFlow', () => {
-    render(<Sidebar />)
+    renderWithProviders(<Sidebar />)
     expect(screen.getByText('PipeFlow')).toBeInTheDocument()
   })
 
   it('renderiza todos os itens de navegação', () => {
-    render(<Sidebar />)
+    renderWithProviders(<Sidebar />)
     expect(screen.getByText('Dashboard')).toBeInTheDocument()
     expect(screen.getByText('Leads')).toBeInTheDocument()
     expect(screen.getByText('Pipeline')).toBeInTheDocument()
@@ -46,7 +70,7 @@ describe('Sidebar', () => {
     const { usePathname } = await import('next/navigation')
     vi.mocked(usePathname).mockReturnValue('/dashboard')
 
-    render(<Sidebar />)
+    renderWithProviders(<Sidebar />)
 
     const dashboardLink = screen.getByRole('link', { name: /dashboard/i })
     expect(dashboardLink).toHaveAttribute('aria-current', 'page')
@@ -56,25 +80,25 @@ describe('Sidebar', () => {
     const { usePathname } = await import('next/navigation')
     vi.mocked(usePathname).mockReturnValue('/dashboard')
 
-    render(<Sidebar />)
+    renderWithProviders(<Sidebar />)
 
     const leadsLink = screen.getByRole('link', { name: /leads/i })
     expect(leadsLink).not.toHaveAttribute('aria-current')
   })
 
   it('renderiza o workspace ativo "Meu Workspace"', () => {
-    render(<Sidebar />)
+    renderWithProviders(<Sidebar />)
     expect(screen.getByText('Meu Workspace')).toBeInTheDocument()
   })
 
   it('renderiza o nome do usuário atual', () => {
-    render(<Sidebar />)
+    renderWithProviders(<Sidebar />)
     expect(screen.getByText('Sizenando Miguel')).toBeInTheDocument()
   })
 
   it('chama onClose ao clicar no botão fechar', () => {
     const onClose = vi.fn()
-    render(<Sidebar onClose={onClose} />)
+    renderWithProviders(<Sidebar onClose={onClose} />)
 
     const closeButton = screen.getByRole('button', { name: /fechar menu/i })
     fireEvent.click(closeButton)
@@ -84,7 +108,7 @@ describe('Sidebar', () => {
 
   it('chama onClose ao clicar em um item de navegação', () => {
     const onClose = vi.fn()
-    render(<Sidebar onClose={onClose} />)
+    renderWithProviders(<Sidebar onClose={onClose} />)
 
     const leadsLink = screen.getByRole('link', { name: /leads/i })
     fireEvent.click(leadsLink)
@@ -93,7 +117,7 @@ describe('Sidebar', () => {
   })
 
   it('tem link de logo apontando para /dashboard', () => {
-    render(<Sidebar />)
+    renderWithProviders(<Sidebar />)
     const logoLink = screen.getByRole('link', { name: /pipeflow/i })
     expect(logoLink).toHaveAttribute('href', '/dashboard')
   })

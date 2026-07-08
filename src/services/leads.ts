@@ -1,7 +1,7 @@
 'use server'
 
 import { getServerClient } from '@/lib/supabase/server'
-import type { Lead, LeadFilters, Activity } from '@/types/lead'
+import type { Activity, Lead, LeadFilters } from '@/types/lead'
 import type { LeadInsert, LeadUpdate } from '@/types/supabase'
 
 const PAGE_SIZE = 10
@@ -9,7 +9,10 @@ const PAGE_SIZE = 10
 // Resolve workspace_id e user_id a partir da sessão — nunca depende do cliente
 async function getSessionContext(): Promise<{ workspaceId: string; userId: string }> {
   const supabase = await getServerClient()
-  const { data: { user }, error: authErr } = await supabase.auth.getUser()
+  const {
+    data: { user },
+    error: authErr,
+  } = await supabase.auth.getUser()
   if (authErr || !user) throw new Error('Não autenticado')
 
   const { data: member, error: memberErr } = await supabase
@@ -83,7 +86,7 @@ export async function getLeads({
     .from('leads')
     .select(
       'id, workspace_id, name, email, phone, company, job_title, status, potential_value, notes, owner_id, created_at, updated_at',
-      { count: 'exact' },
+      { count: 'exact' }
     )
     .eq('workspace_id', workspaceId)
     .order('created_at', { ascending: false })
@@ -121,7 +124,9 @@ export async function getLead(id: string): Promise<Lead | null> {
   const supabase = await getServerClient()
   const { data, error } = await supabase
     .from('leads')
-    .select('id, workspace_id, name, email, phone, company, job_title, status, potential_value, notes, owner_id, created_at, updated_at')
+    .select(
+      'id, workspace_id, name, email, phone, company, job_title, status, potential_value, notes, owner_id, created_at, updated_at'
+    )
     .eq('id', id)
     .single()
 
@@ -129,7 +134,9 @@ export async function getLead(id: string): Promise<Lead | null> {
   return rowToLead(data)
 }
 
-export async function createLead(payload: Omit<LeadInsert, 'workspace_id' | 'owner_id'>): Promise<Lead> {
+export async function createLead(
+  payload: Omit<LeadInsert, 'workspace_id' | 'owner_id'>
+): Promise<Lead> {
   const supabase = await getServerClient()
   const { workspaceId, userId } = await getSessionContext()
 
@@ -154,7 +161,9 @@ export async function createLead(payload: Omit<LeadInsert, 'workspace_id' | 'own
   const { data, error } = await supabase
     .from('leads')
     .insert({ ...payload, workspace_id: workspaceId, owner_id: userId })
-    .select('id, workspace_id, name, email, phone, company, job_title, status, potential_value, notes, owner_id, created_at, updated_at')
+    .select(
+      'id, workspace_id, name, email, phone, company, job_title, status, potential_value, notes, owner_id, created_at, updated_at'
+    )
     .single()
 
   if (error) throw new Error(error.message)
@@ -167,7 +176,9 @@ export async function updateLead(id: string, payload: LeadUpdate): Promise<Lead>
     .from('leads')
     .update(payload)
     .eq('id', id)
-    .select('id, workspace_id, name, email, phone, company, job_title, status, potential_value, notes, owner_id, created_at, updated_at')
+    .select(
+      'id, workspace_id, name, email, phone, company, job_title, status, potential_value, notes, owner_id, created_at, updated_at'
+    )
     .single()
 
   if (error) throw new Error(error.message)
@@ -203,7 +214,8 @@ function rowToActivity(row: {
   }
 }
 
-const ACTIVITY_COLS = 'id, workspace_id, lead_id, type, description, author_id, scheduled_at, created_at'
+const ACTIVITY_COLS =
+  'id, workspace_id, lead_id, type, description, author_id, scheduled_at, created_at'
 
 export async function getActivitiesByLead(leadId: string): Promise<Activity[]> {
   const supabase = await getServerClient()

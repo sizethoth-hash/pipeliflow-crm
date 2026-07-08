@@ -10,10 +10,10 @@
  *   node supabase/apply-migrations.mjs
  */
 
-import { readFileSync, readdirSync } from 'fs'
-import { join, dirname } from 'path'
-import { fileURLToPath } from 'url'
-import { createRequire } from 'module'
+import { readdirSync, readFileSync } from 'node:fs'
+import { createRequire } from 'node:module'
+import { dirname, join } from 'node:path'
+import { fileURLToPath } from 'node:url'
 
 const __dir = dirname(fileURLToPath(import.meta.url))
 
@@ -28,7 +28,10 @@ function loadEnv() {
       const idx = trimmed.indexOf('=')
       if (idx === -1) continue
       const key = trimmed.slice(0, idx).trim()
-      const val = trimmed.slice(idx + 1).trim().replace(/^["']|["']$/g, '')
+      const val = trimmed
+        .slice(idx + 1)
+        .trim()
+        .replace(/^["']|["']$/g, '')
       if (!process.env[key]) process.env[key] = val
     }
   } catch {
@@ -83,9 +86,7 @@ async function run() {
     )
   `)
 
-  const { rows: applied } = await client.query(
-    'select name from public._migrations order by name'
-  )
+  const { rows: applied } = await client.query('select name from public._migrations order by name')
   const appliedSet = new Set(applied.map((r) => r.name))
 
   const files = readdirSync(MIGRATIONS_DIR)

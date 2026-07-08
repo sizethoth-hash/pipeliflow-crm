@@ -1,9 +1,14 @@
-import { fireEvent, render, screen, waitFor } from '@testing-library/react'
+import { fireEvent, screen, waitFor } from '@testing-library/react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { renderWithProviders } from '@/test/renderWithProviders'
 import { AppShell } from '../AppShell'
 
 vi.mock('next/navigation', () => ({
   usePathname: vi.fn(() => '/dashboard'),
+  useRouter: vi.fn(() => ({
+    push: vi.fn(),
+    refresh: vi.fn(),
+  })),
 }))
 
 vi.mock('next/link', () => ({
@@ -29,7 +34,7 @@ describe('AppShell', () => {
   })
 
   it('renderiza o conteúdo filho', () => {
-    render(
+    renderWithProviders(
       <AppShell>
         <div>Conteúdo da página</div>
       </AppShell>
@@ -38,7 +43,7 @@ describe('AppShell', () => {
   })
 
   it('renderiza a sidebar com o logo PipeFlow', () => {
-    render(
+    renderWithProviders(
       <AppShell>
         <div>Página</div>
       </AppShell>
@@ -47,7 +52,7 @@ describe('AppShell', () => {
   })
 
   it('renderiza o botão de menu hamburguer na TopBar', () => {
-    render(
+    renderWithProviders(
       <AppShell>
         <div>Página</div>
       </AppShell>
@@ -56,7 +61,7 @@ describe('AppShell', () => {
   })
 
   it('abre a sidebar ao clicar no hamburguer', () => {
-    render(
+    renderWithProviders(
       <AppShell>
         <div>Página</div>
       </AppShell>
@@ -70,7 +75,7 @@ describe('AppShell', () => {
   })
 
   it('fecha a sidebar ao clicar no botão fechar', () => {
-    render(
+    renderWithProviders(
       <AppShell>
         <div>Página</div>
       </AppShell>
@@ -85,7 +90,7 @@ describe('AppShell', () => {
   })
 
   it('fecha a sidebar ao pressionar ESC', async () => {
-    render(
+    renderWithProviders(
       <AppShell>
         <div>Página</div>
       </AppShell>
@@ -104,7 +109,7 @@ describe('AppShell', () => {
   })
 
   it('bloqueia o scroll do body quando sidebar está aberta', () => {
-    render(
+    renderWithProviders(
       <AppShell>
         <div>Página</div>
       </AppShell>

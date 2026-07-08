@@ -1,8 +1,8 @@
 'use client'
 
 import { useQuery } from '@tanstack/react-query'
-import { useWorkspaceStore } from '@/store/useWorkspaceStore'
 import { getDashboardData } from '@/services/metrics'
+import { useWorkspaceStore } from '@/store/useWorkspaceStore'
 
 export function dashboardKey(workspaceId: string) {
   return ['dashboard', workspaceId] as const

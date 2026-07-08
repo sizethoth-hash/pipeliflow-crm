@@ -1,4 +1,4 @@
-import { createServerClient, type CookieOptions } from '@supabase/ssr'
+import { type CookieOptions, createServerClient } from '@supabase/ssr'
 import { type NextRequest, NextResponse } from 'next/server'
 
 const PROTECTED_PATHS = ['/dashboard', '/leads', '/pipeline', '/settings']
@@ -29,13 +29,13 @@ export async function middleware(request: NextRequest) {
   )
 
   // Refresca sessão — DEVE ser chamado antes de qualquer leitura de session
-  const { data: { user } } = await supabase.auth.getUser()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
 
   const { pathname } = request.nextUrl
 
-  const isProtected = PROTECTED_PATHS.some(
-    (p) => pathname === p || pathname.startsWith(`${p}/`)
-  )
+  const isProtected = PROTECTED_PATHS.some((p) => pathname === p || pathname.startsWith(`${p}/`))
   const isAuthPath = AUTH_PATHS.some((p) => pathname === p)
 
   // Não autenticado → /login
@@ -70,7 +70,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: [
-    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
-  ],
+  matcher: ['/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)'],
 }

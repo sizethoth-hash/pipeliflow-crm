@@ -1,4 +1,4 @@
-import { test, expect, type Page } from '@playwright/test'
+import { expect, type Page, test } from '@playwright/test'
 
 const EMAIL = 'teste@pipeliflow.dev'
 const PASSWORD = 'Senha@1234'
@@ -24,14 +24,17 @@ async function login(page: Page) {
     }
   }
   await page.waitForURL('**/dashboard', { timeout: 10000 })
-  await page.waitForFunction(
-    () => {
-      const el = document.querySelector('[data-workspace-switcher]') ??
-                 document.querySelector('button[aria-haspopup]')
-      return el && el.textContent && el.textContent.length > 2
-    },
-    { timeout: 10000 },
-  ).catch(() => {})
+  await page
+    .waitForFunction(
+      () => {
+        const el =
+          document.querySelector('[data-workspace-switcher]') ??
+          document.querySelector('button[aria-haspopup]')
+        return el?.textContent && el.textContent.length > 2
+      },
+      { timeout: 10000 }
+    )
+    .catch(() => {})
 }
 
 test.describe('M9 — dados reais Supabase', () => {
@@ -54,10 +57,9 @@ test.describe('M9 — dados reais Supabase', () => {
   test('1. criar lead persiste após reload', async ({ page }) => {
     await login(page)
     await page.goto('/leads')
-    await page.waitForFunction(
-      () => !document.querySelector('svg.animate-spin'),
-      { timeout: 15000 },
-    )
+    await page.waitForFunction(() => !document.querySelector('svg.animate-spin'), {
+      timeout: 15000,
+    })
     await page.screenshot({ path: SS('leads-before') })
 
     await page.getByRole('button', { name: /novo lead/i }).click()
@@ -75,18 +77,16 @@ test.describe('M9 — dados reais Supabase', () => {
 
     await page.getByRole('button', { name: /criar lead/i }).click()
     await expect(page.getByRole('heading', { name: /novo lead/i })).toBeHidden({ timeout: 8000 })
-    await page.waitForFunction(
-      () => !document.querySelector('svg.animate-spin'),
-      { timeout: 10000 },
-    )
+    await page.waitForFunction(() => !document.querySelector('svg.animate-spin'), {
+      timeout: 10000,
+    })
     await page.screenshot({ path: SS('lead-created') })
     await expect(page.getByText(leadName)).toBeVisible({ timeout: 10000 })
 
     await page.reload()
-    await page.waitForFunction(
-      () => !document.querySelector('svg.animate-spin'),
-      { timeout: 15000 },
-    )
+    await page.waitForFunction(() => !document.querySelector('svg.animate-spin'), {
+      timeout: 15000,
+    })
     await page.screenshot({ path: SS('lead-after-reload') })
     await expect(page.getByText(leadName)).toBeVisible({ timeout: 10000 })
   })
@@ -94,10 +94,9 @@ test.describe('M9 — dados reais Supabase', () => {
   test('2. filtros de busca funcionam no banco', async ({ page }) => {
     await login(page)
     await page.goto('/leads')
-    await page.waitForFunction(
-      () => !document.querySelector('svg.animate-spin'),
-      { timeout: 15000 },
-    )
+    await page.waitForFunction(() => !document.querySelector('svg.animate-spin'), {
+      timeout: 15000,
+    })
 
     const ts = Date.now()
     const uniqueName = `FilterTest${ts}`
@@ -109,13 +108,17 @@ test.describe('M9 — dados reais Supabase', () => {
     await page.getByLabel(/e-mail \*/i).fill(`filter${ts}@test.com`)
     await page.getByRole('button', { name: /criar lead/i }).click()
     await expect(page.getByRole('heading', { name: /novo lead/i })).toBeHidden({ timeout: 8000 })
-    await page.waitForFunction(() => !document.querySelector('svg.animate-spin'), { timeout: 10000 })
+    await page.waitForFunction(() => !document.querySelector('svg.animate-spin'), {
+      timeout: 10000,
+    })
     await expect(page.getByText(uniqueName)).toBeVisible({ timeout: 10000 })
 
     const searchInput = page.getByPlaceholder(/buscar por nome/i)
     await searchInput.fill(uniqueName)
     await page.waitForTimeout(600)
-    await page.waitForFunction(() => !document.querySelector('svg.animate-spin'), { timeout: 10000 })
+    await page.waitForFunction(() => !document.querySelector('svg.animate-spin'), {
+      timeout: 10000,
+    })
     await page.screenshot({ path: SS('filter-by-name') })
     await expect(page.getByText(uniqueName)).toBeVisible({ timeout: 8000 })
     const rows = page.locator('tbody tr')
@@ -123,10 +126,15 @@ test.describe('M9 — dados reais Supabase', () => {
 
     await searchInput.fill('')
     await page.waitForTimeout(400)
-    await page.getByRole('combobox').filter({ hasText: /todos os status/i }).click()
+    await page
+      .getByRole('combobox')
+      .filter({ hasText: /todos os status/i })
+      .click()
     await page.getByRole('option', { name: /novo lead/i }).click()
     await page.waitForTimeout(800)
-    await page.waitForFunction(() => !document.querySelector('svg.animate-spin'), { timeout: 10000 })
+    await page.waitForFunction(() => !document.querySelector('svg.animate-spin'), {
+      timeout: 10000,
+    })
     await page.screenshot({ path: SS('filter-by-status') })
     const count = await page.locator('tbody tr').count()
     expect(count).toBeGreaterThan(0)
@@ -135,14 +143,15 @@ test.describe('M9 — dados reais Supabase', () => {
   test('3. arrastar deal muda stage no PipelineBoard', async ({ page }) => {
     await login(page)
     await page.goto('/pipeline')
-    await page.waitForFunction(
-      () => !document.querySelector('svg.animate-spin'),
-      { timeout: 15000 },
-    )
+    await page.waitForFunction(() => !document.querySelector('svg.animate-spin'), {
+      timeout: 15000,
+    })
     await page.screenshot({ path: SS('pipeline-before') })
 
     await page.getByRole('button', { name: /novo negócio/i }).click()
-    await expect(page.getByRole('heading', { name: /novo negócio/i })).toBeVisible({ timeout: 8000 })
+    await expect(page.getByRole('heading', { name: /novo negócio/i })).toBeVisible({
+      timeout: 8000,
+    })
     const ts = Date.now()
     const dealTitle = `DragDeal ${ts}`
     createdDeals.push(dealTitle)
@@ -158,7 +167,9 @@ test.describe('M9 — dados reais Supabase', () => {
     await page.screenshot({ path: SS('deal-form-filled') })
     await page.getByRole('button', { name: /criar negócio/i }).click()
     await expect(page.getByRole('heading', { name: /novo negócio/i })).toBeHidden({ timeout: 8000 })
-    await page.waitForFunction(() => !document.querySelector('svg.animate-spin'), { timeout: 10000 })
+    await page.waitForFunction(() => !document.querySelector('svg.animate-spin'), {
+      timeout: 10000,
+    })
     await expect(page.getByText(dealTitle)).toBeVisible({ timeout: 10000 })
     await page.screenshot({ path: SS('deal-created') })
 
@@ -170,7 +181,9 @@ test.describe('M9 — dados reais Supabase', () => {
     const targetBox = await contactedColumn.boundingBox()
 
     if (!cardBox || !targetBox) {
-      throw new Error(`Não foi possível localizar o card (${!!cardBox}) ou a coluna destino (${!!targetBox})`)
+      throw new Error(
+        `Não foi possível localizar o card (${!!cardBox}) ou a coluna destino (${!!targetBox})`
+      )
     }
 
     const startX = cardBox.x + cardBox.width / 2
@@ -185,7 +198,7 @@ test.describe('M9 — dados reais Supabase', () => {
     for (let i = 1; i <= steps; i++) {
       await page.mouse.move(
         startX + ((endX - startX) * i) / steps,
-        startY + ((endY - startY) * i) / steps,
+        startY + ((endY - startY) * i) / steps
       )
       await page.waitForTimeout(20)
     }
@@ -196,7 +209,9 @@ test.describe('M9 — dados reais Supabase', () => {
     await page.screenshot({ path: SS('pipeline-after-drag') })
 
     await page.reload()
-    await page.waitForFunction(() => !document.querySelector('svg.animate-spin'), { timeout: 15000 })
+    await page.waitForFunction(() => !document.querySelector('svg.animate-spin'), {
+      timeout: 15000,
+    })
     await page.screenshot({ path: SS('pipeline-after-reload') })
 
     await expect(page.getByText(dealTitle)).toBeVisible({ timeout: 10000 })
@@ -205,10 +220,9 @@ test.describe('M9 — dados reais Supabase', () => {
   test('4. dashboard reflete dados reais', async ({ page }) => {
     await login(page)
     await page.goto('/dashboard')
-    await page.waitForFunction(
-      () => !document.querySelector('svg.animate-spin'),
-      { timeout: 15000 },
-    )
+    await page.waitForFunction(() => !document.querySelector('svg.animate-spin'), {
+      timeout: 15000,
+    })
     await page.screenshot({ path: SS('dashboard-loaded') })
 
     await expect(page.getByText('Total de Leads')).toBeVisible()

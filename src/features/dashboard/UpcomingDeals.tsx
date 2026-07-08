@@ -71,7 +71,8 @@ export function UpcomingDeals({ deals }: UpcomingDealsProps) {
       ) : (
         <ul className="space-y-1" aria-label="Negócios com prazo próximo">
           {deals.map((deal) => {
-            const days = getDaysRemaining(deal.dueDate!)
+            if (!deal.dueDate) return null
+            const days = getDaysRemaining(deal.dueDate)
             return (
               <li
                 key={deal.id}

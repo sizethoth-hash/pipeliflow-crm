@@ -1,6 +1,6 @@
-import { getBrowserClient } from '@/lib/supabase/client'
 import type { User } from '@supabase/supabase-js'
 import { create } from 'zustand'
+import { getBrowserClient } from '@/lib/supabase/client'
 
 interface AuthState {
   user: User | null
@@ -22,11 +22,15 @@ export const useAuthStore = create<AuthState>()((set) => ({
   initialize: async () => {
     const supabase = getBrowserClient()
 
-    const { data: { user } } = await supabase.auth.getUser()
+    const {
+      data: { user },
+    } = await supabase.auth.getUser()
     set({ user, isLoading: false, initialized: true })
 
     // Retorno da subscription é armazenado para cleanup se necessário
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
       set({ user: session?.user ?? null })
     })
 

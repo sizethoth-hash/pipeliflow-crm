@@ -1,14 +1,6 @@
 'use client'
 
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  Tooltip,
-  ResponsiveContainer,
-  Cell,
-} from 'recharts'
+import { Bar, BarChart, Cell, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import type { FunnelData } from '@/types/dashboard'
 
 interface SalesFunnelChartProps {
@@ -19,13 +11,7 @@ interface TooltipPayloadItem {
   payload: FunnelData
 }
 
-function CustomTooltip({
-  active,
-  payload,
-}: {
-  active?: boolean
-  payload?: TooltipPayloadItem[]
-}) {
+function CustomTooltip({ active, payload }: { active?: boolean; payload?: TooltipPayloadItem[] }) {
   if (!active || !payload?.length) return null
   const item = payload[0].payload
 
@@ -48,10 +34,7 @@ function CustomTooltip({
 
 export function SalesFunnelChart({ data }: SalesFunnelChartProps) {
   return (
-    <div
-      className="rounded-xl border border-slate-700/50 bg-slate-800/60 p-5 shadow-sm"
-      aria-label="Gráfico de funil de vendas por etapa"
-    >
+    <div className="rounded-xl border border-slate-700/50 bg-slate-800/60 p-5 shadow-sm">
       <h3 className="mb-4 text-sm font-semibold text-slate-200">Negócios por Etapa</h3>
       <ResponsiveContainer width="100%" height={220}>
         <BarChart

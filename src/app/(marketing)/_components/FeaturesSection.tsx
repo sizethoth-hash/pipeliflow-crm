@@ -1,7 +1,14 @@
 const features = [
   {
     icon: (
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+      <svg
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        aria-hidden="true"
+        xmlns="http://www.w3.org/2000/svg"
+      >
         <rect x="2" y="5" width="5" height="16" rx="1.5" fill="currentColor" opacity="0.3" />
         <rect x="9.5" y="2" width="5" height="19" rx="1.5" fill="currentColor" opacity="0.6" />
         <rect x="17" y="9" width="5" height="12" rx="1.5" fill="currentColor" />
@@ -13,11 +20,28 @@ const features = [
   },
   {
     icon: (
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+      <svg
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        aria-hidden="true"
+        xmlns="http://www.w3.org/2000/svg"
+      >
         <circle cx="9" cy="7" r="4" stroke="currentColor" strokeWidth="2" />
-        <path d="M2 21v-1a7 7 0 0 1 14 0v1" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+        <path
+          d="M2 21v-1a7 7 0 0 1 14 0v1"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+        />
         <circle cx="18" cy="8" r="3" stroke="currentColor" strokeWidth="2" />
-        <path d="M22 21v-1a5 5 0 0 0-4-4.9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+        <path
+          d="M22 21v-1a5 5 0 0 0-4-4.9"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+        />
       </svg>
     ),
     title: 'Gestão de leads',
@@ -26,8 +50,20 @@ const features = [
   },
   {
     icon: (
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
-        <path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+      <svg
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        aria-hidden="true"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+        />
         <rect x="9" y="3" width="6" height="4" rx="1" stroke="currentColor" strokeWidth="2" />
         <path d="M9 12h6M9 16h4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
       </svg>
@@ -38,9 +74,28 @@ const features = [
   },
   {
     icon: (
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
-        <path d="M3 3v18h18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-        <path d="M7 16l4-4 4 4 4-8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+      <svg
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        aria-hidden="true"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M3 3v18h18"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+        <path
+          d="M7 16l4-4 4 4 4-8"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
       </svg>
     ),
     title: 'Dashboard de métricas',
@@ -49,10 +104,27 @@ const features = [
   },
   {
     icon: (
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
-        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+      <svg
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        aria-hidden="true"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+        />
         <circle cx="9" cy="7" r="4" stroke="currentColor" strokeWidth="2" />
-        <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+        <path
+          d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+        />
       </svg>
     ),
     title: 'Multi-workspace e equipes',
@@ -61,9 +133,21 @@ const features = [
   },
   {
     icon: (
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+      <svg
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        aria-hidden="true"
+        xmlns="http://www.w3.org/2000/svg"
+      >
         <rect x="3" y="11" width="18" height="11" rx="2" stroke="currentColor" strokeWidth="2" />
-        <path d="M7 11V7a5 5 0 0 1 10 0v4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+        <path
+          d="M7 11V7a5 5 0 0 1 10 0v4"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+        />
         <circle cx="12" cy="16" r="1.5" fill="currentColor" />
       </svg>
     ),
@@ -75,11 +159,7 @@ const features = [
 
 export function FeaturesSection() {
   return (
-    <section
-      id="features"
-      className="px-6 py-24"
-      aria-labelledby="features-heading"
-    >
+    <section id="features" className="px-6 py-24" aria-labelledby="features-heading">
       <div className="mx-auto max-w-7xl">
         {/* Cabeçalho */}
         <div className="mx-auto mb-16 max-w-2xl text-center">
@@ -100,7 +180,6 @@ export function FeaturesSection() {
         {/* Grid de cards */}
         <ul
           className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
-          role="list"
           aria-label="Lista de funcionalidades do PipeFlow"
         >
           {features.map((feature) => (

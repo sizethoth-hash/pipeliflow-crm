@@ -42,23 +42,25 @@ export async function POST(request: Request) {
 
         const stripeSub = await stripe.subscriptions.retrieve(subscriptionId)
 
-        await supabase.from('subscriptions').upsert({
-          workspace_id: workspaceId,
-          stripe_customer_id: session.customer as string,
-          stripe_subscription_id: subscriptionId,
-          plan: 'pro',
-          status: 'active',
-          current_period_start: new Date(stripeSub.current_period_start * 1000).toISOString(),
-          current_period_end: new Date(stripeSub.current_period_end * 1000).toISOString(),
-          cancel_at_period_end: stripeSub.cancel_at_period_end,
-        }, { onConflict: 'workspace_id' })
+        await supabase.from('subscriptions').upsert(
+          {
+            workspace_id: workspaceId,
+            stripe_customer_id: session.customer as string,
+            stripe_subscription_id: subscriptionId,
+            plan: 'pro',
+            status: 'active',
+            current_period_start: new Date(stripeSub.current_period_start * 1000).toISOString(),
+            current_period_end: new Date(stripeSub.current_period_end * 1000).toISOString(),
+            cancel_at_period_end: stripeSub.cancel_at_period_end,
+          },
+          { onConflict: 'workspace_id' }
+        )
 
-        await supabase
-          .from('workspaces')
-          .update({ plan: 'pro' })
-          .eq('id', workspaceId)
+        await supabase.from('workspaces').update({ plan: 'pro' }).eq('id', workspaceId)
 
-        console.log(`[stripe/webhook] checkout.session.completed — workspace=${workspaceId} user=${userId} → Pro`)
+        console.log(
+          `[stripe/webhook] checkout.session.completed — workspace=${workspaceId} user=${userId} → Pro`
+        )
         break
       }
 
@@ -68,23 +70,25 @@ export async function POST(request: Request) {
 
         if (!workspaceId) break
 
-        await supabase.from('subscriptions').upsert({
-          workspace_id: workspaceId,
-          stripe_customer_id: stripeSub.customer as string,
-          stripe_subscription_id: stripeSub.id,
-          plan: 'free',
-          status: 'canceled',
-          current_period_start: null,
-          current_period_end: null,
-          cancel_at_period_end: false,
-        }, { onConflict: 'workspace_id' })
+        await supabase.from('subscriptions').upsert(
+          {
+            workspace_id: workspaceId,
+            stripe_customer_id: stripeSub.customer as string,
+            stripe_subscription_id: stripeSub.id,
+            plan: 'free',
+            status: 'canceled',
+            current_period_start: null,
+            current_period_end: null,
+            cancel_at_period_end: false,
+          },
+          { onConflict: 'workspace_id' }
+        )
 
-        await supabase
-          .from('workspaces')
-          .update({ plan: 'free' })
-          .eq('id', workspaceId)
+        await supabase.from('workspaces').update({ plan: 'free' }).eq('id', workspaceId)
 
-        console.log(`[stripe/webhook] customer.subscription.deleted — workspace=${workspaceId} → Free`)
+        console.log(
+          `[stripe/webhook] customer.subscription.deleted — workspace=${workspaceId} → Free`
+        )
         break
       }
 
@@ -94,7 +98,8 @@ export async function POST(request: Request) {
 
         if (!workspaceId) break
 
-        await supabase.from('subscriptions')
+        await supabase
+          .from('subscriptions')
           .update({ status: 'payment_failed' })
           .eq('workspace_id', workspaceId)
 

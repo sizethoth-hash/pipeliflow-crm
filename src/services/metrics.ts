@@ -3,8 +3,8 @@
 import { getServerClient } from '@/lib/supabase/server'
 import type { DashboardMetrics, FunnelData } from '@/types/dashboard'
 import type { Deal } from '@/types/deal'
-import type { Lead } from '@/types/lead'
 import { PIPELINE_COLUMNS } from '@/types/deal'
+import type { Lead } from '@/types/lead'
 
 const OPEN_STAGES = ['new_lead', 'contacted', 'proposal', 'negotiation'] as const
 
@@ -22,14 +22,14 @@ export async function getDashboardData(workspaceId: string): Promise<DashboardDa
     supabase
       .from('leads')
       .select(
-        'id, workspace_id, name, email, phone, company, job_title, status, potential_value, notes, owner_id, created_at, updated_at',
+        'id, workspace_id, name, email, phone, company, job_title, status, potential_value, notes, owner_id, created_at, updated_at'
       )
       .eq('workspace_id', workspaceId)
       .order('created_at', { ascending: false }),
     supabase
       .from('deals')
       .select(
-        'id, workspace_id, lead_id, title, value, stage, owner_id, due_date, created_at, updated_at',
+        'id, workspace_id, lead_id, title, value, stage, owner_id, due_date, created_at, updated_at'
       )
       .eq('workspace_id', workspaceId),
   ])
@@ -87,8 +87,8 @@ export async function getDashboardData(workspaceId: string): Promise<DashboardDa
   })
 
   const upcomingDeals = openDeals
-    .filter((d) => d.dueDate != null)
-    .sort((a, b) => new Date(a.dueDate!).getTime() - new Date(b.dueDate!).getTime())
+    .filter((d): d is typeof d & { dueDate: string } => d.dueDate != null)
+    .sort((a, b) => new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime())
     .slice(0, 5)
 
   const recentLeads = leads.slice(0, 5)

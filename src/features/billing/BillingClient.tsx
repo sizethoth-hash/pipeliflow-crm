@@ -1,13 +1,13 @@
 'use client'
 
+import { Check, Zap } from 'lucide-react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
-import { Check, Zap } from 'lucide-react'
-import { Button } from '@/components/ui/Button'
 import { Badge } from '@/components/ui/Badge'
-import { useWorkspaceStore } from '@/store/useWorkspaceStore'
+import { Button } from '@/components/ui/Button'
 import { useSubscription } from '@/hooks/useSubscription'
 import { FREE_LIMITS } from '@/lib/limits'
+import { useWorkspaceStore } from '@/store/useWorkspaceStore'
 
 const FREE_FEATURES = [
   `Até ${FREE_LIMITS.leads} leads`,
@@ -101,11 +101,11 @@ export function BillingClient() {
       <div className="mb-8 rounded-xl border border-slate-700 bg-slate-800/60 p-5">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
-            <p className="text-xs font-medium uppercase tracking-wider text-slate-500">Plano atual</p>
+            <p className="text-xs font-medium uppercase tracking-wider text-slate-500">
+              Plano atual
+            </p>
             <div className="mt-1 flex items-center gap-2">
-              <span className="text-lg font-semibold text-slate-100">
-                {isPro ? 'Pro' : 'Free'}
-              </span>
+              <span className="text-lg font-semibold text-slate-100">{isPro ? 'Pro' : 'Free'}</span>
               <Badge variant={isPro ? 'default' : 'secondary'}>
                 {isPro ? 'Ativo' : 'Gratuito'}
               </Badge>
@@ -118,7 +118,13 @@ export function BillingClient() {
             )}
           </div>
           {isPro && (
-            <Button variant="outline" size="sm" onClick={handlePortal} disabled={isLoading} className="shrink-0">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handlePortal}
+              disabled={isLoading}
+              className="shrink-0"
+            >
               Gerenciar assinatura
             </Button>
           )}
@@ -128,7 +134,9 @@ export function BillingClient() {
       {/* Comparação de planos */}
       <div className="grid gap-4 sm:grid-cols-2">
         {/* Free */}
-        <div className={`rounded-xl border p-5 ${!isPro ? 'border-indigo-500/50 bg-indigo-500/5' : 'border-slate-700 bg-slate-800/40'}`}>
+        <div
+          className={`rounded-xl border p-5 ${!isPro ? 'border-indigo-500/50 bg-indigo-500/5' : 'border-slate-700 bg-slate-800/40'}`}
+        >
           <div className="mb-4">
             <p className="font-semibold text-slate-100">Free</p>
             <p className="mt-1 text-2xl font-bold text-slate-100">
@@ -143,13 +151,13 @@ export function BillingClient() {
               </li>
             ))}
           </ul>
-          {!isPro && (
-            <p className="mt-4 text-xs font-medium text-indigo-400">Plano atual</p>
-          )}
+          {!isPro && <p className="mt-4 text-xs font-medium text-indigo-400">Plano atual</p>}
         </div>
 
         {/* Pro */}
-        <div className={`rounded-xl border p-5 ${isPro ? 'border-indigo-500/50 bg-indigo-500/5' : 'border-slate-700 bg-slate-800/40'}`}>
+        <div
+          className={`rounded-xl border p-5 ${isPro ? 'border-indigo-500/50 bg-indigo-500/5' : 'border-slate-700 bg-slate-800/40'}`}
+        >
           <div className="mb-4">
             <div className="flex items-center gap-2">
               <p className="font-semibold text-slate-100">Pro</p>
@@ -177,9 +185,7 @@ export function BillingClient() {
                 <Zap className="mr-2 h-4 w-4" />
                 {isRedirecting ? 'Redirecionando…' : 'Assinar Pro'}
               </Button>
-              {checkoutError && (
-                <p className="mt-2 text-xs text-red-400">{checkoutError}</p>
-              )}
+              {checkoutError && <p className="mt-2 text-xs text-red-400">{checkoutError}</p>}
             </>
           )}
         </div>

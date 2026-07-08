@@ -1,7 +1,7 @@
 'use client'
 
-import Link from 'next/link'
 import { Users } from 'lucide-react'
+import Link from 'next/link'
 import { cn } from '@/lib/utils'
 import type { Lead, LeadStatus } from '@/types/lead'
 
@@ -28,9 +28,7 @@ function getInitials(name: string): string {
 }
 
 function formatDate(iso: string): string {
-  return new Intl.DateTimeFormat('pt-BR', { day: '2-digit', month: 'short' }).format(
-    new Date(iso)
-  )
+  return new Intl.DateTimeFormat('pt-BR', { day: '2-digit', month: 'short' }).format(new Date(iso))
 }
 
 export function RecentLeads({ leads }: RecentLeadsProps) {
@@ -72,9 +70,7 @@ export function RecentLeads({ leads }: RecentLeadsProps) {
 
                   <div className="min-w-0 flex-1">
                     <p className="truncate text-sm font-medium text-slate-200">{lead.name}</p>
-                    <p className="truncate text-xs text-slate-500">
-                      {lead.company ?? lead.email}
-                    </p>
+                    <p className="truncate text-xs text-slate-500">{lead.company ?? lead.email}</p>
                   </div>
 
                   <div className="flex flex-col items-end gap-1">
